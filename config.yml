@@ -1,0 +1,13 @@
+token:
+prefix: ++
+guild:
+roles:
+  admin:
+  moderator:
+  user:
+default-messages:
+  gain: 'Well done {}, you have earned a {} point.'
+  self: 'Nice try {}, but you cannot give yourself karma.'
+  bot: 'Thank you {}, but I do not need more karma.'
+  no-mention: 'Your Message is missing a user mention. Try again with {}{} @user.'
+  cooldown: 'Sorry {}, but you have used up all your karma resevoir. Please try again {}.'
