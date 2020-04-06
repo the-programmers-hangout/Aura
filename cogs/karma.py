@@ -1,8 +1,5 @@
-from collections import defaultdict
-
-import discord
-from discord.ext import commands
 import yaml
+from discord.ext import commands
 
 
 class Karma:

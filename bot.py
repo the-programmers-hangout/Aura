@@ -1,7 +1,7 @@
 import yaml
 from discord.ext import commands
 
-from cogs.karma import Karma, Helpful, Informative, Kind, Creative, Funny
+from cogs.karma import Helpful, Informative, Kind, Creative, Funny
 
 if __name__ == '__main__':
     with open("config.yaml", 'r') as stream:
