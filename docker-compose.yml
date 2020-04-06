@@ -1,0 +1,14 @@
+version: 3.7
+services:
+  aura:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - database
+  database:
+    build:
+      dockerfile: Dockerfile
+      context: ./db
+      volumes:
+        - /var/lib/data

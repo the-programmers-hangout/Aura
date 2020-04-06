@@ -1,18 +1,24 @@
 import yaml
 from discord.ext import commands
 
+from core.database import Database
+from core.service.karma_service import KarmaService
+
 
 class Karma:
 
     def __init__(self, bot, karma_type):
-        self.bot = bot
+        self._bot = bot
         self._karma_type = karma_type
+        self._karma_service = KarmaService()
         with open("config.yaml", 'r') as stream:
             self._config = yaml.safe_load(stream)
 
+    # always called through give_karma
     async def update_karma(self, helper_id: int):
         print('db check')
 
+    # always called through give_karma
     async def cooldown_user(self, giver_id: int):
         print('db check')
 
@@ -24,10 +30,10 @@ class Karma:
                                        .format(self._config['prefix'], self._karma_type))
             else:
                 guild_id: int = int(self._config['guild'])
-                guild = self.bot.get_guild(guild_id)
+                guild = self._bot.get_guild(guild_id)
                 message = ctx.message
                 member = message.mentions[0]
-                if self.bot.get_user(self.bot.user.id).mentioned_in(message):
+                if self._bot.get_user(self._bot.user.id).mentioned_in(message):
                     await ctx.channel.send(str(self._config['default-messages']['bot'])
                                            .format(message.author.mention))
                 elif guild.get_member(message.author.id).mentioned_in(message):
