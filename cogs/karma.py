@@ -21,7 +21,7 @@ class Karma:
         if len(ctx.message.role_mentions) == 0:
             if len(ctx.message.mentions) == 0 or len(ctx.message.mentions) > 1:
                 await ctx.channel.send(str(self._config['default-messages']['no-mention'])
-                                       .format(self.bot.prefix, self._karma_type))
+                                       .format(self._config['prefix'], self._karma_type))
             else:
                 guild_id: int = int(self._config['guild'])
                 guild = self.bot.get_guild(guild_id)
@@ -37,6 +37,9 @@ class Karma:
                     if guild.get_member(member).mentioned_in(message):
                         await ctx.channel.send(str(self._config['default-messages']['gain'])
                                                .format(member.mention, self._karma_type))
+        else:
+            await ctx.channel.send(str(self._config['default-messages']['role-mention'])
+                                   .format(ctx.message.author.mention))
 
 
 class Helpful(commands.Cog, Karma):

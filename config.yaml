@@ -11,3 +11,7 @@ default-messages:
   bot: 'Thank you {}, but I do not need more karma.'
   no-mention: 'Your Message should have one user mention. Try again with {}{} @user.'
   cooldown: 'Sorry {}, but you have used up all your karma resevoir. Please try again {}.'
+  role-mention: 'Sorry {}, you can only give Karma to Members.'
+cooldown:
+  amount: 30
+  unit: 'seconds'
