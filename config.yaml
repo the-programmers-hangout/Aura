@@ -1,6 +1,6 @@
 token:
-prefix: ++
 guild:
+prefix: ++
 roles:
   admin:
   moderator:
