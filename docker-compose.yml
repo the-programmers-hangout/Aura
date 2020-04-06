@@ -1,4 +1,4 @@
-version: 3.7
+version: '3.7'
 services:
   aura:
     build:
@@ -10,5 +10,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./db
-      volumes:
-        - /var/lib/data
+    volumes:
+    - 'db:/var/lib/data'
+volumes:
+  db:
