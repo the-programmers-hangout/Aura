@@ -1,38 +1,12 @@
-import sqlite3
+from pymongo import MongoClient
 
 
-class Database:
-    def __init__(self, name):
-        self._conn = sqlite3.connect(name)
-        self._cursor = self._conn.cursor()
+class Database(object):
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.commit()
-        self.connection.close()
+    def __init__(self, host, port, name):
+        self._client = MongoClient(host, port)
+        self._db = self._client[name]
 
     @property
-    def connection(self):
-        return self._conn
-
-    @property
-    def cursor(self):
-        return self._cursor
-
-    def commit(self):
-        self.connection.commit()
-
-    def execute(self, sql, params=None):
-        self.cursor.execute(sql, params or ())
-
-    def fetchall(self):
-        return self.cursor.fetchall()
-
-    def fetchone(self):
-        return self.cursor.fetchone()
-
-    def query(self, sql, params=None):
-        self.cursor.execute(sql, params or ())
-        return self.fetchall()
+    def db(self):
+        return self._db
