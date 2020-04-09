@@ -28,3 +28,6 @@ class Leaderboard(commands.Cog):
                     await ctx.channel.send('{} has earned a total of {} {} karma'
                                            .format(member.name, karma, karma_type))
 
+    @commands.command()
+    async def leaderboard(self, ctx, karma_type):
+        print()

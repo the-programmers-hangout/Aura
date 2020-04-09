@@ -20,7 +20,7 @@ class KarmaService:
     def delete_karma_member(self, member: KarmaMember):
         print()
 
-    def reset_karma_member(self, member: KarmaMember):
+    def set_karma(self, member: KarmaMember):
         print()
 
     def get_karma_from_karma_member(self, member: KarmaMember):
