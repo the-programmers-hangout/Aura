@@ -7,7 +7,6 @@
 * Filtering role mentions (**done**)
 * Filtering messages with more than one mention (**done**)
 * Filtering messages without a user mention, this includes everyone and here mentions. (**done**)
-* Bot will not delete or hinder the @everyone or @here from going through. (**done**)
 * Bot can be started through Docker. (**done**)
 
 ### 0.0.2
@@ -19,4 +18,12 @@ dashboard, mongodb and discord bot. (**done**)
 * Karma Service: get implemented (**done**)
 * Karma Service: filter top x of karma type implemented
 * Karma Service: cooldown user implemented
-* Karma cooldown user after executing Give [karma category type] successfully
+* Karma cooldown user after executing give [karma category type] successfully
+
+### 0.0.3
+* retrieve database configuration from config.yaml
+* filter karma by channel, by channel category
+
+### 0.0.4
+* add setup command that is executed on first start (empty config.yaml)
+* add commands to change the configuration on the fly
