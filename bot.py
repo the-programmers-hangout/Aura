@@ -2,6 +2,7 @@ import yaml
 from discord.ext import commands
 
 from cogs.karma import Helpful, Informative, Kind, Creative, Funny
+from cogs.leaderboard import Leaderboard
 
 if __name__ == '__main__':
     with open("config.yaml", 'r') as stream:
@@ -12,4 +13,5 @@ if __name__ == '__main__':
     client.add_cog(Kind(client))
     client.add_cog(Creative(client))
     client.add_cog(Funny(client))
+    client.add_cog(Leaderboard(client))
     client.run(data_loaded['token'])

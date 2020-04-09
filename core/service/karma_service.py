@@ -27,8 +27,11 @@ class KarmaService:
         self._filter_query['guild_id'] = member.guild_id
         self._filter_query['member_id'] = member.member_id
         self._filter_query['karma_type'] = member.karma_type
-        karma = self._db.karma.find_one(filter=self._filter_query)
-        return karma['karma']
+        document = self._db.karma.find_one(filter=self._filter_query)
+        if document is None:
+            return 0
+        else:
+            return document['karma']
 
     def cooldown_karma_giving_ability(self, member: KarmaMember):
         print()
