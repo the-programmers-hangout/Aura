@@ -7,7 +7,7 @@
 * Filtering role mentions (**done**)
 * Filtering messages with more than one mention (**done**)
 * Filtering messages without a user mention, this includes everyone and here mentions. (**done**)
-Bot will not delete or hinder the @everyone or @here from going through. (**done**)
+* Bot will not delete or hinder the @everyone or @here from going through. (**done**)
 * Bot can be started through Docker. (**done**)
 
 ### 0.0.2
