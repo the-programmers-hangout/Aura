@@ -5,11 +5,9 @@ from core.model.karma_member import KarmaMember
 class KarmaService:
 
     def __init__(self):
-        self._db = Database('localhost', 27017, 'aura.db').db
-        self._filter_query = {"guild_id": "{}",
-                              "member_id": "{}",
-                              "karma_type": "{}"}
-        self._increase_karma = {"$inc: { karma: 1 }"}
+        self._db = Database('mongo', 27017, 'aura').db
+        self._filter_query = dict(guild_id="", member_id="", karma_type="")
+        self._increase_karma = {"$inc": {'karma': int(1)}}
 
     def upsert_karma_member(self, member: KarmaMember):
         karma = self._db.karma

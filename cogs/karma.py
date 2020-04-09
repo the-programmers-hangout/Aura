@@ -1,7 +1,7 @@
 import yaml
 from discord.ext import commands
 
-from core.database import Database
+from core.model.karma_member import KarmaMember
 from core.service.karma_service import KarmaService
 
 
@@ -15,17 +15,13 @@ class Karma:
             self._config = yaml.safe_load(stream)
 
     # always called through give_karma
-    async def update_karma(self, helper_id: int):
-        print('db check')
-
-    # always called through give_karma
     async def cooldown_user(self, giver_id: int):
         print('db check')
 
     async def give_karma(self, ctx):
         # check if message has a mention
         if len(ctx.message.role_mentions) == 0:
-            if len(ctx.message.mentions) == 0 or len(ctx.message.mentions) > 1:
+            if len(ctx.message.mentions) != 1:
                 await ctx.channel.send(str(self._config['default-messages']['no-mention'])
                                        .format(self._config['prefix'], self._karma_type))
             else:
@@ -40,7 +36,9 @@ class Karma:
                     await ctx.channel.send(str(self._config['default-messages']['self'])
                                            .format(message.author.mention))
                 else:
-                    if guild.get_member(member).mentioned_in(message):
+                    if guild.get_member(member.id).mentioned_in(message):
+                        karma_member = KarmaMember(guild_id, member.id, self._karma_type)
+                        self._karma_service.upsert_karma_member(karma_member)
                         await ctx.channel.send(str(self._config['default-messages']['gain'])
                                                .format(member.mention, self._karma_type))
         else:
