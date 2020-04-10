@@ -35,6 +35,9 @@ class Karma:
                 elif guild.get_member(message.author.id).mentioned_in(message):
                     await ctx.channel.send(str(self._config['default-messages']['self'])
                                            .format(message.author.mention))
+                elif self._bot.get_user(member.id).bot:
+                    await ctx.channel.send(str(self._config['default-messages']['other-bot'])
+                                           .format(message.author.mention))
                 else:
                     if guild.get_member(member.id).mentioned_in(message):
                         karma_member = KarmaMember(guild_id, member.id, self._karma_type)

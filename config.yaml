@@ -12,6 +12,7 @@ default-messages:
   no-mention: 'Your Message should have one user mention. Try again with {}{} @user.'
   cooldown: 'Sorry {}, but you have used up all of your karma reservoir. Please try again {}.'
   role-mention: 'Sorry {}, you can only give Karma to Members.'
+  other-bot: 'Sorry {}, other bots cannot get Karma either.'
 leaderboard:
   limit: 25
 cooldown:
