@@ -22,8 +22,6 @@ services:
     container_name: mongo-express
     image: mongo-express
     restart: always
-    depends_on:
-      - database
     ports:
       - 8081:8081
     environment:

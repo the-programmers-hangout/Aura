@@ -27,3 +27,4 @@ dashboard, mongodb and discord bot. (**done**)
 ### 0.0.4
 * add setup command that is executed on first start (empty config.yaml)
 * add commands to change the configuration on the fly
+* add help information to commands

@@ -17,7 +17,7 @@ class Leaderboard(commands.Cog):
         self._limit = self._config['leaderboard']['limit']
 
     @commands.command()
-    async def karma(self, ctx, karma_type, *, content):
+    async def karma(self, ctx, karma_type):
         if len(ctx.message.mentions) == 1:
             guild_id: int = int(self._config['guild'])
             guild = self._bot.get_guild(guild_id)
@@ -36,10 +36,14 @@ class Leaderboard(commands.Cog):
         embed = discord.Embed(title="{}".format(karma_type).capitalize(),
                               description="Top {} Members with {} karma".format(self._limit, karma_type),
                               color=0x00ff00)
-        leaderboard = self._karma_service.get_top_karma_members(guild_id, self._limit)
-        for document in leaderboard:
-            guild = self._bot.get_guild(guild_id)
-            member = guild.get_member(document['member_id'])
-            embed.add_field(name=member.name, value=document['karma'])
-        await ctx.channel.send(embed=embed)
+        leaderboard = self._karma_service.get_top_karma_members(guild_id, self._limit, karma_type)
+        if leaderboard.collection.count_documents(dict(guild_id=guild_id)) > 0:
+            for document in leaderboard:
+                guild = self._bot.get_guild(guild_id)
+                member = guild.get_member(int(document['member_id']))
+                karma = document['karma']
+                embed.add_field(name=member.name+member.discriminator, value=karma, inline=False)
+            await ctx.channel.send(embed=embed)
+        else:
+            await ctx.channel.send('At present there is not a single user with {} karma'.format(karma_type))
 
