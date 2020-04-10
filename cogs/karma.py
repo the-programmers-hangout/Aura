@@ -1,8 +1,11 @@
+from collections import defaultdict
+
 import yaml
 from discord.ext import commands
 
 from core.model.karma_member import KarmaMember
 from core.service.karma_service import KarmaService
+from core.timer import PeriodicTimer
 
 
 class Karma:
@@ -13,10 +16,7 @@ class Karma:
         self._karma_service = KarmaService()
         with open("config.yaml", 'r') as stream:
             self._config = yaml.safe_load(stream)
-
-    # always called through give_karma
-    async def cooldown_user(self, giver_id: int):
-        print('db check')
+        self._members_on_cooldown = defaultdict(list)
 
     async def give_karma(self, ctx):
         # check if message has a mention
@@ -40,13 +40,26 @@ class Karma:
                                            .format(message.author.mention))
                 else:
                     if guild.get_member(member.id).mentioned_in(message):
-                        karma_member = KarmaMember(guild_id, member.id, self._karma_type)
-                        self._karma_service.upsert_karma_member(karma_member)
-                        await ctx.channel.send(str(self._config['default-messages']['gain'])
-                                               .format(member.mention, self._karma_type))
+                        if message.author.id not in self._members_on_cooldown[guild_id]:
+                            karma_member = KarmaMember(guild_id, member.id, self._karma_type)
+                            self._karma_service.upsert_karma_member(karma_member)
+                            await self.cooldown_user(guild_id, message.author.id)
+                            await ctx.channel.send(str(self._config['default-messages']['gain'])
+                                                   .format(member.mention, self._karma_type))
+                        else:
+                            await ctx.channel.send(str(self._config['default-messages']['cooldown'])
+                                                   .format(message.author.mention, self._karma_type))
+
         else:
             await ctx.channel.send(str(self._config['default-messages']['role-mention'])
                                    .format(ctx.message.author.mention))
+
+    async def cooldown_user(self, guild_id: int, member_id: int):
+        self._members_on_cooldown[guild_id].append(member_id)
+        await PeriodicTimer(self.cooldown_user(guild_id, member_id), int(self._config['cooldown'])).start()
+
+    async def remove_from_cooldown(self, guild_id: int, member_id: int):
+        await self._members_on_cooldown[guild_id].remove(member_id)
 
 
 class Helpful(commands.Cog, Karma):

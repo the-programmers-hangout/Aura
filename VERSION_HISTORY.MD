@@ -17,8 +17,8 @@ dashboard, mongodb and discord bot. (**done**)
 * Karma Service: upsert implemented (**done**)
 * Karma Service: get implemented (**done**)
 * Karma Service: filter top x of karma type implemented (**done**)
-* Karma Service: cooldown user implemented
 * Karma cooldown user after executing give [karma category type] successfully
+* Filtering other bot mentions (**done**)
 
 ### 0.0.3
 * retrieve database configuration from config.yaml
