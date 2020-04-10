@@ -13,10 +13,10 @@
 * Docker-compose setup with database complete with database 
 dashboard, mongodb and discord bot. (**done**)
 * Leaderboard : get single of type implemented (**done**)
-* Leaderboard : get top 25 of type implemented
+* Leaderboard : get top x of type implemented (**done**)
 * Karma Service: upsert implemented (**done**)
 * Karma Service: get implemented (**done**)
-* Karma Service: filter top x of karma type implemented
+* Karma Service: filter top x of karma type implemented (**done**)
 * Karma Service: cooldown user implemented
 * Karma cooldown user after executing give [karma category type] successfully
 
