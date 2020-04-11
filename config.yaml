@@ -2,9 +2,8 @@ token:
 guild:
 prefix: +
 roles:
-  admin:
-  moderator:
-  user:
+  admin: 'Admin'
+  moderator: 'Moderator'
 default-messages:
   gain: 'Well done {}, you have earned a {} point.'
   self: 'Nice try {}, but you cannot give yourself karma.'
@@ -16,3 +15,9 @@ default-messages:
 leaderboard:
   limit: 25
 cooldown: 5
+database:
+  username: 'root'
+  password: 'example'
+  host: mongo
+  port: 27017
+  name: 'aura'

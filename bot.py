@@ -1,8 +1,10 @@
 import yaml
 from discord.ext import commands
 
-from cogs.karma import Helpful, Informative, Kind, Creative, Funny
-from cogs.leaderboard import Leaderboard
+from cogs.karma.checker import KarmaChecker
+from cogs.karma.leaderboard import Leaderboard
+from cogs.karma.provider import Helpful, Informative, Kind, Creative, Funny
+from cogs.karma.reset import KarmaCleaner
 
 if __name__ == '__main__':
     with open("config.yaml", 'r') as stream:
@@ -13,5 +15,7 @@ if __name__ == '__main__':
     client.add_cog(Kind(client))
     client.add_cog(Creative(client))
     client.add_cog(Funny(client))
+    client.add_cog(KarmaChecker(client))
+    client.add_cog(KarmaCleaner(client))
     client.add_cog(Leaderboard(client))
     client.run(data_loaded['token'])
