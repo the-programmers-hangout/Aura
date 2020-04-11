@@ -11,14 +11,19 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-To run this bot you need to fill out the following values in the config.yaml
+To run this bot you need to manually fill out the following values in the config.yaml
 
 ```
 token: <Your Bot Account Token>
-guild: "<guild_id>" or '<guild_id>'
+guild: '<guild_id>'
+prefix: <prefix>
+role:
+    admin: "<Exact Name of Admin role>"
 ```
 
-Every other value can be filled by executing TBD.
+Every other value can be filled or updated by executing \<prefix> 
+config \<key> or config \<key> \<key> etc. for the
+according key in the config yaml with a user that has the configured admin role.
 
 ## Running the tests
 
@@ -47,3 +52,9 @@ See also the list of [contributors](https://github.com/arkencl/aura/graphs/contr
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+### Attribution
+
+This README.MD is adapted from the following [Template][template].
+
+[template]: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2

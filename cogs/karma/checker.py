@@ -14,14 +14,12 @@ class KarmaChecker(commands.Cog):
         self._configManager = ConfigManager()
         self._config = self._configManager.config
         self._karma_service = KarmaService()
-        self._roles = self._configManager.roles
 
     @has_any_role(ConfigManager().roles['admin'], ConfigManager().roles['moderator'])
     @commands.command()
     async def karma(self, ctx, karma_type):
         guild_id: str = self._config['guild']
         guild = self._bot.get_guild(int(guild_id))
-        roles = ctx.message.author.roles
         if karma_type in self._configManager.karma_categories:
             if len(ctx.message.mentions) == 1:
                 message = ctx.message

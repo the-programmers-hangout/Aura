@@ -32,11 +32,10 @@ dashboard, mongodb and discord bot. (**done**)
 
 ### 0.5.0
 * modify get karma command to be executed with the respective category command without introduing a seperate command (**done**)
-* first version of a README.md
-* added contributor.MD
+* first version of a README.md (**done**)
+* added contributor.MD (**done**)
 
 ### 0.6.0
-* add setup command that is executed on first start (empty config.yaml)
 * add commands to change the configuration on the fly
 * add exception handling to the bot
 * add logging
@@ -44,3 +43,4 @@ dashboard, mongodb and discord bot. (**done**)
 ### 0.7.0
 * filter get karma by channel, by channel category
 * filter leaderboard by channel, by channel category
+* add setup command that is executed on first start (empty config.yaml)
