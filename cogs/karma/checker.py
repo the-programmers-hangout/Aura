@@ -26,7 +26,7 @@ class KarmaChecker(commands.Cog):
                         karma_member = KarmaMember(guild_id, member.id, karma_type)
                         karma = self._karma_service.get_karma_from_karma_member(karma_member)
                         await ctx.channel.send('{} has earned a total of {} {} karma'
-                                               .format(member.name, karma, karma_type))
+                                               .format(member.name+'#'+member.discriminator, karma, karma_type))
             elif len(ctx.message.mentions) == 0:
                 guild_id: int = int(self._config['guild'])
                 karma_member = KarmaMember(guild_id, ctx.message.author.id, karma_type)
