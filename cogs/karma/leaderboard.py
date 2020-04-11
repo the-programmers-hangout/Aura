@@ -1,9 +1,8 @@
 import discord
-import yaml
 from discord.ext import commands
 
-# Class to return karma of a single user or the top of the particular karma type
 from core.service.karma_service import KarmaService
+from util.config import ConfigManager
 
 
 class Leaderboard(commands.Cog):
@@ -12,8 +11,7 @@ class Leaderboard(commands.Cog):
         self._bot = bot
         bot.remove_command("help")
         self._karma_service = KarmaService()
-        with open("config.yaml", 'r') as stream:
-            self._config = yaml.safe_load(stream)
+        self._config = ConfigManager().config
         self._limit = self._config['leaderboard']['limit']
 
     @commands.command(name='leaderboard')
