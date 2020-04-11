@@ -1,15 +1,14 @@
 import pymongo
-import yaml
 
 from core.database import Database
-from core.model.karma_member import KarmaMember
+from core.model.member import KarmaMember
+from util.config import ConfigManager
 
 
 class KarmaService:
 
     def __init__(self):
-        with open("config.yaml", 'r') as stream:
-            self._config = yaml.safe_load(stream)
+        self._config = ConfigManager().config
         self._karma = Database(self._config['database']['host'], self._config['database']['port'],
                                self._config['database']['username'], self._config['database']['password'],
                                self._config['database']['name']).db.karma
@@ -31,7 +30,7 @@ class KarmaService:
     def delete_karma_member(self, member: KarmaMember):
         print()
 
-    def set_karma(self, member: KarmaMember):
+    def set_karma(self, member: KarmaMember, new_karma: int):
         print()
 
     def get_karma_from_karma_member(self, member: KarmaMember):

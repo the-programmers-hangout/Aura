@@ -21,12 +21,21 @@ dashboard, mongodb and discord bot. (**done**)
 * Filtering other bot mentions (**done**)
 
 ### 0.3.0
-* retrieve database configuration from config.yaml
-* centralize configuration into its own class
+* retrieve database configuration from config.yaml (**done**)
+* centralize configuration into its own class (**done**)
+* get karma [karma_type] returns karma for message author
 * filter get karma by channel, by channel category
 * filter leaderboard by channel, by channel category
 
 ### 0.4.0
+* add command to reset karma of user (all in guild)
+* add command to reset karma of user (type in guild)
+* add command to copy karma of user (all in guild)
+* add command to copy karma of user (type in guild)
+
+### 0.5.0
 * add setup command that is executed on first start (empty config.yaml)
 * add commands to change the configuration on the fly
 * add help information to commands
+* add exception handling to the bot
+* add logging

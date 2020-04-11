@@ -1,21 +1,20 @@
 from collections import defaultdict
 
-import yaml
 from discord.ext import commands
 
-from core.model.karma_member import KarmaMember
+from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
-from core.timer import KarmaTimer
+from core.timer import KarmaCooldownTimer
+from util.config import ConfigManager
 
 
-class Karma:
+class KarmaProvider:
 
     def __init__(self, bot, karma_type):
         self._bot = bot
         self._karma_type = karma_type
         self._karma_service = KarmaService()
-        with open("config.yaml", 'r') as stream:
-            self._config = yaml.safe_load(stream)
+        self._config = ConfigManager().config
         self._members_on_cooldown = defaultdict(list)
 
     async def give_karma(self, ctx):
@@ -56,13 +55,13 @@ class Karma:
 
     async def cooldown_user(self, guild_id: int, member_id: int):
         self._members_on_cooldown[guild_id].append(member_id)
-        await KarmaTimer(self.remove_from_cooldown, int(self._config['cooldown']), guild_id, member_id).start()
+        await KarmaCooldownTimer(self.remove_from_cooldown, int(self._config['cooldown']), guild_id, member_id).start()
 
     async def remove_from_cooldown(self, guild_id: int, member_id: int):
         await self._members_on_cooldown[guild_id].remove(member_id)
 
 
-class Helpful(commands.Cog, Karma):
+class Helpful(commands.Cog, KarmaProvider):
 
     def __init__(self, bot):
         super().__init__(bot, 'helpful')
@@ -72,7 +71,7 @@ class Helpful(commands.Cog, Karma):
         await self.give_karma(ctx)
 
 
-class Informative(commands.Cog, Karma):
+class Informative(commands.Cog, KarmaProvider):
 
     def __init__(self, bot):
         super().__init__(bot, 'informative')
@@ -82,7 +81,7 @@ class Informative(commands.Cog, Karma):
         await self.give_karma(ctx)
 
 
-class Kind(commands.Cog, Karma):
+class Kind(commands.Cog, KarmaProvider):
 
     def __init__(self, bot):
         super().__init__(bot, 'kind')
@@ -92,7 +91,7 @@ class Kind(commands.Cog, Karma):
         await self.give_karma(ctx)
 
 
-class Creative(commands.Cog, Karma):
+class Creative(commands.Cog, KarmaProvider):
 
     def __init__(self, bot):
         super().__init__(bot, 'creative')
@@ -102,7 +101,7 @@ class Creative(commands.Cog, Karma):
         await self.give_karma(ctx)
 
 
-class Funny(commands.Cog, Karma):
+class Funny(commands.Cog, KarmaProvider):
 
     def __init__(self, bot):
         super().__init__(bot, 'funny')
