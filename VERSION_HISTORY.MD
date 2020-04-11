@@ -23,9 +23,7 @@ dashboard, mongodb and discord bot. (**done**)
 ### 0.3.0
 * retrieve database configuration from config.yaml (**done**)
 * centralize configuration into its own class (**done**)
-* get karma [karma_type] returns karma for message author
-* filter get karma by channel, by channel category
-* filter leaderboard by channel, by channel category
+* get karma [karma_type] returns karma for message author (**done**)
 
 ### 0.4.0
 * add command to reset karma of user (all in guild)
@@ -39,3 +37,7 @@ dashboard, mongodb and discord bot. (**done**)
 * add help information to commands
 * add exception handling to the bot
 * add logging
+
+### 0.6.0
+* filter get karma by channel, by channel category
+* filter leaderboard by channel, by channel category
