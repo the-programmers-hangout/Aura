@@ -28,7 +28,7 @@ dashboard, mongodb and discord bot. (**done**)
 ### 0.4.0
 * add command to reset karma of member (all in guild) (**done**)
 * add command to reset karma of member (type in guild) (**done**)
-* add role configuration to the bot
+* add role configuration to the bot (**done**)
 
 ### 0.5.0
 * add setup command that is executed on first start (empty config.yaml)

@@ -2,9 +2,8 @@ token:
 guild:
 prefix: +
 roles:
-  admin:
-  moderator:
-  user:
+  admin: 'Admin'
+  moderator: 'Moderator'
 default-messages:
   gain: 'Well done {}, you have earned a {} point.'
   self: 'Nice try {}, but you cannot give yourself karma.'

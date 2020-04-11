@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.ext.commands import has_any_role
 
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
@@ -13,6 +14,7 @@ class KarmaCleaner(commands.Cog):
         self._config = self._configManager.config
         self._karma_service = KarmaService()
 
+    @has_any_role(ConfigManager().roles['admin'], ConfigManager().roles['moderator'])
     @commands.command()
     async def reset(self, ctx, member_id, karma_type):
         guild_id: str = self._config['guild']

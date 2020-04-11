@@ -14,3 +14,7 @@ class ConfigManager:
     @property
     def karma_categories(self):
         return self._categories
+
+    @property
+    def roles(self):
+        return self.config['roles']
