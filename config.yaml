@@ -1,6 +1,6 @@
 token:
 guild:
-prefix: ++
+prefix: +
 roles:
   admin:
   moderator:
@@ -10,8 +10,9 @@ default-messages:
   self: 'Nice try {}, but you cannot give yourself karma.'
   bot: 'Thank you {}, but I do not need more karma.'
   no-mention: 'Your Message should have one user mention. Try again with {}{} @user.'
-  cooldown: 'Sorry {}, but you have used up all your karma resevoir. Please try again {}.'
+  cooldown: 'Sorry {}, but you have used up all of your {} karma reservoir.'
   role-mention: 'Sorry {}, you can only give Karma to Members.'
-cooldown:
-  amount: 30
-  unit: 'seconds'
+  other-bot: 'Sorry {}, other bots cannot get Karma either.'
+leaderboard:
+  limit: 25
+cooldown: 5

@@ -1,2 +1,3 @@
+pymongo==3.10.1
 discord
 PyYAML==5.3.1
