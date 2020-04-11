@@ -29,6 +29,9 @@ class KarmaService:
 
     # resets karma of member with type
     def delete_karma(self, member: KarmaMember):
+        self._filter_query['guild_id'] = member.guild_id
+        self._filter_query['member_id'] = member.member_id
+        self._filter_query['karma_type'] = member.karma_type
         print()
 
     # resets all karma of member

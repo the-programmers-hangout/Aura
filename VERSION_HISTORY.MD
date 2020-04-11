@@ -26,14 +26,15 @@ dashboard, mongodb and discord bot. (**done**)
 * get karma [karma_type] returns karma for message author (**done**)
 
 ### 0.4.0
-* add command to reset karma of user (all in guild)
-* add command to reset karma of user (type in guild)
-* add exception handling to the bot
-* add logging
+* add command to reset karma of member (all in guild)
+* add command to reset karma of member (type in guild)
+* add role configuration to the bot
 
 ### 0.5.0
 * add setup command that is executed on first start (empty config.yaml)
 * add commands to change the configuration on the fly
+* add exception handling to the bot
+* add logging
 
 ### 0.6.0
 * filter get karma by channel, by channel category
