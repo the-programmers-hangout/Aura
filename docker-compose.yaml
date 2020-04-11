@@ -1,0 +1,31 @@
+version: '3.7'
+services:
+  aura:
+    container_name: aura
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - database
+  database:
+    container_name: mongo
+    image: mongo:4.2.5
+    ports:
+    - 27017:27017
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+    - 'db:/var/lib/data'
+  dashboard:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+volumes:
+  db:
