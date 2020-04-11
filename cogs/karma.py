@@ -5,7 +5,7 @@ from discord.ext import commands
 
 from core.model.karma_member import KarmaMember
 from core.service.karma_service import KarmaService
-from core.timer import PeriodicTimer
+from core.timer import KarmaTimer
 
 
 class Karma:
@@ -56,7 +56,7 @@ class Karma:
 
     async def cooldown_user(self, guild_id: int, member_id: int):
         self._members_on_cooldown[guild_id].append(member_id)
-        await PeriodicTimer(self.cooldown_user(guild_id, member_id), int(self._config['cooldown'])).start()
+        await KarmaTimer(self.remove_from_cooldown, int(self._config['cooldown']), guild_id, member_id).start()
 
     async def remove_from_cooldown(self, guild_id: int, member_id: int):
         await self._members_on_cooldown[guild_id].remove(member_id)
