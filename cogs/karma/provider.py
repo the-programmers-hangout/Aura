@@ -19,41 +19,44 @@ class KarmaProvider:
         self._config = self._configManager.config
         self._members_on_cooldown = defaultdict(list)
 
-    async def give_karma(self, ctx):
-        # check if message has a mention
+    async def karma(self, ctx):
+        guild_id: int = int(self._config['guild'])
+        guild = self._bot.get_guild(guild_id)
         if len(ctx.message.role_mentions) == 0:
-            if len(ctx.message.mentions) != 1:
-                await ctx.channel.send(str(self._config['default-messages']['no-mention'])
-                                       .format(self._config['prefix'], self._karma_type))
+            if len(ctx.message.mentions) == 0:
+                karma_member = KarmaMember(guild_id, ctx.message.author.id, self._karma_type)
+                karma = self._karma_service.get_karma_from_karma_member(karma_member)
+                await ctx.channel.send('You have earned a total of {} {} karma'.format(karma, self._karma_type))
             else:
-                guild_id: int = int(self._config['guild'])
-                guild = self._bot.get_guild(guild_id)
-                message = ctx.message
-                member = message.mentions[0]
-                if self._bot.get_user(self._bot.user.id).mentioned_in(message):
-                    await ctx.channel.send(str(self._config['default-messages']['bot'])
-                                           .format(message.author.mention))
-                elif guild.get_member(message.author.id).mentioned_in(message):
-                    await ctx.channel.send(str(self._config['default-messages']['self'])
-                                           .format(message.author.mention))
-                elif self._bot.get_user(member.id).bot:
-                    await ctx.channel.send(str(self._config['default-messages']['other-bot'])
-                                           .format(message.author.mention))
+                if len(ctx.message.mentions) != 1:
+                    await ctx.channel.send(str(self._config['default-messages']['no-mention'])
+                                           .format(self._config['prefix'], self._karma_type))
                 else:
-                    if guild.get_member(member.id).mentioned_in(message):
-                        if message.author.id not in self._members_on_cooldown[guild_id]:
-                            karma_member = KarmaMember(guild_id, member.id, self._karma_type)
-                            self._karma_service.upsert_karma_member(karma_member)
-                            await self.cooldown_user(guild_id, message.author.id)
-                            await ctx.channel.send(str(self._config['default-messages']['gain'])
-                                                   .format(member.mention, self._karma_type))
-                        else:
-                            await ctx.channel.send(str(self._config['default-messages']['cooldown'])
-                                                   .format(message.author.mention, self._karma_type))
-
+                    message = ctx.message
+                    member = message.mentions[0]
+                    if self._bot.get_user(self._bot.user.id).mentioned_in(message):
+                        await ctx.channel.send(str(self._config['default-messages']['bot'])
+                                               .format(message.author.mention))
+                    elif guild.get_member(message.author.id).mentioned_in(message):
+                        await ctx.channel.send(str(self._config['default-messages']['self'])
+                                               .format(message.author.mention))
+                    elif self._bot.get_user(member.id).bot:
+                        await ctx.channel.send(str(self._config['default-messages']['other-bot'])
+                                               .format(message.author.mention))
+                    else:
+                        if guild.get_member(member.id).mentioned_in(message):
+                            if message.author.id not in self._members_on_cooldown[guild_id]:
+                                karma_member = KarmaMember(guild_id, member.id, self._karma_type)
+                                self._karma_service.upsert_karma_member(karma_member)
+                                await self.cooldown_user(guild_id, message.author.id)
+                                await ctx.channel.send(str(self._config['default-messages']['gain'])
+                                                       .format(member.mention, self._karma_type))
+                            else:
+                                await ctx.channel.send(str(self._config['default-messages']['cooldown'])
+                                                       .format(message.author.mention, self._karma_type))
         else:
             await ctx.channel.send(str(self._config['default-messages']['role-mention'])
-                                   .format(ctx.message.author.mention))
+                                               .format(ctx.message.author.mention))
 
     async def cooldown_user(self, guild_id: int, member_id: int):
         self._members_on_cooldown[guild_id].append(member_id)
@@ -70,7 +73,7 @@ class Helpful(commands.Cog, KarmaProvider):
 
     @commands.command()
     async def helpful(self, ctx):
-        await self.give_karma(ctx)
+        await self.karma(ctx)
 
 
 class Informative(commands.Cog, KarmaProvider):
@@ -80,7 +83,7 @@ class Informative(commands.Cog, KarmaProvider):
 
     @commands.command()
     async def informative(self, ctx):
-        await self.give_karma(ctx)
+        await self.karma(ctx)
 
 
 class Kind(commands.Cog, KarmaProvider):
@@ -90,7 +93,7 @@ class Kind(commands.Cog, KarmaProvider):
 
     @commands.command()
     async def kind(self, ctx):
-        await self.give_karma(ctx)
+        await self.karma(ctx)
 
 
 class Creative(commands.Cog, KarmaProvider):
@@ -100,7 +103,7 @@ class Creative(commands.Cog, KarmaProvider):
 
     @commands.command()
     async def creative(self, ctx):
-        await self.give_karma(ctx)
+        await self.karma(ctx)
 
 
 class Funny(commands.Cog, KarmaProvider):
@@ -110,4 +113,4 @@ class Funny(commands.Cog, KarmaProvider):
 
     @commands.command()
     async def funny(self, ctx):
-        await self.give_karma(ctx)
+        await self.karma(ctx)
