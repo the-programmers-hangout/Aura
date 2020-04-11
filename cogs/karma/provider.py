@@ -12,6 +12,7 @@ class KarmaProvider:
 
     def __init__(self, bot, karma_type):
         self._bot = bot
+        bot.remove_command("help")
         self._karma_type = karma_type
         self._karma_service = KarmaService()
         self._config = ConfigManager().config

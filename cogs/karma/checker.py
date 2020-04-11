@@ -9,6 +9,7 @@ class KarmaChecker(commands.Cog):
 
     def __init__(self, bot):
         self._bot = bot
+        bot.remove_command("help")
         self._config = ConfigManager().config
         self._karma_service = KarmaService()
 

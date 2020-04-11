@@ -34,7 +34,6 @@ dashboard, mongodb and discord bot. (**done**)
 ### 0.5.0
 * add setup command that is executed on first start (empty config.yaml)
 * add commands to change the configuration on the fly
-* add help information to commands
 * add exception handling to the bot
 * add logging
 

@@ -10,6 +10,7 @@ class Leaderboard(commands.Cog):
 
     def __init__(self, bot):
         self._bot = bot
+        bot.remove_command("help")
         self._karma_service = KarmaService()
         with open("config.yaml", 'r') as stream:
             self._config = yaml.safe_load(stream)
