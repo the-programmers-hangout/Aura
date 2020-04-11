@@ -29,7 +29,7 @@ class PeriodicTimer:
             await self.func()
 
 
-class KarmaTimer(PeriodicTimer):
+class KarmaCooldownTimer(PeriodicTimer):
     def __init__(self, func, time, guild_id, member_id):
         super().__init__(func, time)
         self.guild_id = guild_id
