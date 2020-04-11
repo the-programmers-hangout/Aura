@@ -22,15 +22,17 @@ class KarmaService:
         self._karma.update_one(filter=self._filter_query, update=self._increase_karma,
                                upsert=True)
 
-    def get_top_karma_members(self, guild_id: str, limit: int, karma_type: str):
+    def get_top_karma_members(self, guild_id: str, karma_type: str):
         filter_guild = dict(guild_id=guild_id, karma_type=karma_type)
-        print(filter_guild)
-        return self._karma.find(filter_guild).sort([('karma', pymongo.ASCENDING)]).limit(limit)
+        return self._karma.find(filter_guild).sort([('karma', pymongo.ASCENDING)])\
+            .limit(self._config['leaderboard']['limit'])
 
-    def delete_karma_member(self, member: KarmaMember):
+    # resets karma of member with type
+    def delete_karma(self, member: KarmaMember):
         print()
 
-    def set_karma(self, member: KarmaMember, new_karma: int):
+    # resets all karma of member
+    def delete_all_karma(self, guild_id: str, member_id):
         print()
 
     def get_karma_from_karma_member(self, member: KarmaMember):
@@ -42,6 +44,3 @@ class KarmaService:
             return 0
         else:
             return document['karma']
-
-    def cooldown_karma_giving_ability(self, member: KarmaMember):
-        print()
