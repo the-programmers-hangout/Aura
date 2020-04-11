@@ -16,3 +16,9 @@ default-messages:
 leaderboard:
   limit: 25
 cooldown: 5
+database:
+  username: 'root'
+  password: 'example'
+  host: mongo
+  port: 27017
+  name: 'aura'

@@ -1,4 +1,5 @@
 import pymongo
+import yaml
 
 from core.database import Database
 from core.model.karma_member import KarmaMember
@@ -7,7 +8,11 @@ from core.model.karma_member import KarmaMember
 class KarmaService:
 
     def __init__(self):
-        self._karma = Database('mongo', 27017, 'aura').db.karma
+        with open("config.yaml", 'r') as stream:
+            self._config = yaml.safe_load(stream)
+        self._karma = Database(self._config['database']['host'], self._config['database']['port'],
+                               self._config['database']['username'], self._config['database']['password'],
+                               self._config['database']['name']).db.karma
         self._filter_query = dict(guild_id="", member_id="", karma_type="")
         self._increase_karma = {"$inc": {'karma': int(1)}}
 
