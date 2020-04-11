@@ -8,7 +8,8 @@ from util.config import ConfigManager
 class KarmaService:
 
     def __init__(self):
-        self._config = ConfigManager().config
+        self._configManager = ConfigManager()
+        self._config = self._configManager.config
         self._karma = Database(self._config['database']['host'], self._config['database']['port'],
                                self._config['database']['username'], self._config['database']['password'],
                                self._config['database']['name']).db.karma
@@ -32,11 +33,12 @@ class KarmaService:
         self._filter_query['guild_id'] = member.guild_id
         self._filter_query['member_id'] = member.member_id
         self._filter_query['karma_type'] = member.karma_type
-        print()
+        self._karma.delete_one(filter=self._filter_query)
 
     # resets all karma of member
-    def delete_all_karma(self, guild_id: str, member_id):
-        print()
+    def delete_all_karma(self, guild_id: str, member_id: str):
+        filter_member = dict(guild_id=guild_id, member_id=member_id)
+        self._karma.delete_many(filter=filter_member)
 
     def get_karma_from_karma_member(self, member: KarmaMember):
         self._filter_query['guild_id'] = member.guild_id

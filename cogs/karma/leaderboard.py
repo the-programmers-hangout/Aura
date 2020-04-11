@@ -11,12 +11,13 @@ class Leaderboard(commands.Cog):
         self._bot = bot
         bot.remove_command("help")
         self._karma_service = KarmaService()
-        self._config = ConfigManager().config
+        self._configManager = ConfigManager()
+        self._config = self._configManager.config
         self._limit = self._config['leaderboard']['limit']
 
     @commands.command(name='leaderboard')
     async def get_top_karma_members(self, ctx, karma_type):
-        if karma_type in self._config.karma_categories:
+        if karma_type in self._configManager.karma_categories:
             guild_id: str = self._config['guild']
             print(guild_id)
             embed = discord.Embed(title="{}".format(karma_type).capitalize(),
@@ -34,5 +35,5 @@ class Leaderboard(commands.Cog):
                 await ctx.channel.send('At present there is not a single user with {} karma'.format(karma_type))
         else:
             await ctx.channel.send('Karma Type not recognized, only following are valid karma types {}'
-                                   .format(self._config.karma_categories))
+                                   .format(self._configManager.karma_categories))
 

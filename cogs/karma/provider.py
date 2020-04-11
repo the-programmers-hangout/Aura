@@ -15,7 +15,8 @@ class KarmaProvider:
         bot.remove_command("help")
         self._karma_type = karma_type
         self._karma_service = KarmaService()
-        self._config = ConfigManager().config
+        self._configManager = ConfigManager()
+        self._config = self._configManager.config
         self._members_on_cooldown = defaultdict(list)
 
     async def give_karma(self, ctx):

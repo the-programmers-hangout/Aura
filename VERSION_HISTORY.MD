@@ -26,8 +26,8 @@ dashboard, mongodb and discord bot. (**done**)
 * get karma [karma_type] returns karma for message author (**done**)
 
 ### 0.4.0
-* add command to reset karma of member (all in guild)
-* add command to reset karma of member (type in guild)
+* add command to reset karma of member (all in guild) (**done**)
+* add command to reset karma of member (type in guild) (**done**)
 * add role configuration to the bot
 
 ### 0.5.0

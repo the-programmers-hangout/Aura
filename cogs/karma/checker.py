@@ -10,12 +10,13 @@ class KarmaChecker(commands.Cog):
     def __init__(self, bot):
         self._bot = bot
         bot.remove_command("help")
-        self._config = ConfigManager().config
+        self._configManager = ConfigManager()
+        self._config = self._configManager.config
         self._karma_service = KarmaService()
 
     @commands.command()
     async def karma(self, ctx, karma_type):
-        if karma_type in self._config.karma_categories:
+        if karma_type in self._configManager.karma_categories:
             if len(ctx.message.mentions) == 1:
                 guild_id: int = int(self._config['guild'])
                 guild = self._bot.get_guild(guild_id)
@@ -35,4 +36,4 @@ class KarmaChecker(commands.Cog):
                                        .format(karma, karma_type))
         else:
             await ctx.channel.send('Karma Type not recognized, only following are valid karma types {}'
-                                   .format(self._config.karma_categories))
+                                   .format(self._configManager.karma_categories))
