@@ -5,7 +5,7 @@ from discord.ext import commands
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
 from core.timer import KarmaCooldownTimer
-from util.config import ConfigManager
+from util.config import ConfigStore
 
 
 class KarmaProvider:
@@ -15,7 +15,7 @@ class KarmaProvider:
         bot.remove_command("help")
         self._karma_type = karma_type
         self._karma_service = KarmaService()
-        self._configManager = ConfigManager()
+        self._configManager = ConfigStore()
         self._config = self._configManager.config
         self._members_on_cooldown = defaultdict(list)
 

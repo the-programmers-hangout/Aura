@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 from core.service.karma_service import KarmaService
-from util.config import ConfigManager
+from util.config import ConfigStore
 
 
 class Leaderboard(commands.Cog):
@@ -11,7 +11,7 @@ class Leaderboard(commands.Cog):
         self._bot = bot
         bot.remove_command("help")
         self._karma_service = KarmaService()
-        self._configManager = ConfigManager()
+        self._configManager = ConfigStore()
         self._config = self._configManager.config
         self._limit = self._config['leaderboard']['limit']
 
@@ -23,7 +23,7 @@ class Leaderboard(commands.Cog):
             embed = discord.Embed(title="{}".format(karma_type).capitalize(),
                                   description="Top {} Members with {} karma".format(self._limit, karma_type),
                                   color=0x00ff00)
-            leaderboard = self._karma_service.get_top_karma_members(guild_id, self._limit, karma_type)
+            leaderboard = self._karma_service.get_top_karma_members(guild_id, karma_type)
             if leaderboard.collection.count_documents(dict(guild_id=guild_id)) > 0:
                 for document in leaderboard:
                     guild = self._bot.get_guild(int(guild_id))

@@ -2,13 +2,13 @@ import pymongo
 
 from core.database import Database
 from core.model.member import KarmaMember
-from util.config import ConfigManager
+from util.config import ConfigStore
 
 
 class KarmaService:
 
     def __init__(self):
-        self._configManager = ConfigManager()
+        self._configManager = ConfigStore()
         self._config = self._configManager.config
         self._karma = Database(self._config['database']['host'], self._config['database']['port'],
                                self._config['database']['username'], self._config['database']['password'],
