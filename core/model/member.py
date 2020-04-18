@@ -1,5 +1,5 @@
 class KarmaMember:
-    def __init__(self, guild_id, member_id, channel_id):
+    def __init__(self, guild_id, member_id, channel_id=""):
         self.member = dict(guild_id="{}".format(guild_id), member_id="{}".format(member_id),
                            channel_id="{}".format(channel_id), karma="")
 

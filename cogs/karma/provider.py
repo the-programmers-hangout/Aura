@@ -9,7 +9,7 @@ from core.timer import KarmaCooldownTimer
 from util.config import ConfigStore
 
 
-class KarmaProvider:
+class KarmaProvider(commands.Cog):
 
     def __init__(self, bot):
         self._bot = bot
@@ -39,6 +39,9 @@ class KarmaProvider:
             else:
                 # use member name
                 print('not implemented yet')
+
+    def has_thanks(self, message) -> bool:
+        print()
 
     def filter_mentions(self, message, guild) -> int:
         if len(message.role_mentions) == 0:
