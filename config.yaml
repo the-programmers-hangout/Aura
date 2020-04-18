@@ -4,14 +4,6 @@ prefix: +
 roles:
   admin: 'Admin'
   moderator: 'Moderator'
-default-messages:
-  gain: 'Well done {}, you have earned a {} point.'
-  self: 'Nice try {}, but you cannot give yourself karma.'
-  bot: 'Thank you {}, but I do not need more karma.'
-  no-mention: 'Your Message should have one user mention. Try again with {}{} @user.'
-  cooldown: 'Sorry {}, but you have used up all of your {} karma reservoir.'
-  role-mention: 'Sorry {}, you can only give Karma to Members.'
-  other-bot: 'Sorry {}, other bots cannot get Karma either.'
 leaderboard:
   limit: 25
 cooldown: 5
