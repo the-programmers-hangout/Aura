@@ -31,7 +31,7 @@ dashboard, mongodb and discord bot. (**done**)
 * add role configuration to the bot (**done**)
 
 ### 0.5.0
-* modify get karma command to be executed with the respective category command without introduing a seperate command (**done**)
+* modify get karma command to be executed with the respective category command without introducing a separate command (**done**)
 * first version of a README.md (**done**)
 * added contributor.MD (**done**)
 
@@ -42,6 +42,7 @@ dashboard, mongodb and discord bot. (**done**)
 * remove karma type from service and model classes (**done**)
 * add channel_id to model classes and services (**done**)
 * remove karma on message delete
+* log karma
 
 ### 0.8.0
 * add commands to change the configuration on the fly

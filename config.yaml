@@ -1,5 +1,7 @@
 token:
 guild:
+channel:
+  log: 705036088858902620
 prefix: +
 roles:
   admin: 'Admin'
