@@ -19,17 +19,23 @@ class KarmaProvider(commands.Cog):
         self._configManager = ConfigStore()
         self._config = self._configManager.config
         self._members_on_cooldown = defaultdict(list)
-        self._thanksList = ["thanks","ty","thank you"]
+        self._thanksList = ["thanks", "ty", "thank you"]
 
     @commands.Cog.listener()
-    async def on_message(self, ctx):
+    async def on_message(self, message):
         guild_id: int = int(self._config['guild'])
         guild = self._bot.get_guild(guild_id)
-        message = ctx.message
         if message.author.id not in self._members_on_cooldown[guild.id]:
-            self.validate_message(message, guild)
+            await self.validate_message(message, guild)
+        else:
+            await message.channel.send("Sorry, {}. Your Karma needs some time to recharge."
+                                       .format(message.author.mention))
 
-    def validate_message(self, message, guild):
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        print('not impl yet')
+
+    async def validate_message(self, message, guild):
         # check if message has any variation of thanks
         if self.has_thanks(message):
             # filter out messages without incorrect mention
@@ -37,7 +43,7 @@ class KarmaProvider(commands.Cog):
             # give karma to user
             if mention_type > -1:
                 if mention_type == 1:
-                    self.give_karma(message, guild, message.mentions[0])
+                    await self.give_karma(message, guild, message.mentions[0])
                 else:
                     # use member name
                     print('not implemented yet')
@@ -45,7 +51,7 @@ class KarmaProvider(commands.Cog):
     def has_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
         for thanks in self._thanksList:
-            if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message) is not None:
+            if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message.content) is not None:
                 return True
         return False
 
@@ -69,7 +75,7 @@ class KarmaProvider(commands.Cog):
         else:
             return -1
 
-    def give_karma(self, message: discord.Message, guild: discord.Guild, member: discord.Member):
+    async def give_karma(self, message: discord.Message, guild: discord.Guild, member: discord.Member):
         if guild.get_member(member.id).mentioned_in(message):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id)
             self._karma_service.upsert_karma_member(karma_member)
@@ -80,4 +86,4 @@ class KarmaProvider(commands.Cog):
         await KarmaCooldownTimer(self.remove_from_cooldown, int(self._config['cooldown']), guild_id, member_id).start()
 
     async def remove_from_cooldown(self, guild_id: int, member_id: int) -> None:
-        await self._members_on_cooldown[guild_id].remove(member_id)
+        self._members_on_cooldown[guild_id].remove(member_id)
