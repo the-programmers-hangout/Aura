@@ -33,7 +33,7 @@ class KarmaService:
         filter_member = dict(guild_id=guild_id, member_id=member_id)
         self._karma.delete_many(filter=filter_member)
 
-    def get_karma_from_karma_member(self, member: KarmaMember):
+    def aggregate_member_karma(self, member: KarmaMember):
         self._filter_query['guild_id'] = member.guild_id
         self._filter_query['member_id'] = member.member_id
         pipeline = [{{"$match": "{}".format(self._filter_query)}, {"$group": "karma {$sum: $karma}"}}]

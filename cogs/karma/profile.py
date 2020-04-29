@@ -17,6 +17,6 @@ class KarmaProfile(commands.Cog):
     @commands.command()
     async def karma(self, ctx):
         karma_member = KarmaMember(self._config['guild'], ctx.message.author.id)
-        karma = self._karma_service.get_karma_from_karma_member(karma_member)
+        karma = self._karma_service.aggregate_member_karma(karma_member)
         await ctx.channel.send('{} has earned a total of {} karma'
                                .format(ctx.message.author.name + '#' + ctx.author.discriminator, karma))
