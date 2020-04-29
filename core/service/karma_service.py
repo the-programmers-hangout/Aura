@@ -36,9 +36,12 @@ class KarmaService:
     def aggregate_member_karma(self, member: KarmaMember):
         self._filter_query['guild_id'] = member.guild_id
         self._filter_query['member_id'] = member.member_id
-        pipeline = [{{"$match": "{}".format(self._filter_query)}, {"$group": "karma {$sum: $karma}"}}]
+        pipeline = [{"$unwind": "$karma"}, {"$match": self._filter_query},
+                    {"$group": {"_id": {"member_id": "$member_id"}, "karma": {"$sum": "$karma"}}}]
+        print(pipeline)
         document = self._karma.aggregate(pipeline)
         if document is None:
             return 0
         else:
-            return document['karma']
+            for doc in document:
+                return doc['karma']

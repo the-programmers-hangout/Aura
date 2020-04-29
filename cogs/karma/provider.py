@@ -25,19 +25,20 @@ class KarmaProvider(commands.Cog):
     async def on_message(self, message):
         guild_id: int = int(self._config['guild'])
         guild = self._bot.get_guild(guild_id)
-        if message.author.id not in self._members_on_cooldown[guild.id]:
-            await self.validate_message(message, guild, True)
-        else:
-            await message.channel.send("Sorry, {}. Your Karma needs some time to recharge."
-                                       .format(message.author.mention))
+        if self.validate_message(message, guild):
+            if message.author.id not in self._members_on_cooldown[guild.id]:
+                await self.give_karma(message, guild, message.mentions[0], True)
+            else:
+                await message.channel.send("Sorry, {}. Your Karma needs some time to recharge."
+                                           .format(message.author.mention))
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
         guild_id: int = int(self._config['guild'])
         guild = self._bot.get_guild(guild_id)
-        await self.validate_message(message, guild, False)
+        await self.give_karma(message, guild, message.author.id, False)
 
-    async def validate_message(self, message, guild, inc: bool):
+    async def validate_message(self, message, guild) -> bool:
         # check if message has any variation of thanks
         if self.has_thanks(message):
             # filter out messages without incorrect mention
@@ -45,7 +46,7 @@ class KarmaProvider(commands.Cog):
             # give karma to user
             if mention_type > -1:
                 if mention_type == 1:
-                    await self.give_karma(message, guild, message.mentions[0], inc)
+                    return True
                 else:
                     # use member name
                     print('not implemented yet')
