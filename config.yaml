@@ -4,8 +4,6 @@ prefix: +
 roles:
   admin: 'Admin'
   moderator: 'Moderator'
-leaderboard:
-  limit: 25
 cooldown: 5
 database:
   username: 'root'

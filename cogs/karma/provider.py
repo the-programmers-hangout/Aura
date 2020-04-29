@@ -1,3 +1,4 @@
+import re
 from collections import defaultdict
 
 import discord
@@ -18,6 +19,7 @@ class KarmaProvider(commands.Cog):
         self._configManager = ConfigStore()
         self._config = self._configManager.config
         self._members_on_cooldown = defaultdict(list)
+        self._thanksList = ["thanks","ty","thank you"]
 
     @commands.Cog.listener()
     async def on_message(self, ctx):
@@ -28,20 +30,24 @@ class KarmaProvider(commands.Cog):
             self.validate_message(message, guild)
 
     def validate_message(self, message, guild):
-        # check if message has any variaton of thanks
-
-        # filter out messages without incorrect mention
-        mention_type: int = self.filter_mentions(message, guild)
-        # give karma to user
-        if mention_type > -1:
-            if mention_type == 1:
-                self.give_karma(message, guild, message.mentions[0])
-            else:
-                # use member name
-                print('not implemented yet')
+        # check if message has any variation of thanks
+        if self.has_thanks(message):
+            # filter out messages without incorrect mention
+            mention_type: int = self.filter_mentions(message, guild)
+            # give karma to user
+            if mention_type > -1:
+                if mention_type == 1:
+                    self.give_karma(message, guild, message.mentions[0])
+                else:
+                    # use member name
+                    print('not implemented yet')
 
     def has_thanks(self, message) -> bool:
-        print()
+        pattern = r'\b{}\b'
+        for thanks in self._thanksList:
+            if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message) is not None:
+                return True
+        return False
 
     def filter_mentions(self, message, guild) -> int:
         if len(message.role_mentions) == 0:
