@@ -26,16 +26,18 @@ class KarmaProvider(commands.Cog):
         guild_id: int = int(self._config['guild'])
         guild = self._bot.get_guild(guild_id)
         if message.author.id not in self._members_on_cooldown[guild.id]:
-            await self.validate_message(message, guild)
+            await self.validate_message(message, guild, True)
         else:
             await message.channel.send("Sorry, {}. Your Karma needs some time to recharge."
                                        .format(message.author.mention))
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        print('not impl yet')
+        guild_id: int = int(self._config['guild'])
+        guild = self._bot.get_guild(guild_id)
+        await self.validate_message(message, guild, False)
 
-    async def validate_message(self, message, guild):
+    async def validate_message(self, message, guild, inc: bool):
         # check if message has any variation of thanks
         if self.has_thanks(message):
             # filter out messages without incorrect mention
@@ -43,7 +45,7 @@ class KarmaProvider(commands.Cog):
             # give karma to user
             if mention_type > -1:
                 if mention_type == 1:
-                    await self.give_karma(message, guild, message.mentions[0])
+                    await self.give_karma(message, guild, message.mentions[0], inc)
                 else:
                     # use member name
                     print('not implemented yet')
@@ -75,7 +77,7 @@ class KarmaProvider(commands.Cog):
         else:
             return -1
 
-    async def give_karma(self, message: discord.Message, guild: discord.Guild, member: discord.Member):
+    async def give_karma(self, message: discord.Message, guild: discord.Guild, member: discord.Member, inc: bool):
         if guild.get_member(member.id).mentioned_in(message):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id)
             self._karma_service.upsert_karma_member(karma_member)

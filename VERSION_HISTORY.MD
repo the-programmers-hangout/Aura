@@ -37,12 +37,11 @@ dashboard, mongodb and discord bot. (**done**)
 
 ### 0.6.0
 * remove karma category commands (**done**)
-* detect karma by thanks @user
+* detect karma by thanks @user and variations (**done**)
 * remove leaderboard functionality (**done**)
 * remove karma type from service and model classes (**done**)
 * add channel_id to model classes and services (**done**)
-
-
+* remove karma on message delete
 
 ### 0.8.0
 * add commands to change the configuration on the fly
