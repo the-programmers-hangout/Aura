@@ -41,11 +41,12 @@ dashboard, mongodb and discord bot. (**done**)
 * remove leaderboard functionality (**done**)
 * remove karma type from service and model classes (**done**)
 * add channel_id to model classes and services (**done**)
+* add commands to change the configuration on the fly (**done**)
+* aggregate karma on karma without any arguments
 * remove karma on message delete
-* log karma
+* log karma in specific channel
 
 ### 0.8.0
-* add commands to change the configuration on the fly
 * add exception handling to the bot
 * add logging
 
