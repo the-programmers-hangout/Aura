@@ -20,4 +20,4 @@ class ConfigStore:
 
     def write_config(self):
         with open("config.yaml", 'w') as stream:
-            yaml.dump(self.config, stream)
+            yaml.safe_dump(self.config, stream)

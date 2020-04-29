@@ -1,8 +1,11 @@
 FROM python:3.8.2
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /app
 
-COPY . .
+COPY requirements.txt ./app/requirements.txt
 
-CMD [ "python", "-u", "./bot.py" ]
+RUN pip install --no-cache-dir -r ./app/requirements.txt
+
+COPY . ./app
+
+CMD [ "python", "-u", "./app/bot.py"]

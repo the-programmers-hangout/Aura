@@ -1,15 +1,15 @@
-token:
-guild:
 channel:
   log: 705036088858902620
+cooldown: '35'
+database:
+  host: mongo
+  name: aura
+  password: example
+  port: 27017
+  username: root
+guild:
 prefix: +
 roles:
-  admin: 'Admin'
-  moderator: 'Moderator'
-cooldown: 5
-database:
-  username: 'root'
-  password: 'example'
-  host: mongo
-  port: 27017
-  name: 'aura'
+  admin: Admin
+  moderator: Moderator
+token:
