@@ -44,7 +44,7 @@ dashboard, mongodb and discord bot. (**done**)
 * add commands to change the configuration on the fly (**done**)
 * aggregate karma on karma without any arguments (**done**)
 * remove karma on message delete (**done**)
-* log karma in specific channel
+* log karma in specific channel (**done**)
 * add karma profile embed
 
 ### 0.9.0

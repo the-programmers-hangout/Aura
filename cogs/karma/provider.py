@@ -84,6 +84,18 @@ class KarmaProvider(commands.Cog):
         if guild.get_member(member.id).mentioned_in(message):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id)
             self._karma_service.upsert_karma_member(karma_member, inc)
+            if inc:
+                if member.nick is None:
+                    await self._bot.get_channel(self._config['channel']['log']).send('{} got one karma in {}'
+                                                                                 .format(member.name + '#'
+                                                                                         + member.discriminator,
+                                                                                         message.channel.mention))
+                else:
+                    await self._bot.get_channel(self._config['channel']['log']).send('{} ({}) got one karma in {}'
+                                                                                     .format(member.name + '#'
+                                                                                             + member.discriminator,
+                                                                                             member.nick,
+                                                                                             message.channel.mention))
             await self.cooldown_user(guild.id, message.author.id)
 
     async def cooldown_user(self, guild_id: int, member_id: int) -> None:

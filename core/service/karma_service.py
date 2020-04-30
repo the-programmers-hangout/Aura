@@ -22,7 +22,6 @@ class KarmaService:
         self._channel_query['guild_id'] = member.guild_id
         self._channel_query['member_id'] = member.member_id
         self._channel_query['channel_id'] = member.channel_id
-        print(inc)
         if inc:
             self._karma.update_one(filter=self._channel_query, update=self._increase_karma,
                                    upsert=True)
