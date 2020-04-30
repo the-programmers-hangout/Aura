@@ -45,8 +45,11 @@ dashboard, mongodb and discord bot. (**done**)
 * aggregate karma on karma without any arguments (**done**)
 * remove karma on message delete (**done**)
 * log karma in specific channel (**done**)
-* add karma profile embed (member.name+#+member.discriminator, top 5 karma channels + karma for each)
 
-### 0.9.0
+### 0.7.0 profiles
+* add karma profile embed (member.name+#+member.discriminator, top 5 karma channels + karma for each)
+* blacklist members
 * filter get karma by channel
-* add setup command that is executed on first start (empty config.yaml)
+
+### 0.8.0 setup
+* add setup that is executed on first start (empty config.yaml)
