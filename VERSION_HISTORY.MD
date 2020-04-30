@@ -43,12 +43,9 @@ dashboard, mongodb and discord bot. (**done**)
 * add channel_id to model classes and services (**done**)
 * add commands to change the configuration on the fly (**done**)
 * aggregate karma on karma without any arguments (**done**)
-* remove karma on message delete
+* remove karma on message delete (**done**)
 * log karma in specific channel
-
-### 0.8.0
-* add exception handling to the bot
-* add logging
+* add karma profile embed
 
 ### 0.9.0
 * filter get karma by channel

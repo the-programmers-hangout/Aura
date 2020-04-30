@@ -36,7 +36,8 @@ class KarmaProvider(commands.Cog):
     async def on_message_delete(self, message):
         guild_id: int = int(self._config['guild'])
         guild = self._bot.get_guild(guild_id)
-        await self.give_karma(message, guild, message.author.id, False)
+        if await self.validate_message(message, guild):
+            await self.give_karma(message, guild, message.mentions[0], False)
 
     async def validate_message(self, message, guild) -> bool:
         # check if message has any variation of thanks
@@ -56,7 +57,6 @@ class KarmaProvider(commands.Cog):
         pattern = r'\b{}\b'
         for thanks in self._thanksList:
             if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message.content) is not None:
-                print(1234)
                 return True
         return False
 
@@ -83,7 +83,7 @@ class KarmaProvider(commands.Cog):
     async def give_karma(self, message: discord.Message, guild: discord.Guild, member: discord.Member, inc: bool):
         if guild.get_member(member.id).mentioned_in(message):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id)
-            self._karma_service.upsert_karma_member(karma_member)
+            self._karma_service.upsert_karma_member(karma_member, inc)
             await self.cooldown_user(guild.id, message.author.id)
 
     async def cooldown_user(self, guild_id: int, member_id: int) -> None:
