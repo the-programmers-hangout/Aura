@@ -25,7 +25,7 @@ class KarmaProvider(commands.Cog):
     async def on_message(self, message):
         guild_id: int = int(self._config['guild'])
         guild = self._bot.get_guild(guild_id)
-        if self.validate_message(message, guild):
+        if await self.validate_message(message, guild):
             if message.author.id not in self._members_on_cooldown[guild.id]:
                 await self.give_karma(message, guild, message.mentions[0], True)
             else:
@@ -50,11 +50,13 @@ class KarmaProvider(commands.Cog):
                 else:
                     # use member name
                     print('not implemented yet')
+        return False
 
     def has_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
         for thanks in self._thanksList:
             if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message.content) is not None:
+                print(1234)
                 return True
         return False
 

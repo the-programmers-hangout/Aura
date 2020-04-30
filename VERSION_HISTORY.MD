@@ -35,14 +35,14 @@ dashboard, mongodb and discord bot. (**done**)
 * first version of a README.md (**done**)
 * added contributor.MD (**done**)
 
-### 0.6.0
+### 0.6.0 rework version
 * remove karma category commands (**done**)
 * detect karma by thanks @user and variations (**done**)
 * remove leaderboard functionality (**done**)
 * remove karma type from service and model classes (**done**)
 * add channel_id to model classes and services (**done**)
 * add commands to change the configuration on the fly (**done**)
-* aggregate karma on karma without any arguments
+* aggregate karma on karma without any arguments (**done**)
 * remove karma on message delete
 * log karma in specific channel
 
@@ -51,6 +51,5 @@ dashboard, mongodb and discord bot. (**done**)
 * add logging
 
 ### 0.9.0
-* filter get karma by channel, by channel category
-* filter leaderboard by channel, by channel category
+* filter get karma by channel
 * add setup command that is executed on first start (empty config.yaml)
