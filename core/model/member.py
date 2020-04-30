@@ -1,7 +1,7 @@
 class KarmaMember:
-    def __init__(self, guild_id, member_id, karma_type):
+    def __init__(self, guild_id, member_id, channel_id=""):
         self.member = dict(guild_id="{}".format(guild_id), member_id="{}".format(member_id),
-                           karma_type="{}".format(karma_type), karma="")
+                           channel_id="{}".format(channel_id), karma="")
 
     @property
     def guild_id(self):
@@ -12,8 +12,8 @@ class KarmaMember:
         return self.member['member_id']
 
     @property
-    def karma_type(self):
-        return self.member['karma_type']
+    def channel_id(self):
+        return self.member['channel_id']
 
     @property
     def karma(self):

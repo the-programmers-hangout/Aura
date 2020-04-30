@@ -7,6 +7,10 @@ services:
       context: .
     depends_on:
       - database
+    volumes:
+      - type: bind
+        source: ./config.yaml
+        target: /app/config.yaml
   database:
     container_name: mongo
     image: mongo:4.2.5
@@ -17,7 +21,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
-    - 'db:/var/lib/data'
+    - db:/var/lib/data
   dashboard:
     container_name: mongo-express
     image: mongo-express
@@ -29,3 +33,4 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
 volumes:
   db:
+  app:
