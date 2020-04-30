@@ -1,23 +1,15 @@
-token:
+channel:
+  log: 705036088858902620
+cooldown: '35'
+database:
+  host: mongo
+  name: aura
+  password: example
+  port: 27017
+  username: root
 guild:
 prefix: +
 roles:
-  admin: 'Admin'
-  moderator: 'Moderator'
-default-messages:
-  gain: 'Well done {}, you have earned a {} point.'
-  self: 'Nice try {}, but you cannot give yourself karma.'
-  bot: 'Thank you {}, but I do not need more karma.'
-  no-mention: 'Your Message should have one user mention. Try again with {}{} @user.'
-  cooldown: 'Sorry {}, but you have used up all of your {} karma reservoir.'
-  role-mention: 'Sorry {}, you can only give Karma to Members.'
-  other-bot: 'Sorry {}, other bots cannot get Karma either.'
-leaderboard:
-  limit: 25
-cooldown: 5
-database:
-  username: 'root'
-  password: 'example'
-  host: mongo
-  port: 27017
-  name: 'aura'
+  admin: Admin
+  moderator: Moderator
+token:
