@@ -9,7 +9,7 @@ from core.service.karma_service import KarmaService
 from core.timer import KarmaCooldownTimer
 from util.config import ConfigStore
 
-
+# Class that gives positive karma and negative karma on message deletion (take back last action)
 class KarmaProvider(commands.Cog):
 
     def __init__(self, bot):
@@ -21,6 +21,7 @@ class KarmaProvider(commands.Cog):
         self._members_on_cooldown = defaultdict(list)
         self._thanksList = ["thanks", "ty", "thank you"]
 
+    # give karma if message has thanks and correct mentions
     @commands.Cog.listener()
     async def on_message(self, message):
         guild_id: int = int(self._config['guild'])
@@ -32,6 +33,7 @@ class KarmaProvider(commands.Cog):
                 await message.channel.send("Sorry, {}. Your Karma needs some time to recharge."
                                            .format(message.author.mention))
 
+    # remove karma on deleted message of said karma message
     @commands.Cog.listener()
     async def on_message_delete(self, message):
         guild_id: int = int(self._config['guild'])
@@ -39,6 +41,7 @@ class KarmaProvider(commands.Cog):
         if await self.validate_message(message, guild):
             await self.give_karma(message, guild, message.mentions[0], False)
 
+    # check if message is a valid message for karma
     async def validate_message(self, message, guild) -> bool:
         # check if message has any variation of thanks
         if self.has_thanks(message):
@@ -53,6 +56,7 @@ class KarmaProvider(commands.Cog):
                     print('not implemented yet')
         return False
 
+    # check if message has thanks by using regex
     def has_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
         for thanks in self._thanksList:
@@ -60,6 +64,11 @@ class KarmaProvider(commands.Cog):
                 return True
         return False
 
+    # returns -1 if mentions are incorrect for karma -> everything but user mention, mention of bot id
+    # mention of author id himself, mention of karma bot id
+    # return 0 if message has no mention
+    # -> (will be handled in a future version where messages with no mentions are potentially considered).
+    # return 1 if correct user mention
     def filter_mentions(self, message, guild) -> int:
         if len(message.role_mentions) == 0:
             if not self._bot.get_user(self._bot.user.id).mentioned_in(message) \
@@ -80,6 +89,9 @@ class KarmaProvider(commands.Cog):
         else:
             return -1
 
+    # give karma to user.
+    # logged to a configured channel with member name & discriminator, optionally with nickname
+    # cooldown author after successfully giving karma
     async def give_karma(self, message: discord.Message, guild: discord.Guild, member: discord.Member, inc: bool):
         if guild.get_member(member.id).mentioned_in(message):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id)
@@ -98,9 +110,11 @@ class KarmaProvider(commands.Cog):
                                                                                              message.channel.mention))
             await self.cooldown_user(guild.id, message.author.id)
 
+    # create new timer and add the user to it
     async def cooldown_user(self, guild_id: int, member_id: int) -> None:
         self._members_on_cooldown[guild_id].append(member_id)
         await KarmaCooldownTimer(self.remove_from_cooldown, int(self._config['cooldown']), guild_id, member_id).start()
 
+    # remove user from cooldown after time runs out
     async def remove_from_cooldown(self, guild_id: int, member_id: int) -> None:
         self._members_on_cooldown[guild_id].remove(member_id)

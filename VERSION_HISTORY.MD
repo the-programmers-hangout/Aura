@@ -47,6 +47,7 @@ dashboard, mongodb and discord bot. (**done**)
 * log karma in specific channel (**done**)
 
 ### 0.7.0 profiles
+* update documentation (**done**)
 * add karma profile embed (member.name+#+member.discriminator, top 5 karma channels + karma for each)
 * blacklist members
 * filter get karma by channel

@@ -1,9 +1,6 @@
 #  Aura
 
-Aura is a micro bot written in Python with the simple goal of providing a server
-with a set of categories (helpful, creative, kind, funny, informative) to highlight 
-good conduct of members through other members. The goal is to have an intuitive usage with
-the topic of karma on discord.  
+Aura is a discord bot focused on rewarding user contributions through simple karma.
 
 ## Getting Started
 

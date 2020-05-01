@@ -2,6 +2,7 @@ import asyncio
 from contextlib import suppress
 
 
+# Base PeriodicTimer that executes some action after started time runs out
 class PeriodicTimer:
     def __init__(self, func, time):
         self.func = func
@@ -29,6 +30,7 @@ class PeriodicTimer:
             await self.func()
 
 
+# SingleActionTimer that removes a user from the cooldown list
 class KarmaCooldownTimer(PeriodicTimer):
     def __init__(self, func, time, guild_id, member_id):
         super().__init__(func, time)

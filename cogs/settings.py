@@ -12,6 +12,8 @@ class SettingsManager(commands.Cog):
         self._config_manager = ConfigStore()
         self._config = self._config_manager.config
 
+    # edit config defined in config.yaml, return messages if incorrect args are provided.
+    # no checks on non existing configuration
     @has_role(ConfigStore().roles['admin'])
     @commands.command()
     async def config(self, ctx, *, params: str):

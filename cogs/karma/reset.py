@@ -6,7 +6,8 @@ from core.service.karma_service import KarmaService
 from util.config import ConfigStore
 
 
-class KarmaCleaner(commands.Cog):
+# Karma Manager Class, reset member karma or blacklist them.
+class KarmaManager(commands.Cog):
 
     def __init__(self, bot):
         self._bot = bot
@@ -14,6 +15,7 @@ class KarmaCleaner(commands.Cog):
         self._config = self._configManager.config
         self._karma_service = KarmaService()
 
+    # remove all karma from member
     @has_any_role(ConfigStore().roles['admin'], ConfigStore().roles['moderator'])
     @commands.command()
     async def reset(self, ctx, member_id):

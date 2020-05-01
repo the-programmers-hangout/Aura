@@ -1,6 +1,7 @@
 import yaml
 
 
+# Safely Read and Write Configuration with pyyaml
 class ConfigStore:
     def __init__(self):
         self._config = self.read_config()
