@@ -5,6 +5,8 @@ from core.service.karma_service import KarmaService
 from util.config import ConfigStore
 
 
+# Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
+# Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 class KarmaProfile(commands.Cog):
 
     def __init__(self, bot):
@@ -15,6 +17,7 @@ class KarmaProfile(commands.Cog):
         self._config = self._configManager.config
         self._roles = self._configManager.roles
 
+    # get karma of yourself without any arguments, get karma of others if admin or moderator with user_id.
     @commands.command()
     async def karma(self, ctx):
         guild_id: str = self._config['guild']
