@@ -10,7 +10,7 @@ database:
 prefix: 'aura!'
 roles:
   admin: Admin
-  moderator: Moderator
+  moderator: Staff
 thanks: ''
 token:
 
