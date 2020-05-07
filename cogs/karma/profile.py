@@ -2,7 +2,6 @@ from discord.ext import commands
 
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
-from util.config import config, roles
 
 
 # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
@@ -13,7 +12,7 @@ class KarmaProfile(commands.Cog):
         self._bot = bot
         self._karma_service = KarmaService()
 
-    # get karma of yourself without any arguments, get karma of others if admin or moderator with user_id.
+    # get karma of yourself without any arguments, get karma of others with mention
     @commands.command(brief='get karma of a user or yourself', description='prefix karma or prefix karma user_mention')
     async def karma(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
