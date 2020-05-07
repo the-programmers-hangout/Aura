@@ -98,13 +98,13 @@ class KarmaProducer(commands.Cog):
             if inc:
                 if member.nick is None:
                     await self._bot.get_channel(int(config['channel']['log'])).send(
-                        '{} got one karma in {}'
+                        '{} earned karma through a post in {}'
                         .format(member.name + '#'
                                 + member.discriminator,
                                 message.channel.mention))
                 else:
                     await self._bot.get_channel(int(config['channel']['log'])).send(
-                        '{} ({}) got one karma in {}'
+                        '{} ({}) earned karma through a post in {}'
                         .format(member.name + '#'
                                 + member.discriminator,
                                 member.nick,
