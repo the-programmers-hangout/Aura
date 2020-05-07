@@ -8,7 +8,7 @@ database:
   port: 27017
   username: root
 guild: 648904326915555348
-prefix: .
+prefix: aura!
 roles:
   admin: Admin
   moderator: Moderator
