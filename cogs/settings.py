@@ -1,17 +1,19 @@
 from discord.ext import commands
+from discord.ext.commands import has_role
 
-from util.config import config, write_config
+from util.config import config, write_config, roles
 
 
 class SettingsManager(commands.Cog):
 
     def __init__(self, bot):
         self._bot = bot
-        bot.remove_command("help")
 
     # edit config defined in config.yaml, return messages if incorrect args are provided.
     # no checks on non existing configuration
-    @commands.command()
+    @has_role(roles()['admin'])
+    @commands.command(brief='change configuration parameters, requires admin',
+                      description='change config params to new value, last value in params is new_value')
     async def config(self, ctx, *, params: str):
         args = params.split()
         if len(args) > 3:

@@ -16,7 +16,6 @@ class KarmaProducer(commands.Cog):
 
     def __init__(self, bot):
         self._bot = bot
-        bot.remove_command("help")
         self._karma_service = KarmaService()
         self.members_on_cooldown = defaultdict(list)
 
