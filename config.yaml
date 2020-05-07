@@ -1,5 +1,5 @@
 channel:
-  log: 705036088858902620
+  log: '705164655617638510'
 cooldown: '35'
 database:
   host: mongo
@@ -7,9 +7,10 @@ database:
   password: example
   port: 27017
   username: root
-guild:
+guild: 648904326915555348
 prefix: +
 roles:
   admin: Admin
   moderator: Moderator
+thanks: ''
 token:

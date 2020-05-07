@@ -48,9 +48,15 @@ dashboard, mongodb and discord bot. (**done**)
 
 ### 0.7.0 profiles
 * update documentation (**done**)
-* add karma profile embed (member.name+#+member.discriminator, top 5 karma channels + karma for each)
+* convert config into module level variable / methods (**done**)
+* improve config command:
+    - list all configuration parameters possible to set in an embed
+    - check for non existent configuration parameters
+    - keep sorting order the same
 * blacklist members
+* add karma profile embed (member.name+#+member.discriminator, top 5 karma channels + karma for each)
 * filter get karma by channel
+* move guild out of config and get it from the message
 
 ### 0.8.0 setup
 * add setup that is executed on first start (empty config.yaml)
