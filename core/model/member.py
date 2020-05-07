@@ -1,8 +1,8 @@
 # simple entity class for karma associated with a member
 class KarmaMember:
-    def __init__(self, guild_id, member_id, channel_id=""):
+    def __init__(self, guild_id: str, member_id: str, channel_id: str = "", message_id: str = ""):
         self.member = dict(guild_id="{}".format(guild_id), member_id="{}".format(member_id),
-                           channel_id="{}".format(channel_id), karma="")
+                           channel_id="{}".format(channel_id), message_id="{}".format(message_id), karma="")
 
     @property
     def guild_id(self):
@@ -15,6 +15,10 @@ class KarmaMember:
     @property
     def channel_id(self):
         return self.member['channel_id']
+
+    @property
+    def message_id(self):
+        return self.member['message_id']
 
     @property
     def karma(self):

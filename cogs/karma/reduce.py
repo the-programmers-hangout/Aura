@@ -1,14 +1,14 @@
 from discord.ext import commands
-from discord.ext.commands import has_role, has_any_role
+from discord.ext.commands import has_any_role
 
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
 
 
-# Karma Reducer Class remove karma
 from util.config import roles
 
 
+# Karma Reducer Class remove karma
 class KarmaReducer(commands.Cog):
 
     def __init__(self, bot):
@@ -17,8 +17,8 @@ class KarmaReducer(commands.Cog):
 
     # remove all karma from member
     @has_any_role(roles()['admin'], roles()['moderator'])
-    @commands.command(brief='Reset all karma of a member, requires admin or moderator', description='prefix reset '
-                                                                                                    'member_id')
+    @commands.command(brief='Reset all karma of a member, requires admin or moderator',
+                      description='prefix reset member_id')
     async def reset(self, ctx, member):
         guild_id: str = str(ctx.message.guild.id)
         self._karma_service.delete_all_karma(KarmaMember(guild_id, member))
