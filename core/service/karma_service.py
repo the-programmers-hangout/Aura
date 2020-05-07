@@ -12,7 +12,7 @@ class KarmaService:
                                  config['database']['username'], config['database']['password'],
                                  config['database']['name']).db.karma
         self._filter_query = dict(guild_id="", member_id="")
-        self._channel_query = dict(guild_id="", member_id="", channel_id="")
+        self._channel_query = dict(guild_id="", member_id="", channel_id="", message_id="")
         self._increase_karma = {"$inc": {'karma': 1}}
         self._decrease_karma = {"$inc": {'karma': -1}}
 
@@ -22,12 +22,13 @@ class KarmaService:
         self._channel_query['guild_id'] = member.guild_id
         self._channel_query['member_id'] = member.member_id
         self._channel_query['channel_id'] = member.channel_id
+        self._channel_query['message_id'] = member.message_id
+
         if inc:
             self._karma.update_one(filter=self._channel_query, update=self._increase_karma,
                                    upsert=True)
         else:
-            self._karma.update_one(filter=self._channel_query, update=self._decrease_karma,
-                                   upsert=False)
+            self._karma.delete_one(filter=self._channel_query)
 
     # remove all karma, regardless of channel
     def delete_all_karma(self, guild_id: str, member_id: str) -> None:
