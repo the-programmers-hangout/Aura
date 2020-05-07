@@ -1,7 +1,6 @@
 from core.datasource import DataSource
 from core.model.member import KarmaMember
 
-
 # karma database service class, perform operations on the configured mongodb.
 from util.config import config
 
@@ -50,5 +49,9 @@ class KarmaService:
                 return doc['karma']
 
 
-# class BlockerService:
+class BlockerService:
 
+    def __init__(self):
+        self._blacklist = DataSource(config['database']['host'], config['database']['port'],
+                                     config['database']['username'], config['database']['password'],
+                                     config['database']['name']).db.blacklist
