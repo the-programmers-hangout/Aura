@@ -56,7 +56,7 @@ dashboard, mongodb and discord bot. (**done**)
 * blacklist members
 * add karma profile embed (member.name+#+member.discriminator, top 5 karma channels + karma for each)
 * filter get karma by channel
-* move guild out of config and get it from the message
+* move guild out of config and get it from the message (**done**)
 
 ### 0.8.0 setup
 * add setup that is executed on first start (empty config.yaml)
