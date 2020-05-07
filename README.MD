@@ -41,7 +41,7 @@ This project uses [SemVer](http://semver.org/) for versioning. For the versions 
 
 ## Authors
 
-* **Georg G** - *Initial work* - [arkencl](https://github.com/arkencl)
+* **Georg Göring** - *Initial work* - [arkencl](https://github.com/arkencl)
 
 See also the list of [contributors](https://github.com/arkencl/aura/graphs/contributors) who participated in this project.
 
