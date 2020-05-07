@@ -1,4 +1,3 @@
-import yaml
 from discord.ext import commands
 
 from cogs.karma.profile import KarmaProfile

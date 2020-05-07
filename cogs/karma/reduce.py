@@ -1,5 +1,4 @@
 from discord.ext import commands
-from discord.ext.commands import has_any_role
 
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
