@@ -7,27 +7,26 @@ from discord.ext import commands
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
 from core.timer import KarmaCooldownTimer
-from util.config import ConfigStore
+
+from util.config import config, thanks_list
+
 
 # Class that gives positive karma and negative karma on message deletion (take back last action)
-class KarmaProvider(commands.Cog):
+class KarmaProducer(commands.Cog):
 
     def __init__(self, bot):
         self._bot = bot
         bot.remove_command("help")
         self._karma_service = KarmaService()
-        self._configManager = ConfigStore()
-        self._config = self._configManager.config
-        self._members_on_cooldown = defaultdict(list)
-        self._thanksList = ["thanks", "ty", "thank you"]
+        self.members_on_cooldown = defaultdict(list)
 
     # give karma if message has thanks and correct mentions
     @commands.Cog.listener()
     async def on_message(self, message):
-        guild_id: int = int(self._config['guild'])
+        guild_id: int = int(config['guild'])
         guild = self._bot.get_guild(guild_id)
         if await self.validate_message(message, guild):
-            if message.author.id not in self._members_on_cooldown[guild.id]:
+            if message.author.id not in self.members_on_cooldown[guild.id]:
                 await self.give_karma(message, guild, message.mentions[0], True)
             else:
                 await message.channel.send("Sorry, {}. Your Karma needs some time to recharge."
@@ -36,7 +35,7 @@ class KarmaProvider(commands.Cog):
     # remove karma on deleted message of said karma message
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        guild_id: int = int(self._config['guild'])
+        guild_id: int = int(config['guild'])
         guild = self._bot.get_guild(guild_id)
         if await self.validate_message(message, guild):
             await self.give_karma(message, guild, message.mentions[0], False)
@@ -59,7 +58,7 @@ class KarmaProvider(commands.Cog):
     # check if message has thanks by using regex
     def has_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
-        for thanks in self._thanksList:
+        for thanks in thanks_list():
             if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message.content) is not None:
                 return True
         return False
@@ -94,27 +93,30 @@ class KarmaProvider(commands.Cog):
     # cooldown author after successfully giving karma
     async def give_karma(self, message: discord.Message, guild: discord.Guild, member: discord.Member, inc: bool):
         if guild.get_member(member.id).mentioned_in(message):
-            karma_member = KarmaMember(guild.id, member.id, message.channel.id)
+            karma_member = KarmaMember(str(guild.id), member.id, message.channel.id)
             self._karma_service.upsert_karma_member(karma_member, inc)
             if inc:
                 if member.nick is None:
-                    await self._bot.get_channel(self._config['channel']['log']).send('{} got one karma in {}'
-                                                                                 .format(member.name + '#'
-                                                                                         + member.discriminator,
-                                                                                         message.channel.mention))
+                    await self._bot.get_channel(int(config['channel']['log'])).send(
+                        '{} got one karma in {}'
+                        .format(member.name + '#'
+                                + member.discriminator,
+                                message.channel.mention))
                 else:
-                    await self._bot.get_channel(self._config['channel']['log']).send('{} ({}) got one karma in {}'
-                                                                                     .format(member.name + '#'
-                                                                                             + member.discriminator,
-                                                                                             member.nick,
-                                                                                             message.channel.mention))
+                    await self._bot.get_channel(int(config['channel']['log'])).send(
+                        '{} ({}) got one karma in {}'
+                        .format(member.name + '#'
+                                + member.discriminator,
+                                member.nick,
+                                message.channel.mention))
             await self.cooldown_user(guild.id, message.author.id)
 
     # create new timer and add the user to it
     async def cooldown_user(self, guild_id: int, member_id: int) -> None:
-        self._members_on_cooldown[guild_id].append(member_id)
-        await KarmaCooldownTimer(self.remove_from_cooldown, int(self._config['cooldown']), guild_id, member_id).start()
+        self.members_on_cooldown[guild_id].append(member_id)
+        await KarmaCooldownTimer(self.remove_from_cooldown, int(config['cooldown']),
+                                 guild_id, member_id).start()
 
     # remove user from cooldown after time runs out
     async def remove_from_cooldown(self, guild_id: int, member_id: int) -> None:
-        self._members_on_cooldown[guild_id].remove(member_id)
+        self.members_on_cooldown[guild_id].remove(member_id)
