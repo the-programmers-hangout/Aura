@@ -12,7 +12,6 @@ To run this bot you need to manually fill out the following values in the config
 
 ```
 token: <Your Bot Account Token>
-guild: '<guild_id>'
 prefix: <prefix>
 role:
     admin: "<Exact Name of Admin role>"

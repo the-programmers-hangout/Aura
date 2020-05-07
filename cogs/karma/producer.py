@@ -23,7 +23,7 @@ class KarmaProducer(commands.Cog):
     # give karma if message has thanks and correct mentions
     @commands.Cog.listener()
     async def on_message(self, message):
-        guild_id: int = int(config['guild'])
+        guild_id: int = message.guild.id
         guild = self._bot.get_guild(guild_id)
         if await self.validate_message(message, guild):
             if message.author.id not in self.members_on_cooldown[guild.id]:
@@ -35,7 +35,7 @@ class KarmaProducer(commands.Cog):
     # remove karma on deleted message of said karma message
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        guild_id: int = int(config['guild'])
+        guild_id: int = message.guild.id
         guild = self._bot.get_guild(guild_id)
         if await self.validate_message(message, guild):
             await self.give_karma(message, guild, message.mentions[0], False)
@@ -98,13 +98,13 @@ class KarmaProducer(commands.Cog):
             if inc:
                 if member.nick is None:
                     await self._bot.get_channel(int(config['channel']['log'])).send(
-                        '{} earned karma through a post in {}'
+                        '{} earned karma in {}'
                         .format(member.name + '#'
                                 + member.discriminator,
                                 message.channel.mention))
                 else:
                     await self._bot.get_channel(int(config['channel']['log'])).send(
-                        '{} ({}) earned karma through a post in {}'
+                        '{} ({}) earned karma in {}'
                         .format(member.name + '#'
                                 + member.discriminator,
                                 member.nick,
