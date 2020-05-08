@@ -50,6 +50,7 @@ class KarmaProfile(commands.Cog):
             karma_member = KarmaMember(guild_id, ctx.message.author.id)
             embed = await self.build_profile_embed(karma_member, guild)
             embed.title = "Profile of {}".format(ctx.message.author.name + "#" + ctx.message.author.discriminator)
+            embed.set_thumbnail(url=ctx.author.avatar_url)
             await ctx.channel.send(embed=embed)
         elif len(ctx.message.mentions) == 1:
             message = ctx.message
@@ -59,6 +60,7 @@ class KarmaProfile(commands.Cog):
                 karma_member = KarmaMember(guild_id, member.id)
                 embed = await self.build_profile_embed(karma_member, guild)
                 embed.title = "Profile of {}".format(member.name + "#" + member.discriminator)
+                embed.set_thumbnail(url=member.avatar_url)
                 await ctx.channel.send(embed=embed)
 
     async def build_profile_embed(self, karma_member: KarmaMember, guild) -> discord.Embed:
