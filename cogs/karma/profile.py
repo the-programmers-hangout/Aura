@@ -1,4 +1,5 @@
 import discord
+from discord import Color
 from discord.ext import commands
 
 from core.model.member import KarmaMember
@@ -42,23 +43,35 @@ class KarmaProfile(commands.Cog):
     async def profile(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
         guild = self.bot.get_guild(int(guild_id))
-        message = ctx.message
-        member = message.mentions[0]
-        if not self.bot.get_user(self.bot.user.id).mentioned_in(message) and guild.get_member(
-                member.id).mentioned_in(message):
-            karma_member = KarmaMember(guild_id, member.id)
-            embed = await self.build_profile_embed(karma_member)
-            await ctx.channel.send(embed=embed)
-        elif len(ctx.message.mentions) == 0:
+        if len(ctx.message.mentions) == 0:
             karma_member = KarmaMember(guild_id, ctx.message.author.id)
-            embed = await self.build_profile_embed(karma_member)
+            embed = await self.build_profile_embed(karma_member, guild)
+            embed.title = "Profile of {}".format(ctx.message.author.name + "#" + ctx.message.author.discriminator)
             await ctx.channel.send(embed=embed)
+        elif len(ctx.message.mentions) == 1:
+            message = ctx.message
+            member = message.mentions[0]
+            if not self.bot.get_user(self.bot.user.id).mentioned_in(message) and guild.get_member(
+                    member.id).mentioned_in(message):
+                karma_member = KarmaMember(guild_id, member.id)
+                embed = await self.build_profile_embed(karma_member, guild)
+                embed.title = "Profile of {}".format(member.name + "#" + member.discriminator)
+                await ctx.channel.send(embed=embed)
 
-    async def build_profile_embed(self, karma_member: KarmaMember) -> discord.Embed:
+    async def build_profile_embed(self, karma_member: KarmaMember, guild) -> discord.Embed:
         channel_cursor = self.karma_service.aggregate_member_by_channels(karma_member)
-        if channel_cursor is not None:
-            # large embed with every channel
-            print('impl')
+        embed: discord.Embed = discord.Embed(colour=Color.dark_gold())
+        total_karma: int = 0
+        channel_list = list(channel_cursor)
+        if len(channel_list) > 0:
+            embed.add_field(name='0', value='0', inline=False)
+            for document in channel_list:
+                total_karma += document['karma']
+                channel = guild.get_channel(int(document['_id']['channel_id']))
+                embed.add_field(name="{}".format(channel.name), value=document['karma'], inline=False)
+            embed.set_field_at(index=0, name="Total Karma:", value=str(total_karma), inline=True)
+            return embed
         else:
             # small embed since no karma etc.
-            print('impl')
+            embed.add_field(name="Total Karma:", value=str(total_karma), inline=True)
+            return embed

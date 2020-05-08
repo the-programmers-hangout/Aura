@@ -54,8 +54,7 @@ dashboard, mongodb and discord bot. (**done**)
     - check for non existent configuration parameters
     - keep sorting order the same
 * blacklist / whitelist members (**done**)
-* add karma profile embed (member.name+#+member.discriminator, top 5 karma channels + karma for each)
-* filter get karma by channel
+* add karma profile embed (member.name+#+member.discriminator, top x karma channels + karma for each) (**done**)
 * move guild out of config and get it from the message (**done**)
 * add help command back in and add default descriptions (**done**)
 
