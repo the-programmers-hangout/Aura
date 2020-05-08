@@ -1,17 +1,17 @@
+blacklist: Modmail
 channel:
-  log: '705164655617638510'
-cooldown: '35'
+  log: '707943244998115341'
+cooldown: '20'
 database:
   host: mongo
   name: aura
   password: example
   port: 27017
   username: root
-prefix: 'aura!'
+prefix: aura!
+profile:
+  channels: 5
 roles:
   admin: Admin
   moderator: Staff
-thanks: ''
 token:
-
-
