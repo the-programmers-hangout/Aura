@@ -11,8 +11,8 @@ from util.config import roles
 class KarmaReducer(commands.Cog):
 
     def __init__(self, bot):
-        self._bot = bot
-        self._karma_service = KarmaService()
+        self.bot = bot
+        self.karma_service = KarmaService()
 
     # remove all karma from member
     @has_any_role(roles()['admin'], roles()['moderator'])
@@ -20,24 +20,24 @@ class KarmaReducer(commands.Cog):
                       description='prefix reset member_id')
     async def reset(self, ctx, member):
         guild_id: str = str(ctx.message.guild.id)
-        self._karma_service.delete_all_karma(KarmaMember(guild_id, member))
+        self.karma_service.delete_all_karma(KarmaMember(guild_id, member))
         await ctx.channel.send('Removed all Karma from {}'.format(member))
 
 
 class KarmaBlocker(commands.Cog):
 
     def __init__(self, bot):
-        self._bot = bot
-        self._blocker_service = BlockerService()
+        self.bot = bot
+        self.blocker_service = BlockerService()
 
     @has_role(roles()['admin'])
     @commands.command(brief='blacklists a member from this bot, requires admin',
                       description='prefix blacklist member')
     async def blacklist(self, ctx, member):
         if len(ctx.message.mentions) == 1:
-            self._blocker_service.blacklist(Member(ctx.message.guild.id, ctx.message.mentions[0].id))
+            self.blocker_service.blacklist(Member(ctx.message.guild.id, ctx.message.mentions[0].id))
         else:
-            self._blocker_service.blacklist(Member(ctx.message.guild.id, member))
+            self.blocker_service.blacklist(Member(ctx.message.guild.id, member))
         await ctx.channel.send('Blacklisted {}'.format(member))
 
     @has_role(roles()['admin'])
@@ -45,7 +45,7 @@ class KarmaBlocker(commands.Cog):
                       description='prefix whitelist member')
     async def whitelist(self, ctx, *, member):
         if len(ctx.message.mentions) == 1:
-            self._blocker_service.whitelist(Member(ctx.message.guild.id, ctx.message.mentions[0].id))
+            self.blocker_service.whitelist(Member(ctx.message.guild.id, ctx.message.mentions[0].id))
         else:
-            self._blocker_service.whitelist(Member(ctx.message.guild.id, member))
+            self.blocker_service.whitelist(Member(ctx.message.guild.id, member))
         await ctx.channel.send('Whitelisted {}'.format(member))
