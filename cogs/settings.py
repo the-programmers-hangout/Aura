@@ -21,12 +21,16 @@ class SettingsManager(commands.Cog):
         elif len(args) <= 1:
             await ctx.channel.send('Your message needs at least two arguments.')
         else:
-            if len(args) == 3:
-                config[args[0]][args[1]] = args[2]
-                write_config()
-                await ctx.channel.send('Configuration parameter {} {} has been changed to {}'.format(args[0], args[1],
-                                                                                                     args[2]))
-            else:
-                config[args[0]] = args[1]
-                write_config()
-                await ctx.channel.send('Configuration parameter {} has been changed to {}'.format(args[0], args[1]))
+            if config[args[0]] is not None and args[0] != 'token' and args[0] != 'prefix':
+                if len(args) == 3:
+                    if config[args[0]][args[1]] is not None \
+                            and args[0] != 'token' and args[0] != 'prefix':
+                        config[args[0]][args[1]] = args[2]
+                        write_config()
+                        await ctx.channel.send(
+                            'Configuration parameter {} {} has been changed to {}'.format(args[0], args[1],
+                                                                                          args[2]))
+                else:
+                    config[args[0]] = args[1]
+                    write_config()
+                    await ctx.channel.send('Configuration parameter {} has been changed to {}'.format(args[0], args[1]))
