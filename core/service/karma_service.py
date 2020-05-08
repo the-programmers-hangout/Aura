@@ -50,7 +50,8 @@ class KarmaService:
         self._filter_query['member_id'] = member.member_id
         pipeline = [{"$unwind": "$karma"}, {"$match": self._filter_query},
                     {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
-                                "karma": {"$sum": "$karma"}}}, {"$limit": profile()['channels']}]
+                                "karma": {"$sum": "$karma"}}}, {"$limit": profile()['channels']},
+                    {"$sort": {"karma": -1}}]
         doc_cursor = self._karma.aggregate(pipeline)
         return doc_cursor
 
