@@ -18,5 +18,9 @@ def roles():
     return config['roles']
 
 
+def profile():
+    return config['profile']
+
+
 def thanks_list():
     return ['thanks', 'ty', 'thank you']

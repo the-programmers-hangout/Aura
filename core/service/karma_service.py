@@ -2,7 +2,7 @@ from core.datasource import DataSource
 from core.model.member import KarmaMember, Member
 
 # karma database service class, perform operations on the configured mongodb.
-from util.config import config
+from util.config import config, profile
 
 
 class KarmaService:
@@ -35,19 +35,30 @@ class KarmaService:
         filter_member = dict(guild_id=guild_id, member_id=member_id)
         self._karma.delete_many(filter=filter_member)
 
-    # aggregate karma of member for different channels
-    def aggregate_member_karma(self, member: KarmaMember) -> int:
+    # aggregate overall karma of a member
+    def aggregate_member_by_karma(self, member: KarmaMember) -> int:
         self._filter_query['guild_id'] = member.guild_id
         self._filter_query['member_id'] = member.member_id
         pipeline = [{"$unwind": "$karma"}, {"$match": self._filter_query},
                     {"$group": {"_id": {"member_id": "$member_id"}, "karma": {"$sum": "$karma"}}}]
-        print(pipeline)
-        document = self._karma.aggregate(pipeline)
-        if document is None:
+        doc_cursor = self._karma.aggregate(pipeline)
+        if doc_cursor is None:
             return 0
         else:
-            for doc in document:
+            for doc in doc_cursor:
                 return doc['karma']
+
+    def aggregate_member_by_channels(self, member: KarmaMember):
+        self._filter_query['guild_id'] = member.guild_id
+        self._filter_query['member_id'] = member.member_id
+        pipeline = [{"$unwind": "$karma"}, {"$match": self._filter_query},
+                    {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
+                                "karma": {"$sum": "$karma"}}}, {"$limit": profile()['channels']}]
+        doc_cursor = self._karma.aggregate(pipeline)
+        if doc_cursor is None:
+            return None
+        else:
+            return doc_cursor
 
 
 class BlockerService:
