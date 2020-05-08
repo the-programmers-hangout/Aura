@@ -75,11 +75,11 @@ class KarmaProfile(commands.Cog):
             for document in channel_list:
                 total_karma += document['karma']
                 channel = guild.get_channel(int(document['_id']['channel_id']))
-                if (index % 3) is 0 and index is not 0:
+                if (index % 3) == 0 and index != 0:
                     embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=False)
                 else:
                     embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=True)
-            if len(channel_list) % 3 is not 0:
+            if len(channel_list) % 3 != 0:
                 embed.add_field(name='\u200b', value='\u200b')
             embed.set_field_at(index=0, name="**total**", value=str(total_karma), inline=False)
             return embed
