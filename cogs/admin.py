@@ -9,7 +9,8 @@ class Admin(commands.cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(hidden=True)
+    @commands.command(briefdescription="load a module",
+                      description='load a module')
     @has_role(roles()['admin'])
     async def load(self, *, module: str):
         """Loads a module."""
@@ -21,7 +22,8 @@ class Admin(commands.cog):
         else:
             await self.bot.say('\N{OK HAND SIGN}')
 
-    @commands.command(hidden=True)
+    @commands.command(briefdescription="unload a module",
+                      description='unload a module')
     @has_role(roles()['admin'])
     async def unload(self, *, module: str):
         """Unloads a module."""
@@ -33,7 +35,8 @@ class Admin(commands.cog):
         else:
             await self.bot.say('\N{OK HAND SIGN}')
 
-    @commands.command(name='reload', hidden=True)
+    @commands.command(name='reload', briefdescription="reload a module",
+                      description='reload a module')
     @has_role(roles()['admin'])
     async def _reload(self, *, module: str):
         """Reloads a module."""
