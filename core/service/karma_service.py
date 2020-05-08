@@ -1,5 +1,5 @@
 from core.datasource import DataSource
-from core.model.member import KarmaMember
+from core.model.member import KarmaMember, Member
 
 # karma database service class, perform operations on the configured mongodb.
 from util.config import config
@@ -56,3 +56,22 @@ class BlockerService:
         self._blacklist = DataSource(config['database']['host'], config['database']['port'],
                                      config['database']['username'], config['database']['password'],
                                      config['database']['name']).db.blacklist
+        self._filter_query = dict(guild_id="", member_id="")
+
+    def blacklist(self, member: Member):
+        self._filter_query['guild_id'] = member.guild_id
+        self._filter_query['member_id'] = member.member_id
+        self._blacklist.update_one(filter=self._filter_query, update={'$set': {
+            'guild_id': '{}'.format(member.guild_id),
+            'member_id': '{}'.format(member.member_id)
+        }}, upsert=True)
+
+    def whitelist(self, member: Member):
+        self._filter_query['guild_id'] = member.guild_id
+        self._filter_query['member_id'] = member.member_id
+        self._blacklist.delete_one(filter=self._filter_query)
+
+    def find_member(self, member: Member):
+        self._filter_query['guild_id'] = member.guild_id
+        self._filter_query['member_id'] = member.member_id
+        return self._blacklist.find_one(filter=self._filter_query)
