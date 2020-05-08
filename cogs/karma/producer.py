@@ -29,6 +29,10 @@ class KarmaProducer(commands.Cog):
             if await self.validate_message(message, guild):
                 if message.author.id not in self._members_on_cooldown[guild.id]:
                     await self.give_karma(message, guild, message.mentions[0], True)
+        else:
+            await message.author.send('You have been blacklisted from giving out Karma, '
+                                      'if you believe this to be an error contact {}.'
+                                      .format(config['blacklist']))
 
     # remove karma on deleted message of said karma message
     @commands.Cog.listener()

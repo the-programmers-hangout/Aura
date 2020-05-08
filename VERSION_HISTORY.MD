@@ -57,9 +57,9 @@ dashboard, mongodb and discord bot. (**done**)
 * various profile embed improvements (proper spacing etc.) (**done**)
 
 ### 0.8.0 blacklist dm and config
+* dm users that are blacklisted when they try to give out karma (**done**)
 * improve config command:
     - list all configuration parameters possible to set in an embed
     - check for non existent configuration parameters
     - keep sorting order the same
     - filter out certain configuration parameters (prefix and token are not supposed to be changeable on start anyway)
-* dm users that are blacklisted when they try to give out karma
