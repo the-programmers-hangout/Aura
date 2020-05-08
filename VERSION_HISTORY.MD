@@ -57,7 +57,7 @@ dashboard, mongodb and discord bot. (**done**)
 * add karma profile embed (member.name+#+member.discriminator, top x karma channels + karma for each) (**done**)
 * move guild out of config and get it from the message (**done**)
 * add help command back in and add default descriptions (**done**)
-* add profile picture to profile embed
+* add profile picture to profile embed (**done**)
 
 ### 0.8.0 karma detection
 
