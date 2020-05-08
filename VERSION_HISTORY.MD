@@ -61,8 +61,5 @@ dashboard, mongodb and discord bot. (**done**)
     - list all configuration parameters possible to set in an embed
     - check for non existent configuration parameters
     - keep sorting order the same
+    - filter out certain configuration parameters (prefix and token are not supposed to be changeable on start anyway)
 * dm users that are blacklisted when they try to give out karma
-
-
-### 0.9.0 setup
-* add setup that is executed on first start (empty config.yaml)
