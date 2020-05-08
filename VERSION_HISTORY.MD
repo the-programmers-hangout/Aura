@@ -53,11 +53,14 @@ dashboard, mongodb and discord bot. (**done**)
     - list all configuration parameters possible to set in an embed
     - check for non existent configuration parameters
     - keep sorting order the same
-* blacklist members
+* blacklist / whitelist members (**done**)
 * add karma profile embed (member.name+#+member.discriminator, top 5 karma channels + karma for each)
 * filter get karma by channel
 * move guild out of config and get it from the message (**done**)
 * add help command back in and add default descriptions (**done**)
 
-### 0.8.0 setup
+### 0.8.0 karma detection
+
+
+### 0.9.0 setup
 * add setup that is executed on first start (empty config.yaml)

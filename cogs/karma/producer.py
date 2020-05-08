@@ -4,8 +4,8 @@ from collections import defaultdict
 import discord
 from discord.ext import commands
 
-from core.model.member import KarmaMember
-from core.service.karma_service import KarmaService
+from core.model.member import KarmaMember, Member
+from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaCooldownTimer
 
 from util.config import config, thanks_list
@@ -17,6 +17,7 @@ class KarmaProducer(commands.Cog):
     def __init__(self, bot):
         self._bot = bot
         self._karma_service = KarmaService()
+        self._blocker_service = BlockerService()
         self.members_on_cooldown = defaultdict(list)
 
     # give karma if message has thanks and correct mentions
@@ -24,12 +25,13 @@ class KarmaProducer(commands.Cog):
     async def on_message(self, message):
         guild_id: int = message.guild.id
         guild = self._bot.get_guild(guild_id)
-        if await self.validate_message(message, guild):
-            if message.author.id not in self.members_on_cooldown[guild.id]:
-                await self.give_karma(message, guild, message.mentions[0], True)
-            else:
-                await message.channel.send("Sorry, {}. Your Karma needs some time to recharge."
-                                           .format(message.author.mention))
+        if self._blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
+            if await self.validate_message(message, guild):
+                if message.author.id not in self.members_on_cooldown[guild.id]:
+                    await self.give_karma(message, guild, message.mentions[0], True)
+                else:
+                    await message.channel.send("Sorry, {}. Your Karma needs some time to recharge."
+                                               .format(message.author.mention))
 
     # remove karma on deleted message of said karma message
     @commands.Cog.listener()
@@ -98,16 +100,16 @@ class KarmaProducer(commands.Cog):
                 if member.nick is None:
                     await self._bot.get_channel(int(config['channel']['log'])).send(
                         '{} earned karma in {}'
-                        .format(member.name + '#'
-                                + member.discriminator,
-                                message.channel.mention))
+                            .format(member.name + '#'
+                                    + member.discriminator,
+                                    message.channel.mention))
                 else:
                     await self._bot.get_channel(int(config['channel']['log'])).send(
                         '{} ({}) earned karma in {}'
-                        .format(member.name + '#'
-                                + member.discriminator,
-                                member.nick,
-                                message.channel.mention))
+                            .format(member.name + '#'
+                                    + member.discriminator,
+                                    member.nick,
+                                    message.channel.mention))
             await self.cooldown_user(guild.id, message.author.id)
 
     # create new timer and add the user to it

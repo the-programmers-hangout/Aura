@@ -1,9 +1,8 @@
 from discord.ext import commands
-from discord.ext.commands import has_any_role
+from discord.ext.commands import has_any_role, has_role
 
-from core.model.member import KarmaMember
-from core.service.karma_service import KarmaService
-
+from core.model.member import KarmaMember, Member
+from core.service.karma_service import KarmaService, BlockerService
 
 from util.config import roles
 
@@ -29,12 +28,24 @@ class KarmaBlocker(commands.Cog):
 
     def __init__(self, bot):
         self._bot = bot
-        self._karma_service = KarmaService()
+        self._blocker_service = BlockerService()
 
+    @has_role(roles()['admin'])
+    @commands.command(brief='blacklists a member from this bot, requires admin',
+                      description='prefix blacklist member')
     async def blacklist(self, ctx, member):
-        guild_id: str = str(ctx.message.guild.id)
+        if len(ctx.message.mentions) == 1:
+            self._blocker_service.blacklist(Member(ctx.message.guild.id, ctx.message.mentions[0].id))
+        else:
+            self._blocker_service.blacklist(Member(ctx.message.guild.id, member))
         await ctx.channel.send('Blacklisted {}'.format(member))
 
-    async def whitelist(self, ctx, member):
-        guild_id: str = str(ctx.message.guild.id)
+    @has_role(roles()['admin'])
+    @commands.command(brief='removes existing blacklists of a member from this bot, requires admin',
+                      description='prefix whitelist member')
+    async def whitelist(self, ctx, *, member):
+        if len(ctx.message.mentions) == 1:
+            self._blocker_service.whitelist(Member(ctx.message.guild.id, ctx.message.mentions[0].id))
+        else:
+            self._blocker_service.whitelist(Member(ctx.message.guild.id, member))
         await ctx.channel.send('Whitelisted {}'.format(member))

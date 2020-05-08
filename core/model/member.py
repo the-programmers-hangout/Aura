@@ -27,3 +27,16 @@ class KarmaMember:
     @property
     def document(self):
         return self.member
+
+
+class Member:
+    def __init__(self, guild_id: str, member_id: str):
+        self.member = dict(guild_id="{}".format(guild_id), member_id="{}".format(member_id))
+
+    @property
+    def guild_id(self):
+        return self.member['guild_id']
+
+    @property
+    def member_id(self):
+        return self.member['member_id']
