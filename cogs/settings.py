@@ -7,7 +7,7 @@ from util.config import config, write_config, roles
 class SettingsManager(commands.Cog):
 
     def __init__(self, bot):
-        self._bot = bot
+        self.bot = bot
 
     # edit config defined in config.yaml, return messages if incorrect args are provided.
     # no checks on non existing configuration

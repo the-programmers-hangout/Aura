@@ -10,20 +10,20 @@ from core.service.karma_service import KarmaService
 class KarmaProfile(commands.Cog):
 
     def __init__(self, bot):
-        self._bot = bot
-        self._karma_service = KarmaService()
+        self.bot = bot
+        self.karma_service = KarmaService()
 
     # get karma of yourself without any arguments, get karma of others with mention
     @commands.command(brief='get karma of a user or yourself', description='prefix karma or prefix karma user_mention')
     async def karma(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
-        guild = self._bot.get_guild(int(guild_id))
+        guild = self.bot.get_guild(int(guild_id))
         message = ctx.message
         member = message.mentions[0]
-        if not self._bot.get_user(self._bot.user.id).mentioned_in(message) and guild.get_member(
+        if not self.bot.get_user(self.bot.user.id).mentioned_in(message) and guild.get_member(
                 member.id).mentioned_in(message):
             karma_member = KarmaMember(guild_id, member.id)
-            karma = self._karma_service.aggregate_member_by_karma(karma_member)
+            karma = self.karma_service.aggregate_member_by_karma(karma_member)
             if karma is None:
                 await ctx.channel.send('{} has earned a total of {} karma'
                                        .format(member.name + '#' + member.discriminator, 0))
@@ -32,7 +32,7 @@ class KarmaProfile(commands.Cog):
                                        .format(member.name + '#' + member.discriminator, karma))
         elif len(ctx.message.mentions) == 0:
             karma_member = KarmaMember(guild_id, ctx.message.author.id)
-            karma = self._karma_service.aggregate_member_by_karma(karma_member)
+            karma = self.karma_service.aggregate_member_by_karma(karma_member)
             await ctx.channel.send('{} has earned a total of {} karma'
                                    .format(ctx.message.author.name + '#' + ctx.author.discriminator, karma))
 
@@ -40,10 +40,10 @@ class KarmaProfile(commands.Cog):
                       description='prefix profile or prefix profile user_mention')
     async def profile(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
-        guild = self._bot.get_guild(int(guild_id))
+        guild = self.bot.get_guild(int(guild_id))
         message = ctx.message
         member = message.mentions[0]
-        if not self._bot.get_user(self._bot.user.id).mentioned_in(message) and guild.get_member(
+        if not self.bot.get_user(self.bot.user.id).mentioned_in(message) and guild.get_member(
                 member.id).mentioned_in(message):
             karma_member = KarmaMember(guild_id, member.id)
             embed = await self.build_profile_embed(karma_member)
@@ -54,7 +54,7 @@ class KarmaProfile(commands.Cog):
             await ctx.channel.send(embed=embed)
 
     async def build_profile_embed(self, karma_member: KarmaMember) -> discord.Embed:
-        channel_cursor = self._karma_service.aggregate_member_by_channels(karma_member)
+        channel_cursor = self.karma_service.aggregate_member_by_channels(karma_member)
         if channel_cursor is not None:
             # large embed with every channel
             print('impl')

@@ -15,26 +15,26 @@ from util.config import config, thanks_list
 class KarmaProducer(commands.Cog):
 
     def __init__(self, bot):
-        self._bot = bot
-        self._karma_service = KarmaService()
-        self._blocker_service = BlockerService()
-        self.members_on_cooldown = defaultdict(list)
+        self.bot = bot
+        self.karma_service = KarmaService()
+        self.blocker_service = BlockerService()
+        self._members_on_cooldown = defaultdict(list)
 
     # give karma if message has thanks and correct mentions
     @commands.Cog.listener()
     async def on_message(self, message):
         guild_id: int = message.guild.id
-        guild = self._bot.get_guild(guild_id)
-        if self._blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
+        guild = self.bot.get_guild(guild_id)
+        if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
             if await self.validate_message(message, guild):
-                if message.author.id not in self.members_on_cooldown[guild.id]:
+                if message.author.id not in self._members_on_cooldown[guild.id]:
                     await self.give_karma(message, guild, message.mentions[0], True)
 
     # remove karma on deleted message of said karma message
     @commands.Cog.listener()
     async def on_message_delete(self, message):
         guild_id: int = message.guild.id
-        guild = self._bot.get_guild(guild_id)
+        guild = self.bot.get_guild(guild_id)
         if await self.validate_message(message, guild):
             await self.give_karma(message, guild, message.mentions[0], False)
 
@@ -68,7 +68,7 @@ class KarmaProducer(commands.Cog):
     # return 1 if correct user mention
     def filter_mentions(self, message, guild) -> int:
         if len(message.role_mentions) == 0:
-            if not self._bot.get_user(self._bot.user.id).mentioned_in(message) \
+            if not self.bot.get_user(self.bot.user.id).mentioned_in(message) \
                     and not guild.get_member(message.author.id).mentioned_in(message):
                 if len(message.mentions) > 1:
                     return -1
@@ -76,8 +76,8 @@ class KarmaProducer(commands.Cog):
                     return 0
                 else:
                     member = message.mentions[0]
-                    if self._bot.get_user(member.id).bot \
-                            or self._blocker_service.find_member(Member(guild.id, member.id)):
+                    if self.bot.get_user(member.id).bot \
+                            or self.blocker_service.find_member(Member(guild.id, member.id)):
                         # other bot or blacklisted
                         return -1
                     else:
@@ -93,16 +93,16 @@ class KarmaProducer(commands.Cog):
     async def give_karma(self, message: discord.Message, guild: discord.Guild, member: discord.Member, inc: bool):
         if guild.get_member(member.id).mentioned_in(message):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
-            self._karma_service.upsert_karma_member(karma_member, inc)
+            self.karma_service.upsert_karma_member(karma_member, inc)
             if inc:
                 if member.nick is None:
-                    await self._bot.get_channel(int(config['channel']['log'])).send(
+                    await self.bot.get_channel(int(config['channel']['log'])).send(
                         '{} earned karma in {}'
                             .format(member.name + '#'
                                     + member.discriminator,
                                     message.channel.mention))
                 else:
-                    await self._bot.get_channel(int(config['channel']['log'])).send(
+                    await self.bot.get_channel(int(config['channel']['log'])).send(
                         '{} ({}) earned karma in {}'
                             .format(member.name + '#'
                                     + member.discriminator,
@@ -112,10 +112,10 @@ class KarmaProducer(commands.Cog):
 
     # create new timer and add the user to it
     async def cooldown_user(self, guild_id: int, member_id: int) -> None:
-        self.members_on_cooldown[guild_id].append(member_id)
+        self._members_on_cooldown[guild_id].append(member_id)
         await KarmaCooldownTimer(self.remove_from_cooldown, int(config['cooldown']),
                                  guild_id, member_id).start()
 
     # remove user from cooldown after time runs out
     async def remove_from_cooldown(self, guild_id: int, member_id: int) -> None:
-        self.members_on_cooldown[guild_id].remove(member_id)
+        self._members_on_cooldown[guild_id].remove(member_id)
