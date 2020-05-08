@@ -5,7 +5,7 @@ from util.config import roles
 
 
 # Changed based on the example at https://github.com/Rapptz/RoboDanny/blob/master/cogs/admin.py#L18
-class Admin(commands.cog):
+class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

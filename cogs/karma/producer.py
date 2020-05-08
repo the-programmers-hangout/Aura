@@ -49,8 +49,8 @@ class KarmaProducer(commands.Cog):
                 if mention_type == 1:
                     return True
                 else:
-                    # use member name
-                    print('not implemented yet')
+                    # use member name without mention
+                    print('not implemented')
         return False
 
     # check if message has thanks by using regex
@@ -76,9 +76,8 @@ class KarmaProducer(commands.Cog):
                     return 0
                 else:
                     member = message.mentions[0]
-                    if self.bot.get_user(member.id).bot \
-                            or self.blocker_service.find_member(Member(guild.id, member.id)):
-                        # other bot or blacklisted
+                    if self.bot.get_user(member.id).bot:
+                        # other bot
                         return -1
                     else:
                         return 1

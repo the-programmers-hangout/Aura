@@ -42,11 +42,8 @@ class KarmaService:
         pipeline = [{"$unwind": "$karma"}, {"$match": self._filter_query},
                     {"$group": {"_id": {"member_id": "$member_id"}, "karma": {"$sum": "$karma"}}}]
         doc_cursor = self._karma.aggregate(pipeline)
-        if doc_cursor is None:
-            return 0
-        else:
-            for doc in doc_cursor:
-                return doc['karma']
+        for doc in doc_cursor:
+            return doc['karma']
 
     def aggregate_member_by_channels(self, member: KarmaMember):
         self._filter_query['guild_id'] = member.guild_id
@@ -55,10 +52,7 @@ class KarmaService:
                     {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
                                 "karma": {"$sum": "$karma"}}}, {"$limit": profile()['channels']}]
         doc_cursor = self._karma.aggregate(pipeline)
-        if doc_cursor is None:
-            return None
-        else:
-            return doc_cursor
+        return doc_cursor
 
 
 class BlockerService:
