@@ -29,9 +29,6 @@ class KarmaProducer(commands.Cog):
             if await self.validate_message(message, guild):
                 if message.author.id not in self.members_on_cooldown[guild.id]:
                     await self.give_karma(message, guild, message.mentions[0], True)
-                else:
-                    await message.channel.send("Sorry, {}. Your Karma needs some time to recharge."
-                                               .format(message.author.mention))
 
     # remove karma on deleted message of said karma message
     @commands.Cog.listener()
@@ -79,8 +76,9 @@ class KarmaProducer(commands.Cog):
                     return 0
                 else:
                     member = message.mentions[0]
-                    if self._bot.get_user(member.id).bot:
-                        # other bot
+                    if self._bot.get_user(member.id).bot \
+                            or self._blocker_service.find_member(Member(guild.id, member.id)):
+                        # other bot or blacklisted
                         return -1
                     else:
                         return 1
