@@ -8,6 +8,9 @@ from core.service.karma_service import KarmaService
 
 # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
 # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
+from util.config import profile
+
+
 class KarmaProfile(commands.Cog):
 
     def __init__(self, bot):
@@ -61,6 +64,7 @@ class KarmaProfile(commands.Cog):
     async def build_profile_embed(self, karma_member: KarmaMember, guild) -> discord.Embed:
         channel_cursor = self.karma_service.aggregate_member_by_channels(karma_member)
         embed: discord.Embed = discord.Embed(colour=Color.dark_gold())
+        embed.description = 'Karma Profile with breakdown of top channels'
         total_karma: int = 0
         channel_list = list(channel_cursor)
         if len(channel_list) > 0:
@@ -68,8 +72,8 @@ class KarmaProfile(commands.Cog):
             for document in channel_list:
                 total_karma += document['karma']
                 channel = guild.get_channel(int(document['_id']['channel_id']))
-                embed.add_field(name="{}".format(channel.name), value=document['karma'], inline=False)
-            embed.set_field_at(index=0, name="Total Karma:", value=str(total_karma), inline=True)
+                embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=True)
+            embed.set_field_at(index=0, name="**total**", value=str(total_karma), inline=True)
             return embed
         else:
             # small embed since no karma etc.
