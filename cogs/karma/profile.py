@@ -14,7 +14,8 @@ class KarmaProfile(commands.Cog):
         self.karma_service = KarmaService()
 
     # get karma of yourself without any arguments, get karma of others with mention
-    @commands.command(brief='get karma of a user or yourself', description='prefix karma or prefix karma user_mention')
+    @commands.command(brief='get karma of a user or yourself',
+                      description='prefix karma or prefix karma user_mention')
     async def karma(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
         guild = self.bot.get_guild(int(guild_id))
