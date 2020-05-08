@@ -1,23 +1,26 @@
 import yaml
 
 
-class ConfigStore:
-    def __init__(self):
-        self._config = self.read_config()
+def read_config():
+    with open("config.yaml", 'r') as stream:
+        return yaml.safe_load(stream)
 
-    @property
-    def config(self):
-        return self._config
 
-    @property
-    def roles(self):
-        return self.config['roles']
+config = read_config()
 
-    @staticmethod
-    def read_config():
-        with open("config.yaml", 'r') as stream:
-            return yaml.safe_load(stream)
 
-    def write_config(self):
-        with open("config.yaml", 'w') as stream:
-            yaml.safe_dump(self.config, stream)
+def write_config():
+    with open("config.yaml", 'w') as stream:
+        yaml.safe_dump(config, stream)
+
+
+def roles():
+    return config['roles']
+
+
+def profile():
+    return config['profile']
+
+
+def thanks_list():
+    return ['thanks', 'ty', 'thank you']

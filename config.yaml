@@ -1,5 +1,5 @@
 channel:
-  log: 705036088858902620
+  log: '705164655617638510'
 cooldown: '35'
 database:
   host: mongo
@@ -7,9 +7,11 @@ database:
   password: example
   port: 27017
   username: root
-guild:
-prefix: +
+prefix: 'aura!'
 roles:
   admin: Admin
-  moderator: Moderator
+  moderator: Staff
+thanks: ''
 token:
+
+

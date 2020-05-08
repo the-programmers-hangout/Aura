@@ -1,19 +1,19 @@
 from discord.ext import commands
 from discord.ext.commands import has_role
 
-from util.config import ConfigStore
+from util.config import config, write_config, roles
 
 
 class SettingsManager(commands.Cog):
 
     def __init__(self, bot):
-        self._bot = bot
-        bot.remove_command("help")
-        self._config_manager = ConfigStore()
-        self._config = self._config_manager.config
+        self.bot = bot
 
-    @has_role(ConfigStore().roles['admin'])
-    @commands.command()
+    # edit config defined in config.yaml, return messages if incorrect args are provided.
+    # no checks on non existing configuration
+    @has_role(roles()['admin'])
+    @commands.command(brief='change configuration parameters, requires admin',
+                      description='change config params to new value, last value in params is new_value')
     async def config(self, ctx, *, params: str):
         args = params.split()
         if len(args) > 3:
@@ -22,12 +22,11 @@ class SettingsManager(commands.Cog):
             await ctx.channel.send('Your message needs at least two arguments.')
         else:
             if len(args) == 3:
-                self._config[args[0]][args[1]] = args[2]
-                print(self._config[args[0]][args[1]])
-                self._config_manager.write_config()
+                config[args[0]][args[1]] = args[2]
+                write_config()
                 await ctx.channel.send('Configuration parameter {} {} has been changed to {}'.format(args[0], args[1],
                                                                                                      args[2]))
             else:
-                self._config[args[0]] = args[1]
-                self._config_manager.write_config()
+                config[args[0]] = args[1]
+                write_config()
                 await ctx.channel.send('Configuration parameter {} has been changed to {}'.format(args[0], args[1]))

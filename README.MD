@@ -1,9 +1,6 @@
 #  Aura
 
-Aura is a micro bot written in Python with the simple goal of providing a server
-with a set of categories (helpful, creative, kind, funny, informative) to highlight 
-good conduct of members through other members. The goal is to have an intuitive usage with
-the topic of karma on discord.  
+Aura is a discord bot focused on rewarding user contributions through simple karma.
 
 ## Getting Started
 
@@ -15,7 +12,6 @@ To run this bot you need to manually fill out the following values in the config
 
 ```
 token: <Your Bot Account Token>
-guild: '<guild_id>'
 prefix: <prefix>
 role:
     admin: "<Exact Name of Admin role>"
@@ -45,7 +41,7 @@ This project uses [SemVer](http://semver.org/) for versioning. For the versions 
 
 ## Authors
 
-* **Georg G** - *Initial work* - [arkencl](https://github.com/arkencl)
+* **Georg Göring** - *Initial work* - [arkencl](https://github.com/arkencl)
 
 See also the list of [contributors](https://github.com/arkencl/aura/graphs/contributors) who participated in this project.
 
