@@ -47,9 +47,19 @@ dashboard, mongodb and discord bot. (**done**)
 * log karma in specific channel (**done**)
 
 ### 0.7.0 profiles
-* add karma profile embed (member.name+#+member.discriminator, top 5 karma channels + karma for each)
-* blacklist members
-* filter get karma by channel
+* update documentation (**done**)
+* convert config into module level variable / methods (**done**)
+* blacklist / whitelist members (**done**)
+* add karma profile embed (member.name+#+member.discriminator, top x karma channels + karma for each) (**done**)
+* move guild out of config and get it from the message (**done**)
+* add help command back in and add default descriptions (**done**)
+* add profile picture to profile embed (**done**)
+* various profile embed improvements (proper spacing etc.) (**done**)
 
-### 0.8.0 setup
-* add setup that is executed on first start (empty config.yaml)
+### 0.8.0 blacklist dm and config
+* improve config command:
+    - list all configuration parameters possible to set in an embed
+    - check for non existent configuration parameters
+    - keep sorting order the same
+    - filter out certain configuration parameters (prefix and token are not supposed to be changeable on start anyway)
+* dm users that are blacklisted when they try to give out karma
