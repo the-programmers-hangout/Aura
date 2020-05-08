@@ -25,10 +25,14 @@ class KarmaProducer(commands.Cog):
     async def on_message(self, message):
         guild_id: int = message.guild.id
         guild = self.bot.get_guild(guild_id)
-        if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
-            if await self.validate_message(message, guild):
+        if await self.validate_message(message, guild):
+            if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
                 if message.author.id not in self._members_on_cooldown[guild.id]:
                     await self.give_karma(message, guild, message.mentions[0], True)
+            else:
+                await message.author.send('You have been blacklisted from giving out Karma, '
+                                          'if you believe this to be an error contact {}.'
+                                          .format(config['blacklist']))
 
     # remove karma on deleted message of said karma message
     @commands.Cog.listener()

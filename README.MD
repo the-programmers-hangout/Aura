@@ -17,7 +17,7 @@ role:
     admin: "<Exact Name of Admin role>"
 ```
 
-Every other value can be filled or updated by executing \<prefix> 
+Every other value can be updated by executing \<prefix>
 config \<key> or config \<key> \<key> etc. for the
 according key in the config yaml with a user that has the configured admin role.
 
@@ -27,9 +27,11 @@ TBD
 
 ## Dependencies
 
-* see the [requirements file](requirements.txt)
+* see the [requirements file](requirements.txt) for the python app dependencies
 * Docker
-* Docker-Compose
+* Docker-Compose compatible with 3.7
+* MongoDB (tested with version 4.2.5)
+
 
 ## Contributing
 
