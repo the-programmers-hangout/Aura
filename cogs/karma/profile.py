@@ -66,7 +66,7 @@ class KarmaProfile(commands.Cog):
     async def build_profile_embed(self, karma_member: KarmaMember, guild) -> discord.Embed:
         channel_cursor = self.karma_service.aggregate_member_by_channels(karma_member)
         embed: discord.Embed = discord.Embed(colour=Color.dark_gold())
-        embed.description = 'Karma Profile with breakdown of top channels'
+        embed.description = 'Karma Profile with breakdown of top {} channels'.format(profile()['channels'])
         total_karma: int = 0
         channel_list = list(channel_cursor)
         if len(channel_list) > 0:
@@ -75,9 +75,9 @@ class KarmaProfile(commands.Cog):
                 total_karma += document['karma']
                 channel = guild.get_channel(int(document['_id']['channel_id']))
                 embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=True)
-            embed.set_field_at(index=0, name="**total**", value=str(total_karma), inline=True)
+            embed.set_field_at(index=0, name="**total**", value=str(total_karma), inline=False)
             return embed
         else:
             # small embed since no karma etc.
-            embed.add_field(name="Total Karma:", value=str(total_karma), inline=True)
+            embed.add_field(name="**total**", value=str(total_karma), inline=False)
             return embed
