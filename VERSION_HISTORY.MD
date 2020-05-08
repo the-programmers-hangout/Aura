@@ -61,3 +61,10 @@ dashboard, mongodb and discord bot. (**done**)
 * improve config command:
     - check for non existent configuration parameters (**done**)
     - filter out certain configuration parameters (prefix and token) (**done**)
+
+### 0.9.0 pre-release 1.0.0
+* add tests
+* add check on nickname for profile, add nickname to profile
+
+### 1.0.0 release version
+* tidy up code
