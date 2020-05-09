@@ -64,8 +64,9 @@ dashboard, mongodb and discord bot. (**done**)
 
 ### 0.9.0 pre-release 1.0.0
 * add tests
-* add check on nickname for profile
-* add nickname to profile
+* add some exception handling
+* add check on nickname for profile (**done**)
+* add nickname to profile (**done**)
 
 ### 1.0.0 release version
 * tidy up code
