@@ -49,8 +49,12 @@ class KarmaProfile(commands.Cog):
         if len(ctx.message.mentions) == 0:
             karma_member = KarmaMember(guild_id, ctx.message.author.id)
             embed = await self.build_profile_embed(karma_member, guild)
-            embed.title = "Profile of {}".format(ctx.message.author.name + "#" + ctx.message.author.discriminator)
+            if ctx.message.author.nick is None:
+                embed.title = "Profile of {}".format(ctx.message.author.name + "#" + ctx.message.author.discriminator)
+            else:
+                embed.title = "Profile of {}".format(ctx.message.author.nick)
             embed.set_thumbnail(url=ctx.author.avatar_url)
+
             await ctx.channel.send(embed=embed)
         elif len(ctx.message.mentions) == 1:
             message = ctx.message
@@ -59,7 +63,10 @@ class KarmaProfile(commands.Cog):
                     member.id).mentioned_in(message):
                 karma_member = KarmaMember(guild_id, member.id)
                 embed = await self.build_profile_embed(karma_member, guild)
-                embed.title = "Profile of {}".format(member.name + "#" + member.discriminator)
+                if member.nick is None:
+                    embed.title = "Profile of {}".format(member.name + "#" + member.discriminator)
+                else:
+                    embed.title = "Profile of {}".format(member.nick)
                 embed.set_thumbnail(url=member.avatar_url)
                 await ctx.channel.send(embed=embed)
 
