@@ -44,8 +44,8 @@ class KarmaGiving(unittest.TestCase):
     dummy_wrong_message_content = 'lmao <@1>'
     dummy_correct_message_content = 'thanks <@1>'
 
-    pytestmark = pytest.mark.asyncio
 
+    @pytest.mark.asyncio
     async def test_karma_given(self):
         message_instance.content = 'thanks <@1>'
         is_valid = await self.karma_producer.validate_message(message=message_instance, guild=guild_instance)
