@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 
-
 # Database Class using MongoClient from pymongo
 from util.config import config
 
@@ -18,9 +17,9 @@ class DataSource(object):
 
 
 blacklist = DataSource(config['database']['host'], config['database']['port'],
-           config['database']['username'], config['database']['password'],
-           config['database']['name']).db.blacklist
+                       config['database']['username'], config['database']['password'],
+                       config['database']['name']).db.blacklist
 
 karma = DataSource(config['database']['host'], config['database']['port'],
-                       config['database']['username'], config['database']['password'],
-                       config['database']['name']).db.karma
+                   config['database']['username'], config['database']['password'],
+                   config['database']['name']).db.karma

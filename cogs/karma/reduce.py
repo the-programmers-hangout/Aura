@@ -11,9 +11,9 @@ from util.config import roles
 # Karma Reducer Class remove karma
 class KarmaReducer(commands.Cog):
 
-    def __init__(self, bot):
+    def __init__(self, bot, karma_service=KarmaService(datasource.karma)):
         self.bot = bot
-        self.karma_service = KarmaService(datasource.karma)
+        self.karma_service = karma_service
 
     # remove all karma from member
     @has_any_role(roles()['admin'], roles()['moderator'])
