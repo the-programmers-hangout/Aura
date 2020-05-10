@@ -4,6 +4,7 @@ from collections import defaultdict
 import discord
 from discord.ext import commands
 
+from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaCooldownTimer
@@ -16,8 +17,8 @@ class KarmaProducer(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.karma_service = KarmaService()
-        self.blocker_service = BlockerService()
+        self.karma_service = KarmaService(datasource.karma)
+        self.blocker_service = BlockerService(datasource.blacklist)
         self._members_on_cooldown = defaultdict(list)
 
     # give karma if message has thanks and correct mentions
