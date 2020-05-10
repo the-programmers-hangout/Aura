@@ -66,6 +66,7 @@ dashboard, mongodb and discord bot. (**done**)
 * tidy up code
 * add tests
 * add some exception handling
+* make it possible to thank several people in a message
 * add check on nickname for profile (**done**)
 * add nickname to profile (**done**)
 * add emote thumps up to thanks messages (**done**)
