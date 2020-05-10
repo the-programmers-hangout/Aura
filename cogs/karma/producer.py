@@ -15,10 +15,11 @@ from util.config import config, thanks_list
 # Class that gives positive karma and negative karma on message deletion (take back last action)
 class KarmaProducer(commands.Cog):
 
-    def __init__(self, bot):
+    def __init__(self, bot, karma_service=KarmaService(datasource.karma),
+                 blocker_service=BlockerService(datasource.blacklist)):
         self.bot = bot
-        self.karma_service = KarmaService(datasource.karma)
-        self.blocker_service = BlockerService(datasource.blacklist)
+        self.karma_service = karma_service
+        self.blocker_service = blocker_service
         self._members_on_cooldown = defaultdict(list)
 
     # give karma if message has thanks and correct mentions
