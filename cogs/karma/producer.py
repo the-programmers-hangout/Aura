@@ -100,19 +100,24 @@ class KarmaProducer(commands.Cog):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
             self.karma_service.upsert_karma_member(karma_member, inc)
             if inc:
-                if member.nick is None:
-                    await self.bot.get_channel(int(config['channel']['log'])).send(
-                        '{} earned karma in {}'
-                            .format(member.name + '#'
-                                    + member.discriminator,
-                                    message.channel.mention))
-                else:
-                    await self.bot.get_channel(int(config['channel']['log'])).send(
-                        '{} ({}) earned karma in {}'
-                            .format(member.name + '#'
-                                    + member.discriminator,
-                                    member.nick,
-                                    message.channel.mention))
+                if config['karma']['log']:
+                    if member.nick is None:
+                        await self.bot.get_channel(int(config['channel']['log'])).send(
+                            '{} earned karma in {}'
+                                .format(member.name + '#'
+                                        + member.discriminator,
+                                        message.channel.mention))
+                    else:
+                        await self.bot.get_channel(int(config['channel']['log'])).send(
+                            '{} ({}) earned karma in {}'.format(member.name + '#'
+                                                                + member.discriminator,
+                                                                member.nick,
+                                                                message.channel.mention))
+                if config['karma']['message']:
+                    self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned a karma.'
+                                                                  .format(member.mention))
+                if config['karma']['emote']:
+                    await message.add_reaction('👍')
             await self.cooldown_user(guild.id, message.author.id)
 
     # create new timer and add the user to it

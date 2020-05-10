@@ -2,6 +2,10 @@ blacklist: Modmail
 channel:
   log: '707943244998115341'
 cooldown: '20'
+karma:
+  message: True
+  log: True
+  emote: True
 database:
   host: mongo
   name: aura

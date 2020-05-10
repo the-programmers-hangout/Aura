@@ -68,5 +68,6 @@ dashboard, mongodb and discord bot. (**done**)
 * add some exception handling
 * add check on nickname for profile (**done**)
 * add nickname to profile (**done**)
+* add emote thumps up to thanks messages
 * add config in regards to show how karma was received
-(thumps emote, chat message or just log)
+(thumps emote, chat message, log)
