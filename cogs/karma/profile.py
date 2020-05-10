@@ -2,6 +2,7 @@ import discord
 from discord import Color
 from discord.ext import commands
 
+from core import datasource
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
 
@@ -13,9 +14,9 @@ from util.config import profile
 
 class KarmaProfile(commands.Cog):
 
-    def __init__(self, bot):
+    def __init__(self, bot, karma_service=KarmaService(datasource.karma)):
         self.bot = bot
-        self.karma_service = KarmaService()
+        self.karma_service = karma_service
 
     # get karma of yourself without any arguments, get karma of others with mention
     @commands.command(brief='get karma of a user or yourself',

@@ -114,7 +114,7 @@ class KarmaProducer(commands.Cog):
                                                                 member.nick,
                                                                 message.channel.mention))
                 if config['karma']['message']:
-                    self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned a karma.'
+                    await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned a karma.'
                                                                   .format(member.mention))
                 if config['karma']['emote']:
                     await message.add_reaction('👍')
