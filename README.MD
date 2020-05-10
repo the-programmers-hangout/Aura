@@ -35,7 +35,7 @@ according key in the config yaml with a user that has the configured admin role.
 
 ## Running the tests
 
-TBD
+Mongomock is required to run the existing tests in the test directory.
 
 ## Dependencies
 
