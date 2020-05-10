@@ -27,10 +27,12 @@ class KarmaProducer(commands.Cog):
     async def on_message(self, message):
         guild_id: int = message.guild.id
         guild = self.bot.get_guild(guild_id)
-        if await self.validate_message(message, guild):
+        sanitized_message = await self.validate_message(message, guild)
+        if sanitized_message is not None:
             if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
                 if message.author.id not in self._members_on_cooldown[guild.id]:
-                    await self.give_karma(message, guild, message.mentions[0], True)
+                    await self.give_karma(sanitized_message, guild, True)
+                    await self.cooldown_user(guild.id, message.author.id)
             else:
                 await message.author.send('You have been blacklisted from giving out Karma, '
                                           'if you believe this to be an error contact {}.'
@@ -41,23 +43,17 @@ class KarmaProducer(commands.Cog):
     async def on_message_delete(self, message):
         guild_id: int = message.guild.id
         guild = self.bot.get_guild(guild_id)
-        if await self.validate_message(message, guild):
-            await self.give_karma(message, guild, message.mentions[0], False)
+        sanitized_message = await self.validate_message(message, guild)
+        if sanitized_message is not None:
+            await self.give_karma(sanitized_message, guild, message.mentions[0], False)
 
     # check if message is a valid message for karma
-    async def validate_message(self, message, guild) -> bool:
+    async def validate_message(self, message, guild):
         # check if message has any variation of thanks
         if self.has_thanks(message):
-            # filter out messages without incorrect mention
-            mention_type: int = self.filter_mentions(message, guild)
-            # give karma to user
-            if mention_type > -1:
-                if mention_type == 1:
-                    return True
-                else:
-                    # use member name without mention
-                    print('not implemented')
-        return False
+            new_message = self.sanatize_message(message)
+            return new_message
+        return None
 
     # check if message has thanks by using regex
     def has_thanks(self, message) -> bool:
@@ -67,58 +63,45 @@ class KarmaProducer(commands.Cog):
                 return True
         return False
 
-    # returns -1 if mentions are incorrect for karma -> everything but user mention, mention of bot id
-    # mention of author id himself, mention of karma bot id
-    # return 0 if message has no mention
-    # -> (will be handled in a future version where messages with no mentions are potentially considered).
-    # return 1 if correct user mention
-    def filter_mentions(self, message, guild) -> int:
-        if len(message.role_mentions) == 0:
-            if not self.bot.get_user(self.bot.user.id).mentioned_in(message) \
-                    and not guild.get_member(message.author.id).mentioned_in(message):
-                if len(message.mentions) > 1:
-                    return -1
-                elif len(message.mentions) == 0:
-                    return 0
-                else:
-                    member = message.mentions[0]
-                    if self.bot.get_user(member.id).bot:
-                        # other bot
-                        return -1
-                    else:
-                        return 1
-            else:
-                return -1
-        else:
-            return -1
+    # remove role mentions if they exist
+    # remove self mentions if they exist
+    # remove bot mentions if they exist
+    def sanatize_message(self, message):
+        for mention in message.mentions:
+            print(mention)
+        return message
 
-    # give karma to user.
+    # give karma to all users in a message
     # logged to a configured channel with member name & discriminator, optionally with nickname
     # cooldown author after successfully giving karma
-    async def give_karma(self, message: discord.Message, guild: discord.Guild, member: discord.Member, inc: bool):
-        if guild.get_member(member.id).mentioned_in(message):
+    async def give_karma(self, message: discord.Message, guild: discord.Guild, inc: bool):
+        for mention in message.mentions:
+            member = mention
             karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
             self.karma_service.upsert_karma_member(karma_member, inc)
             if inc:
-                if str(config['karma']['log']).lower() == 'true':
-                    if member.nick is None:
-                        await self.bot.get_channel(int(config['channel']['log'])).send(
-                            '{} earned karma in {}'
-                                .format(member.name + '#'
-                                        + member.discriminator,
-                                        message.channel.mention))
-                    else:
-                        await self.bot.get_channel(int(config['channel']['log'])).send(
-                            '{} ({}) earned karma in {}'.format(member.name + '#'
-                                                                + member.discriminator,
-                                                                member.nick,
-                                                                message.channel.mention))
-                if str(config['karma']['message']).lower() == 'true':
-                    await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned a karma.'
-                                                                        .format(member.mention))
-                if str(config['karma']['emote']).lower() == 'true':
-                    await message.add_reaction('👍')
-            await self.cooldown_user(guild.id, message.author.id)
+                await self.notify_member(message, member)
+
+    # notify user about successful karma gain
+    async def notify_member(self, message, member):
+        if str(config['karma']['log']).lower() == 'true':
+            if member.nick is None:
+                await self.bot.get_channel(int(config['channel']['log'])).send(
+                    '{} earned karma in {}'
+                        .format(member.name + '#'
+                                + member.discriminator,
+                                message.channel.mention))
+            else:
+                await self.bot.get_channel(int(config['channel']['log'])).send(
+                    '{} ({}) earned karma in {}'.format(member.name + '#'
+                                                        + member.discriminator,
+                                                        member.nick,
+                                                        message.channel.mention))
+        if str(config['karma']['message']).lower() == 'true':
+            await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned a karma.'
+                                                                .format(member.mention))
+        if str(config['karma']['emote']).lower() == 'true':
+            await message.add_reaction('👍')
 
     # create new timer and add the user to it
     async def cooldown_user(self, guild_id: int, member_id: int) -> None:
