@@ -62,12 +62,11 @@ dashboard, mongodb and discord bot. (**done**)
     - check for non existent configuration parameters (**done**)
     - filter out certain configuration parameters (prefix and token) (**done**)
 
-### 0.9.0 pre-release
+### 1.0.0 release version
+* tidy up code
 * add tests
 * add some exception handling
 * add check on nickname for profile (**done**)
 * add nickname to profile (**done**)
-* add config in regards to show how karma was received (thumps emote, chat message or just log)
-
-### 1.0.0 release version
-* tidy up code
+* add config in regards to show how karma was received
+(thumps emote, chat message or just log)
