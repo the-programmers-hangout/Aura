@@ -1,6 +1,7 @@
 from discord.ext import commands
 from discord.ext.commands import has_any_role, has_role
 
+from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 
@@ -12,7 +13,7 @@ class KarmaReducer(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.karma_service = KarmaService()
+        self.karma_service = KarmaService(datasource.karma)
 
     # remove all karma from member
     @has_any_role(roles()['admin'], roles()['moderator'])
@@ -28,7 +29,7 @@ class KarmaBlocker(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.blocker_service = BlockerService()
+        self.blocker_service = BlockerService(datasource.blacklist)
 
     @has_role(roles()['admin'])
     @commands.command(brief='blacklists a member from this bot, requires admin',
