@@ -16,9 +16,9 @@ class MemberIsBlackListed(unittest.TestCase):
     blocker_service = BlockerService(blacklisted)
     member = Member('1', '1')
     member_2 = Member('1', '2')
-    blocker_service.blacklist(member)
 
     def test_blacklisted_correctly(self):
+        self.blocker_service.blacklist(self.member)
         assert self.blocker_service.find_member(self.member) is not None
         assert self.blocker_service.find_member(self.member_2) is None
 

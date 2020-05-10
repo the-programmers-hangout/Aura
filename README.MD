@@ -35,7 +35,11 @@ according key in the config yaml with a user that has the configured admin role.
 
 ## Running the tests
 
-Mongomock is required to run the existing tests in the test directory.
+```
+pip install pytest-asyncio
+pip install mongomock
+python -m pytest tests/
+```
 
 ## Dependencies
 
