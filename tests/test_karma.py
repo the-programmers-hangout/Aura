@@ -44,7 +44,6 @@ class KarmaGiving(unittest.TestCase):
     dummy_wrong_message_content = 'lmao <@1>'
     dummy_correct_message_content = 'thanks <@1>'
 
-
     @pytest.mark.asyncio
     async def test_karma_given(self):
         message_instance.content = 'thanks <@1>'

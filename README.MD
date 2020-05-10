@@ -38,7 +38,7 @@ according key in the config yaml with a user that has the configured admin role.
 ```
 pip install pytest-asyncio
 pip install mongomock
-python -m pytest tests/
+python -m pytest tests/ or pytest tests/
 ```
 
 ## Dependencies
