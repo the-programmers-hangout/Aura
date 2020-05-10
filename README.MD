@@ -1,10 +1,22 @@
-#  Aura
+#  Aura - Discord
 
-Aura is a discord bot focused on rewarding user contributions through simple karma.
+Aura is a discord bot focused on rewarding user contributions through
+a point system called karma. It has the following features:
+
+* Give out karma on messages containing thanks, ty, thank you case-insensitive
+with a single non bot user mention.
+* Blacklist and Whitelist Members from giving out karma.
+    * Blacklisted Members will get a DM specifying who to contact to dispute it
+* Karma Profile with the Profile Picture, full name (name + discriminator) or nick,
+total karma and karma breakdown by top x channels configured.
+* Cooldown Members from giving out karma after giving it out or set the timer to 0.
+* Reset all Karma of a Member in a guild
+* Delete karma on message delete of the triggering message.
+* Change most configuration on the fly by providing keys from the config.yaml
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
@@ -43,7 +55,7 @@ This project uses [SemVer](http://semver.org/) for versioning. For the versions 
 
 ## Authors
 
-* **Georg Göring** - *Initial work* - [arkencl](https://github.com/arkencl)
+* **Georg Göring** - *Original Author* - [arkencl](https://github.com/arkencl)
 
 See also the list of [contributors](https://github.com/arkencl/aura/graphs/contributors) who participated in this project.
 
