@@ -100,7 +100,7 @@ class KarmaProducer(commands.Cog):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
             self.karma_service.upsert_karma_member(karma_member, inc)
             if inc:
-                if config['karma']['log']:
+                if str(config['karma']['log']).lower() == 'true':
                     if member.nick is None:
                         await self.bot.get_channel(int(config['channel']['log'])).send(
                             '{} earned karma in {}'
@@ -113,10 +113,10 @@ class KarmaProducer(commands.Cog):
                                                                 + member.discriminator,
                                                                 member.nick,
                                                                 message.channel.mention))
-                if config['karma']['message']:
+                if str(config['karma']['message']).lower() == 'true':
                     await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned a karma.'
-                                                                  .format(member.mention))
-                if config['karma']['emote']:
+                                                                        .format(member.mention))
+                if str(config['karma']['emote']).lower() == 'true':
                     await message.add_reaction('👍')
             await self.cooldown_user(guild.id, message.author.id)
 
