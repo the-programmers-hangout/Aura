@@ -2,6 +2,8 @@ blacklist: Modmail
 channel:
   log: '707943244998115341'
 cooldown: '20'
+  emote: 'true'
+  message: 'false'
 database:
   host: mongo
   name: aura
@@ -19,3 +21,4 @@ roles:
   admin: Admin
   moderator: Staff
 token:
+

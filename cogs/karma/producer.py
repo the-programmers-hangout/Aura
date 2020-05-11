@@ -32,7 +32,12 @@ class KarmaProducer(commands.Cog):
                 if message.author.id not in self._members_on_cooldown[guild.id]:
                     await self.give_karma(message, guild, True)
                 else:
-                    await message.add_reaction('🕒')
+                    if str(config['cooldown']['emote']).lower() == "true":
+                        await message.add_reaction('🕒')
+                    if str(config['cooldown']['message']).lower() == "true":
+                        await self.bot.get_channel(message.channel.id) \
+                            .send('Sorry {}, your karma needs time to recharge'
+                                  .format(message.author.mention))
             else:
                 await message.author.send('You have been blacklisted from giving out Karma, '
                                           'if you believe this to be an error contact {}.'
