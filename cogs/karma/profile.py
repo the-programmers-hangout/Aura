@@ -24,21 +24,27 @@ class KarmaProfile(commands.Cog):
     async def karma(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
         message = ctx.message
+        return_msg = ''
         if len(message.mentions) > 0:
             for member in message.mentions:
                 karma_member = KarmaMember(guild_id, member.id)
                 karma = self.karma_service.aggregate_member_by_karma(karma_member)
                 if karma is None:
-                    await ctx.channel.send('{} has earned a total of {} karma'
-                                           .format(member.name + '#' + member.discriminator, 0))
+                    return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#' + member.discriminator,
+                                                                               0)
                 else:
-                    await ctx.channel.send('{} has earned a total of {} karma'
-                                           .format(member.name + '#' + member.discriminator, karma))
+                    return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#' + member.discriminator,
+                                                                               karma)
         elif len(message.mentions) == 0:
             karma_member = KarmaMember(guild_id, ctx.message.author.id)
             karma = self.karma_service.aggregate_member_by_karma(karma_member)
-            await ctx.channel.send('{} has earned a total of {} karma'
-                                   .format(ctx.message.author.name + '#' + ctx.author.discriminator, karma))
+            if karma is None:
+                return_msg += '{} has earned a total of {} karma\n'.format(ctx.message.author.name + '#'
+                                                                           + ctx.message.author.discriminator,0)
+            else:
+                return_msg += '{} has earned a total of {} karma'.format(ctx.message.author.name + '#'
+                                                                         + ctx.message.author.discriminator, karma)
+        await ctx.channel.send(return_msg)
 
     @commands.command(brief='get karma profile of a user or yourself',
                       description='prefix profile or prefix profile user_mention')

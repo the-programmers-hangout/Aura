@@ -36,7 +36,7 @@ class KarmaService:
         return self._karma.delete_many(filter=filter_member)
 
     # aggregate overall karma of a member
-    def aggregate_member_by_karma(self, member: KarmaMember) -> int:
+    def aggregate_member_by_karma(self, member: KarmaMember):
         self._filter_query['guild_id'] = member.guild_id
         self._filter_query['member_id'] = member.member_id
         pipeline = [{"$unwind": "$karma"}, {"$match": self._filter_query},
