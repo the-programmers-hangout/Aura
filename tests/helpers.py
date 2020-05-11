@@ -46,6 +46,7 @@ message_data = {
     'webhook_id': 431341013479718912,
     'attachments': [],
     'embeds': [],
+    'mentions': [],
     'application': 'Python Discord',
     'activity': 'mocking',
     'channel': channel_instance,

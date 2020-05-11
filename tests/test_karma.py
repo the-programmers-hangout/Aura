@@ -1,13 +1,14 @@
 import unittest
 from unittest import mock
 
+import asynctest as asynctest
 import mongomock
 import pytest
 
 from cogs.karma.producer import KarmaProducer
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService, BlockerService
-from tests.helpers import message_instance, guild_instance
+from tests.helpers import message_instance
 
 if __name__ == '__main__':
     unittest.main()
@@ -34,7 +35,7 @@ class KarmaChange(unittest.TestCase):
 
 
 # Verify that karma giving works on all possible permutations
-class KarmaGiving(unittest.TestCase):
+class KarmaGiving(asynctest.TestCase):
     karma_storage = mongomock.MongoClient().db.karma
     blacklisted = mongomock.MongoClient().db.blacklist
     blocker_service = BlockerService(blacklisted)
@@ -42,10 +43,10 @@ class KarmaGiving(unittest.TestCase):
     karma_producer = KarmaProducer(mock.MagicMock(), karma_service=karma_service, blocker_service=blocker_service)
 
     dummy_wrong_message_content = 'lmao <@1>'
-    dummy_correct_message_content = 'thanks <@1>'
+    dummy_correct_message_content = 'thanks'
 
     @pytest.mark.asyncio
     async def test_karma_given(self):
-        message_instance.content = 'thanks <@1>'
-        is_valid = await self.karma_producer.validate_message(message=message_instance, guild=guild_instance)
+        message_instance.content = self.dummy_correct_message_content
+        is_valid = await self.karma_producer.validate_message(message=message_instance)
         assert is_valid
