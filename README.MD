@@ -3,16 +3,26 @@
 Aura is a discord bot focused on rewarding user contributions through
 a point system called karma. It has the following features:
 
-* Give out karma on messages containing thanks, ty, thank you case-insensitive
-with a single non bot user mention.
+* Give out karma on messages containing thanks, ty, thank you case-insensitive.
+    * Several Member Mentions in a message possible.
+    * Ignores other Mentions.
+    * Ignores bot mentions.
+    * Ignores message author mentions.
+* Configurable Feedback on karma gain
+    - Logging to a channel.
+    - Thumps up reaction to the message.
+    - Affirmation Message in same channel as the thank you message.
 * Blacklist and Whitelist Members from giving out karma.
-    * Blacklisted Members will get a DM specifying who to contact to dispute it
+    * Blacklisted Members will get a DM specifying who to contact to dispute it.
+* Get Karma of one or multiple Members through Mentions, or message author without mentions.
 * Karma Profile with the Profile Picture, full name (name + discriminator) or nick,
-total karma and karma breakdown by top x channels configured.
+total karma and karma breakdown by top x channels configured, single mention or no mention for message author profile.
 * Cooldown Members from giving out karma after giving it out or set the timer to 0.
-* Reset all Karma of a Member in a guild
-* Delete karma on message delete of the triggering message.
-* Change most configuration on the fly by providing keys from the config.yaml
+* Reset all Karma of a Member in a guild.
+* Delete karma from Members on message delete of the message that gave out karma.
+* Change most configuration on the fly by providing keys from the config.yaml.
+* This should work on multiple guilds with following caveats:
+   * Global Configuration unless several instances
 
 ## Getting Started
 

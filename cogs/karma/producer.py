@@ -31,6 +31,8 @@ class KarmaProducer(commands.Cog):
             if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
                 if message.author.id not in self._members_on_cooldown[guild.id]:
                     await self.give_karma(message, guild, True)
+                else:
+                    await message.add_reaction('🕒')
             else:
                 await message.author.send('You have been blacklisted from giving out Karma, '
                                           'if you believe this to be an error contact {}.'
