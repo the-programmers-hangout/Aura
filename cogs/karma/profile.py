@@ -23,20 +23,18 @@ class KarmaProfile(commands.Cog):
                       description='prefix karma or prefix karma user_mention')
     async def karma(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
-        guild = self.bot.get_guild(int(guild_id))
         message = ctx.message
-        member = message.mentions[0]
-        if not self.bot.get_user(self.bot.user.id).mentioned_in(message) and guild.get_member(
-                member.id).mentioned_in(message):
-            karma_member = KarmaMember(guild_id, member.id)
-            karma = self.karma_service.aggregate_member_by_karma(karma_member)
-            if karma is None:
-                await ctx.channel.send('{} has earned a total of {} karma'
-                                       .format(member.name + '#' + member.discriminator, 0))
-            else:
-                await ctx.channel.send('{} has earned a total of {} karma'
-                                       .format(member.name + '#' + member.discriminator, karma))
-        elif len(ctx.message.mentions) == 0:
+        if len(message.mentions) > 0:
+            for member in message.mentions:
+                karma_member = KarmaMember(guild_id, member.id)
+                karma = self.karma_service.aggregate_member_by_karma(karma_member)
+                if karma is None:
+                    await ctx.channel.send('{} has earned a total of {} karma'
+                                           .format(member.name + '#' + member.discriminator, 0))
+                else:
+                    await ctx.channel.send('{} has earned a total of {} karma'
+                                           .format(member.name + '#' + member.discriminator, karma))
+        elif len(message.mentions) == 0:
             karma_member = KarmaMember(guild_id, ctx.message.author.id)
             karma = self.karma_service.aggregate_member_by_karma(karma_member)
             await ctx.channel.send('{} has earned a total of {} karma'
