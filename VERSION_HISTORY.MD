@@ -66,6 +66,7 @@ dashboard, mongodb and discord bot. (**done**)
 * tidy up code
 * add tests for every major functionality
 * add some exception handling
+* add config embed (**done**)
 * make it possible to thank several people in a message (**done**)
 * make it possible to get the karma of several mentions in a message (**done**)
 * add check on nickname for profile (**done**)
