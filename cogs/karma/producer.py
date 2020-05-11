@@ -32,9 +32,9 @@ class KarmaProducer(commands.Cog):
                 if message.author.id not in self._members_on_cooldown[guild.id]:
                     await self.give_karma(message, guild, True)
                 else:
-                    if str(config['cooldown']['emote']).lower() == "true":
+                    if str(config['karma']['time-emote']).lower() == "true":
                         await message.add_reaction('🕒')
-                    if str(config['cooldown']['message']).lower() == "true":
+                    if str(config['karma']['time-message']).lower() == "true":
                         await self.bot.get_channel(message.channel.id) \
                             .send('Sorry {}, your karma needs time to recharge'
                                   .format(message.author.mention))
