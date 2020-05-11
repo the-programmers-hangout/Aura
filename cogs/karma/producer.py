@@ -27,33 +27,28 @@ class KarmaProducer(commands.Cog):
     async def on_message(self, message):
         guild_id: int = message.guild.id
         guild = self.bot.get_guild(guild_id)
-        sanitized_message = await self.validate_message(message, guild)
-        if sanitized_message is not None:
-            if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
-                if message.author.id not in self._members_on_cooldown[guild.id]:
-                    await self.give_karma(sanitized_message, guild, True)
-                    await self.cooldown_user(guild.id, message.author.id)
-            else:
-                await message.author.send('You have been blacklisted from giving out Karma, '
-                                          'if you believe this to be an error contact {}.'
-                                          .format(config['blacklist']))
+        if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
+            if message.author.id not in self._members_on_cooldown[guild.id]:
+                if self.validate_message(message):
+                    await self.give_karma(message, guild, True)
+        else:
+            await message.author.send('You have been blacklisted from giving out Karma, '
+                                      'if you believe this to be an error contact {}.'
+                                      .format(config['blacklist']))
 
     # remove karma on deleted message of said karma message
     @commands.Cog.listener()
     async def on_message_delete(self, message):
         guild_id: int = message.guild.id
         guild = self.bot.get_guild(guild_id)
-        sanitized_message = await self.validate_message(message, guild)
-        if sanitized_message is not None:
-            await self.give_karma(sanitized_message, guild, message.mentions[0], False)
+        await self.give_karma(message, guild, False)
 
     # check if message is a valid message for karma
-    async def validate_message(self, message, guild):
+    async def validate_message(self, message) -> bool:
         # check if message has any variation of thanks
-        if self.has_thanks(message):
-            new_message = self.sanatize_message(message)
-            return new_message
-        return None
+        if self.has_thanks(message) and len(message.mentions) > 0:
+            return True
+        return False
 
     # check if message has thanks by using regex
     def has_thanks(self, message) -> bool:
@@ -63,24 +58,22 @@ class KarmaProducer(commands.Cog):
                 return True
         return False
 
-    # remove role mentions if they exist
-    # remove self mentions if they exist
-    # remove bot mentions if they exist
-    def sanatize_message(self, message):
-        for mention in message.mentions:
-            print(mention)
-        return message
-
-    # give karma to all users in a message
+    # give karma to all users in a message except author, other bots or aura itself.
     # logged to a configured channel with member name & discriminator, optionally with nickname
     # cooldown author after successfully giving karma
     async def give_karma(self, message: discord.Message, guild: discord.Guild, inc: bool):
+        karma_given = 0
         for mention in message.mentions:
             member = mention
-            karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
-            self.karma_service.upsert_karma_member(karma_member, inc)
-            if inc:
-                await self.notify_member(message, member)
+            if member.id != message.author.id and member.id != self.bot.user.id and not \
+                    self.bot.get_user(member.id).bot:
+                karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
+                self.karma_service.upsert_karma_member(karma_member, inc)
+                karma_given += 1
+                if inc:
+                    await self.notify_member(message, member)
+        if karma_given > 0:
+            await self.cooldown_user(guild.id, message.author.id)
 
     # notify user about successful karma gain
     async def notify_member(self, message, member):
