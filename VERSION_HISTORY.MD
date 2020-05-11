@@ -64,9 +64,10 @@ dashboard, mongodb and discord bot. (**done**)
 
 ### 1.0.0 release version
 * tidy up code
-* add tests
+* add tests for every major functionality
 * add some exception handling
-* make it possible to thank several people in a message
+* make it possible to thank several people in a message (**done**)
+* make it possible to get the karma of several mentions in a message (**done**)
 * add check on nickname for profile (**done**)
 * add nickname to profile (**done**)
 * add emote thumps up to thanks messages (**done**)
