@@ -51,7 +51,7 @@ pip install mongomock
 python -m pytest tests/ or pytest tests/
 ```
 
-## Dependencies
+## Requirements
 
 * see the [requirements file](requirements.txt) for the python app dependencies
 * Docker
