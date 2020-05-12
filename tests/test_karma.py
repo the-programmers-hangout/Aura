@@ -1,14 +1,11 @@
 import unittest
 from unittest import mock
 
-import asynctest as asynctest
 import mongomock
-import pytest
 
 from cogs.karma.producer import KarmaProducer
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService, BlockerService
-from tests.helpers import message_instance
 
 if __name__ == '__main__':
     unittest.main()
@@ -34,19 +31,19 @@ class KarmaChange(unittest.TestCase):
         assert self.karma_service.aggregate_member_by_karma(self.karma_member) is None
 
 
-# Verify that karma giving works on all possible permutations
-class KarmaGiving(asynctest.TestCase):
-    karma_storage = mongomock.MongoClient().db.karma
-    blacklisted = mongomock.MongoClient().db.blacklist
-    blocker_service = BlockerService(blacklisted)
-    karma_service = KarmaService(karma_storage)
-    karma_producer = KarmaProducer(mock.MagicMock(), karma_service=karma_service, blocker_service=blocker_service)
+# Verify that karma messages are identified correctly
+class KarmaGiving(unittest.TestCase):
+    karma_producer = KarmaProducer(mock.MagicMock(), mock.MagicMock(), mock.MagicMock())
 
     dummy_wrong_message_content = 'lmao <@1>'
-    dummy_correct_message_content = 'thanks'
+    dummy_correct_message_content = 'thanks <@1>'
+    dummy_correct_message_content_2 = 'Thanks <@1>'
+    dummy_correct_message_content_3 = 'ty <@1>'
+    dummy_correct_message_content_4 = 'thank You <@1>'
 
-    @pytest.mark.asyncio
-    async def test_karma_given(self):
-        message_instance.content = self.dummy_correct_message_content
-        is_valid = await self.karma_producer.validate_message(message=message_instance)
-        assert is_valid
+    def test_messages_identified_correctly(self):
+        assert not self.karma_producer.has_thanks(self.dummy_wrong_message_content)
+        assert self.karma_producer.has_thanks(self.dummy_correct_message_content)
+        assert self.karma_producer.has_thanks(self.dummy_correct_message_content_2)
+        assert self.karma_producer.has_thanks(self.dummy_correct_message_content_3)
+        assert self.karma_producer.has_thanks(self.dummy_correct_message_content_4)

@@ -53,7 +53,7 @@ class KarmaProducer(commands.Cog):
     # check if message is a valid message for karma
     async def validate_message(self, message) -> bool:
         # check if message has any variation of thanks
-        if self.has_thanks(message) and len(message.mentions) > 0:
+        if self.has_thanks(message.content) and len(message.mentions) > 0:
             return True
         else:
             return False
@@ -62,7 +62,7 @@ class KarmaProducer(commands.Cog):
     def has_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
         for thanks in thanks_list():
-            if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message.content) is not None:
+            if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message) is not None:
                 return True
         return False
 
