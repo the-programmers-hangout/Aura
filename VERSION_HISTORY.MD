@@ -64,7 +64,8 @@ dashboard, mongodb and discord bot. (**done**)
 
 ### 1.0.0 release version
 * tidy up code
-* add tests for every major functionality
+* add tests for every major functionality that does not require mocking discord libraries (**done**)
+
 * add some exception handling
 * add config embed (**done**)
 * make it possible to thank several people in a message (**done**)
