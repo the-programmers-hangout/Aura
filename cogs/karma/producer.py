@@ -1,13 +1,15 @@
+import logging
 import re
 from collections import defaultdict
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import guild_only
 
 from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
-from core.timer import KarmaCooldownTimer
+from core.timer import KarmaSingleActionTimer
 
 from util.config import config, thanks_list
 
@@ -23,6 +25,7 @@ class KarmaProducer(commands.Cog):
         self._members_on_cooldown = defaultdict(list)
 
     # give karma if message has thanks and correct mentions
+    @guild_only()
     @commands.Cog.listener()
     async def on_message(self, message):
         guild_id: int = message.guild.id
@@ -32,6 +35,8 @@ class KarmaProducer(commands.Cog):
                 if message.author.id not in self._members_on_cooldown[guild.id]:
                     await self.give_karma(message, guild, True)
                 else:
+                    logging.info('Sending configured cooldown response to {} in guild {}'
+                                 .format(message.author.id, guild_id))
                     if str(config['karma']['time-emote']).lower() == "true":
                         await message.add_reaction('🕒')
                     if str(config['karma']['time-message']).lower() == "true":
@@ -39,11 +44,13 @@ class KarmaProducer(commands.Cog):
                             .send('Sorry {}, your karma needs time to recharge'
                                   .format(message.author.mention))
             else:
+                logging.info('Sending Blacklist dm to {} in guild {}'.format(message.author.id, guild_id))
                 await message.author.send('You have been blacklisted from giving out Karma, '
                                           'if you believe this to be an error contact {}.'
                                           .format(config['blacklist']))
 
     # remove karma on deleted message of said karma message
+    @guild_only()
     @commands.Cog.listener()
     async def on_message_delete(self, message):
         guild_id: int = message.guild.id
@@ -75,6 +82,8 @@ class KarmaProducer(commands.Cog):
             member = mention
             if member.id != message.author.id and member.id != self.bot.user.id and not \
                     self.bot.get_user(member.id).bot:
+                logging.info('{} gave karma to {} in guild {} with inc {}'
+                             .format(message.author.id, member.id, guild.id, inc))
                 karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
                 self.karma_service.upsert_karma_member(karma_member, inc)
                 karma_given += 1
@@ -107,8 +116,8 @@ class KarmaProducer(commands.Cog):
     # create new timer and add the user to it
     async def cooldown_user(self, guild_id: int, member_id: int) -> None:
         self._members_on_cooldown[guild_id].append(member_id)
-        await KarmaCooldownTimer(self.remove_from_cooldown, int(config['cooldown']),
-                                 guild_id, member_id).start()
+        await KarmaSingleActionTimer(self.remove_from_cooldown, int(config['cooldown']),
+                                     guild_id, member_id).start()
 
     # remove user from cooldown after time runs out
     async def remove_from_cooldown(self, guild_id: int, member_id: int) -> None:

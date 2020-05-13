@@ -1,6 +1,6 @@
 from discord import Embed, Color
 from discord.ext import commands
-from discord.ext.commands import has_role
+from discord.ext.commands import has_role, guild_only
 
 from util.config import config, write_config, roles
 
@@ -12,9 +12,10 @@ class SettingsManager(commands.Cog):
 
     # edit config defined in config.yaml, return messages if incorrect args are provided.
     # no checks on non existing configuration
+    @guild_only()
     @has_role(roles()['admin'])
-    @commands.command(brief='change configuration parameters, requires admin',
-                      description='change config params to new value, last value in params is new_value')
+    @commands.command(brief='change configuration parameters or config panel',
+                      description='change config params to new value, last value in params is new_value', )
     async def config(self, ctx, *, params: str = ""):
         args = params.split()
         if len(args) > 3:

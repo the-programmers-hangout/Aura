@@ -1,11 +1,11 @@
 import discord
 from discord import Color
 from discord.ext import commands
+from discord.ext.commands import guild_only
 
 from core import datasource
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
-
 
 # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
 # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
@@ -19,7 +19,8 @@ class KarmaProfile(commands.Cog):
         self.karma_service = karma_service
 
     # get karma of yourself without any arguments, get karma of others with mention
-    @commands.command(brief='get karma of a user or yourself',
+    @guild_only()
+    @commands.command(brief='get karma of users or yourself',
                       description='prefix karma or prefix karma user_mention')
     async def karma(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
@@ -40,12 +41,13 @@ class KarmaProfile(commands.Cog):
             karma = self.karma_service.aggregate_member_by_karma(karma_member)
             if karma is None:
                 return_msg += '{} has earned a total of {} karma\n'.format(ctx.message.author.name + '#'
-                                                                           + ctx.message.author.discriminator,0)
+                                                                           + ctx.message.author.discriminator, 0)
             else:
                 return_msg += '{} has earned a total of {} karma'.format(ctx.message.author.name + '#'
                                                                          + ctx.message.author.discriminator, karma)
         await ctx.channel.send(return_msg)
 
+    @guild_only()
     @commands.command(brief='get karma profile of a user or yourself',
                       description='prefix profile or prefix profile user_mention')
     async def profile(self, ctx):
