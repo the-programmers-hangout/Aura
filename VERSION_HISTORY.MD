@@ -64,10 +64,12 @@ dashboard, mongodb and discord bot. (**done**)
 
 ### 1.0.0 release version
 * tidy up code
-* add tests for every major functionality that does not require mocking discord libraries (**done**)
-* add tests for every major functionality that does require mocking discord libraries
+* add tests for every major functionality that does not require mocking the discord library (**done**)
+* add tests for every major functionality that does require mocking the discord library
 * add some exception handling
+* add logging to aura
 * add config embed (**done**)
+* make sure aura works only inside of guilds by adding guild checks (**done**)
 * make it possible to thank several people in a message (**done**)
 * make it possible to get the karma of several mentions in a message (**done**)
 * add check on nickname for profile (**done**)
