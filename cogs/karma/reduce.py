@@ -1,20 +1,26 @@
-from discord.ext import commands
-from discord.ext.commands import has_any_role, has_role
+import logging
 
+from discord.ext import commands
+from discord.ext.commands import has_any_role, has_role, guild_only
+
+from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 
 from util.config import roles
 
+log = logging.getLogger(__name__)
+
 
 # Karma Reducer Class remove karma
 class KarmaReducer(commands.Cog):
 
-    def __init__(self, bot):
+    def __init__(self, bot, karma_service=KarmaService(datasource.karma)):
         self.bot = bot
-        self.karma_service = KarmaService()
+        self.karma_service = karma_service
 
     # remove all karma from member
+    @guild_only()
     @has_any_role(roles()['admin'], roles()['moderator'])
     @commands.command(brief='Reset all karma of a member, requires admin or moderator',
                       description='prefix reset member_id')
@@ -28,8 +34,9 @@ class KarmaBlocker(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.blocker_service = BlockerService()
+        self.blocker_service = BlockerService(datasource.blacklist)
 
+    @guild_only()
     @has_role(roles()['admin'])
     @commands.command(brief='blacklists a member from this bot, requires admin',
                       description='prefix blacklist member')
@@ -40,6 +47,7 @@ class KarmaBlocker(commands.Cog):
             self.blocker_service.blacklist(Member(ctx.message.guild.id, member))
         await ctx.channel.send('Blacklisted {}'.format(member))
 
+    @guild_only()
     @has_role(roles()['admin'])
     @commands.command(brief='removes existing blacklists of a member from this bot, requires admin',
                       description='prefix whitelist member')

@@ -1,5 +1,4 @@
 blacklist: Modmail
-logging: 'INFO'
 channel:
   log: '707943244998115341'
 cooldown: '20'
@@ -9,12 +8,6 @@ database:
   password: example
   port: 27017
   username: root
-karma:
-  emote: 'true'
-  log: 'true'
-  message: 'false'
-  time-emote: 'true'
-  time-message: 'false'
 prefix: aura!
 profile:
   channels: 5
@@ -22,4 +15,3 @@ roles:
   admin: Admin
   moderator: Staff
 token:
-

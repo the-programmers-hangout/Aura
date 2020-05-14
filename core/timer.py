@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from contextlib import suppress
 
 
@@ -31,13 +32,14 @@ class PeriodicTimer:
 
 
 # SingleActionTimer that removes a user from the cooldown list
-class KarmaCooldownTimer(PeriodicTimer):
+class KarmaSingleActionTimer(PeriodicTimer):
     def __init__(self, func, time, guild_id, member_id):
         super().__init__(func, time)
         self.guild_id = guild_id
         self.member_id = member_id
 
     async def start(self):
+        logging.info('Started KarmaSingleActionTimer for {} in guild {}'.format(self.member_id, self.guild_id))
         if not self.is_started:
             self.is_started = True
             # Start task to call func once:
