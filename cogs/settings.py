@@ -1,8 +1,12 @@
+import logging
+
 from discord import Embed, Color
 from discord.ext import commands
 from discord.ext.commands import has_role, guild_only
 
 from util.config import config, write_config, roles
+
+log = logging.getLogger(__name__)
 
 
 class SettingsManager(commands.Cog):

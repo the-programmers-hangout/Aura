@@ -13,6 +13,8 @@ from core.timer import KarmaSingleActionTimer
 
 from util.config import config, thanks_list
 
+log = logging.getLogger(__name__)
+
 
 # Class that gives positive karma and negative karma on message deletion (take back last action)
 class KarmaProducer(commands.Cog):
@@ -35,7 +37,7 @@ class KarmaProducer(commands.Cog):
                 if message.author.id not in self._members_on_cooldown[guild.id]:
                     await self.give_karma(message, guild, True)
                 else:
-                    logging.info('Sending configured cooldown response to {} in guild {}'
+                    log.info('Sending configured cooldown response to {} in guild {}'
                                  .format(message.author.id, guild_id))
                     if str(config['karma']['time-emote']).lower() == "true":
                         await message.add_reaction('🕒')
@@ -44,7 +46,7 @@ class KarmaProducer(commands.Cog):
                             .send('Sorry {}, your karma needs time to recharge'
                                   .format(message.author.mention))
             else:
-                logging.info('Sending Blacklist dm to {} in guild {}'.format(message.author.id, guild_id))
+                log.info('Sending Blacklist dm to {} in guild {}'.format(message.author.id, guild_id))
                 await message.author.send('You have been blacklisted from giving out Karma, '
                                           'if you believe this to be an error contact {}.'
                                           .format(config['blacklist']))
@@ -82,7 +84,7 @@ class KarmaProducer(commands.Cog):
             member = mention
             if member.id != message.author.id and member.id != self.bot.user.id and not \
                     self.bot.get_user(member.id).bot:
-                logging.info('{} gave karma to {} in guild {} with inc {}'
+                log.info('{} gave karma to {} in guild {} with inc {}'
                              .format(message.author.id, member.id, guild.id, inc))
                 karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
                 self.karma_service.upsert_karma_member(karma_member, inc)
