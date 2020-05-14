@@ -63,8 +63,8 @@ dashboard, mongodb and discord bot. (**done**)
     - filter out certain configuration parameters (prefix and token) (**done**)
 
 ### 0.9.0 small reworks, config embed, configuration changes, reactions, tests, logging, error
-* add some exception handling
-* add logging to aura
+* add some exception handling (**done**)
+* add logging to aura (**done**)
 * add config embed (**done**)
 * make sure aura works only inside of guilds by adding guild checks (**done**)
 * make it possible to thank several people in a message (**done**)
@@ -75,6 +75,9 @@ dashboard, mongodb and discord bot. (**done**)
 * add config in regards to show how karma was received (**done**)
 * add tests for every major functionality that does not require mocking the discord library (**done**)
 * refactor core model classes (**done**)
+
+### 0.9.1
+* fix karma give not working (**done**)
 
 ### 0.10.0 db rework
 rework database documents
