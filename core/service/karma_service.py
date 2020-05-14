@@ -1,8 +1,12 @@
+import logging
+
 from core.datasource import DataSource
 from core.model.member import KarmaMember, Member
 
 # karma database service class, perform operations on the configured mongodb.
 from util.config import config, profile
+
+log = logging.getLogger(__name__)
 
 
 class KarmaService:
@@ -21,6 +25,7 @@ class KarmaService:
         self._channel_query['member_id'] = member.member_id
         self._channel_query['channel_id'] = member.channel_id
         self._channel_query['message_id'] = member.message_id
+        logging.info('channel_query: {}'.format(self._channel_query))
         if inc:
             # return update result
             return self._karma.update_one(filter=self._channel_query, update=self._increase_karma,
