@@ -18,5 +18,5 @@ if __name__ == '__main__':
     client.add_cog(KarmaProfile(client))
     client.add_cog(SettingsManager(client))
     client.add_cog(CommandErrorHandler(client))
-    logging.basicConfig(level=config['logging'])
+    logging.basicConfig(level=config['logging'], format='%(levelname)s %(name)s %(message)s')
     client.run(config['token'])
