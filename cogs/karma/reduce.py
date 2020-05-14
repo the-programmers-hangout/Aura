@@ -1,3 +1,5 @@
+import logging
+
 from discord.ext import commands
 from discord.ext.commands import has_any_role, has_role, guild_only
 
@@ -6,6 +8,8 @@ from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 
 from util.config import roles
+
+log = logging.getLogger(__name__)
 
 
 # Karma Reducer Class remove karma

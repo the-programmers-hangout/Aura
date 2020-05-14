@@ -62,10 +62,7 @@ dashboard, mongodb and discord bot. (**done**)
     - check for non existent configuration parameters (**done**)
     - filter out certain configuration parameters (prefix and token) (**done**)
 
-### 1.0.0 release version
-* tidy up code
-* add tests for every major functionality that does not require mocking the discord library (**done**)
-* add tests for every major functionality that does require mocking the discord library
+### 0.9.0 small reworks, config embed, configuration changes, reactions, tests, logging, error
 * add some exception handling
 * add logging to aura
 * add config embed (**done**)
@@ -76,4 +73,12 @@ dashboard, mongodb and discord bot. (**done**)
 * add nickname to profile (**done**)
 * add emote thumps up to thanks messages (**done**)
 * add config in regards to show how karma was received (**done**)
-(thumps emote, chat message, log)
+* add tests for every major functionality that does not require mocking the discord library (**done**)
+* refactor core model classes (**done**)
+
+### 0.10.0 db rework
+rework database documents
+
+### 1.0.0 release version
+* tidy up code
+* add tests for every major functionality that does require mocking the discord library

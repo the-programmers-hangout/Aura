@@ -1,4 +1,5 @@
 blacklist: Modmail
+logging: 'INFO'
 channel:
   log: '707943244998115341'
 cooldown: '20'

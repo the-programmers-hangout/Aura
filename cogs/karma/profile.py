@@ -1,3 +1,5 @@
+import logging
+
 import discord
 from discord import Color
 from discord.ext import commands
@@ -10,6 +12,8 @@ from core.service.karma_service import KarmaService
 # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
 # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 from util.config import profile
+
+log = logging.getLogger(__name__)
 
 
 class KarmaProfile(commands.Cog):
