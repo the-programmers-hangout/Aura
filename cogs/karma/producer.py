@@ -46,10 +46,13 @@ class KarmaProducer(commands.Cog):
                             .send('Sorry {}, your karma needs time to recharge'
                                   .format(message.author.mention))
             else:
-                log.info('Sending Blacklist dm to {} in guild {}'.format(message.author.id, guild_id))
-                await message.author.send('You have been blacklisted from giving out Karma, '
-                                          'if you believe this to be an error contact {}.'
-                                          .format(config['blacklist']))
+                if str(config['blacklist']['message']).lower() == 'true':
+                    log.info('Sending Blacklist dm to {} in guild {}'.format(message.author.id, guild_id))
+                    await message.author.send('You have been blacklisted from giving out Karma, '
+                                              'if you believe this to be an error contact {}.'
+                                              .format(config['blacklist']['entity']))
+                if str(config['blacklist']['emote']).lower() == 'true':
+                    await message.add_reaction('☠️')
 
     # remove karma on deleted message of said karma message
     @guild_only()
@@ -87,10 +90,12 @@ class KarmaProducer(commands.Cog):
                 log.info('{} gave karma to {} in guild {} with inc {}'
                          .format(message.author.id, member.id, guild.id, inc))
                 karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
-                self.karma_service.upsert_karma_member(karma_member, inc)
-                karma_given += 1
                 if inc:
+                    self.karma_service.upsert_karma_member(karma_member)
+                    karma_given += 1
                     await self.notify_member(message, member)
+                else:
+                    self.karma_service.delete_karma_member(karma_member)
         if karma_given > 0:
             await self.cooldown_user(guild.id, message.author.id)
 
