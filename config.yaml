@@ -1,14 +1,18 @@
-blacklist: Modmail
+blacklist:
+  entity: Modmail
+  emote: 'true'
+  message: 'true'
 logging: 'INFO'
 channel:
   log: '707943244998115341'
 cooldown: '20'
 database:
-  host: mongo
+  connection:
+    host: mongo
+    port: 27017
+    username: root
+    password: example
   name: aura
-  password: example
-  port: 27017
-  username: root
 karma:
   emote: 'true'
   log: 'true'
