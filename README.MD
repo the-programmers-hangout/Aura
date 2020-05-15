@@ -37,6 +37,7 @@ token: <Your Bot Account Token>
 prefix: <prefix>
 role:
     admin: "<Exact Name of Admin role>"
+everything under the database key
 ```
 
 Every other value can be updated by executing \<prefix>
