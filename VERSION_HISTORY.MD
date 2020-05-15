@@ -80,8 +80,8 @@ dashboard, mongodb and discord bot. (**done**)
 * fix karma give not working (**done**)
 
 ### 1.0.0 release version
-* tidy up code
-* add tests for every major functionality that does require mocking the discord library
+* tidy up code (**done**)
 
 ### 1.1.0
-rework python models and mongodb queries, should not change anything about the api.
+* rework python models and mongodb queries, should not change anything about the api.
+* add tests for every major functionality that does require mocking the discord library
