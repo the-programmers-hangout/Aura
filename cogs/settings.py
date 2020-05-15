@@ -28,7 +28,8 @@ class SettingsManager(commands.Cog):
             embed = self.build_config_embed()
             await ctx.channel.send(embed=embed)
         else:
-            if config[args[0]] is not None and args[0] != 'token' and args[0] != 'prefix' and args[0] != 'database':
+            if config[args[0]] is not None and args[0] != 'token' and args[0] != 'prefix' \
+                    and args[0] != 'database' and args[0] != 'logging':
                 if len(args) == 3:
                     if config[args[0]][args[1]] is not None:
                         config[args[0]][args[1]] = args[2]
@@ -47,10 +48,10 @@ class SettingsManager(commands.Cog):
                                                 + 'that can be changed on runtime and their expected ' +
                                                 'config values',
                                     colour=Color.dark_gold())
-        config_embed.add_field(name='**blacklist entity**', value='String value (blacklisted contact dm)')
+        config_embed.add_field(name='**blacklist entity**', value='any string')
         config_embed.add_field(name='**blacklist emote**', value='true, false')
         config_embed.add_field(name='**blacklist message**', value='true, false')
-        config_embed.add_field(name='**channel log**', value='channel id to log to')
+        config_embed.add_field(name='**channel log**', value='channel id')
         config_embed.add_field(name='**cooldown**', value='time in seconds')
         config_embed.add_field(name='**karma time-emote**', value='true, false')
         config_embed.add_field(name='**karma time-message**', value='true, false')
@@ -60,6 +61,6 @@ class SettingsManager(commands.Cog):
         config_embed.add_field(name='**profile channels**', value='num_value (top num_value channels in profile)')
         config_embed.add_field(name='**roles admin**', value='name of admin role')
         config_embed.add_field(name='**roles moderator**', value='name of moderator role')
-        config_embed.set_footer(text='token, prefix, db only only changable before runtime')
+        config_embed.set_footer(text='token, prefix, database, logging level only only changeable before runtime')
         config_embed.set_thumbnail(url=self.bot.user.avatar_url)
         return config_embed
