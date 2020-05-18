@@ -25,6 +25,7 @@ class HelpMenu(commands.Cog):
         else:
             await ctx.channel.send('You passed too many arguments to the help command.')
 
+    # build the help embed that is to be returned to the user
     async def build_help_embed(self, ctx, args) -> Embed:
         embed = Embed(colour=Color.dark_gold())
         if len(args) == 0:
