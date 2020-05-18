@@ -35,12 +35,14 @@ class KarmaProfile(commands.Cog):
             for member in message.mentions:
                 karma_member = KarmaMember(guild_id, member.id)
                 karma = self.karma_service.aggregate_member_by_karma(karma_member)
-                if karma is None:
-                    return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#' + member.discriminator,
-                                                                               0)
-                else:
-                    return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#' + member.discriminator,
-                                                                               karma)
+                if not member.bot:
+                    if karma is None:
+                        return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#'
+                                                                                   + member.discriminator, 0)
+                    else:
+                        return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#'
+                                                                                   + member.discriminator,
+                                                                                   karma)
         elif len(message.mentions) == 0:
             karma_member = KarmaMember(guild_id, ctx.message.author.id)
             karma = self.karma_service.aggregate_member_by_karma(karma_member)
