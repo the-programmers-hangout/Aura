@@ -64,6 +64,6 @@ class HelpMenu(commands.Cog):
                 embed.description = command.brief
                 embed.add_field(name='**'+'Structure'+'**', value=command.usage)
             else:
-                embed.title = 'Error: Command'
+                embed.title = 'Error: Command not found'
                 embed.description = 'Command does not exist or you do not have the permissions to view it'
         return embed
