@@ -25,13 +25,13 @@ class KarmaReducer(commands.Cog):
     @commands.command(brief='Reset all karma of a member in the guild',
                       usage='{}reset member_id\n{}reset <@!member_id>'
                       .format(config['prefix'], config['prefix']))
-    async def reset(self, ctx, member):
-        guild_id: str = str(ctx.message.guild.id)
+    async def reset(self, ctx, *, member_id):
+        guild_id: int = ctx.message.guild.id
         if len(ctx.message.mentions) == 1:
             self.karma_service.delete_all_karma(KarmaMember(guild_id, ctx.message.mentions[0].id))
         else:
-            self.karma_service.delete_all_karma(KarmaMember(guild_id, member))
-        await ctx.channel.send('Removed all Karma from {}'.format(member))
+            self.karma_service.delete_all_karma(KarmaMember(guild_id, member_id))
+        await ctx.channel.send('Removed all Karma from {}'.format(member_id))
 
 
 class KarmaBlocker(commands.Cog):
