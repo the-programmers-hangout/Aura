@@ -82,6 +82,11 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.0.0 release version
 * tidy up code (**done**)
 
-### 1.1.0
+### 1.1.0 config and help command
+* rework help command (**done**)
+* change some config command values (**done**)
+* add prefix and mention of bot for commands (**done**)
+
+### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.
 * add tests for every major functionality that does require mocking the discord library

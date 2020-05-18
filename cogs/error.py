@@ -32,4 +32,4 @@ class CommandErrorHandler(commands.Cog):
         elif isinstance(error, commands.NoPrivateMessage):
             return await ctx.author.send(f'{ctx.command} can not be used in Private Messages.')
 
-        log.error('Ignoring exception in command {}:'.format(ctx.command))
+        log.error('Ignoring exception in command {}: {}'.format(ctx.command, error))
