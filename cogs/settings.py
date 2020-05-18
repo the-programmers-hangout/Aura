@@ -18,8 +18,9 @@ class SettingsManager(commands.Cog):
     # no checks on non existing configuration
     @guild_only()
     @has_role(roles()['admin'])
-    @commands.command(brief='change configuration parameters or config panel',
-                      description='change config params to new value, last value in params is new_value', )
+    @commands.command(brief='configuration panel or configuration modification',
+                      usage='{}config\n{}config keys new_value'
+                      .format(config['prefix'], config['prefix']))
     async def config(self, ctx, *, params: str = ""):
         args = params.split()
         if len(args) > 3:

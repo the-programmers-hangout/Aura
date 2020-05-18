@@ -11,7 +11,7 @@ from core.service.karma_service import KarmaService
 
 # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
 # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
-from util.config import profile
+from util.config import profile, config
 
 log = logging.getLogger(__name__)
 
@@ -24,8 +24,9 @@ class KarmaProfile(commands.Cog):
 
     # get karma of yourself without any arguments, get karma of others with mention
     @guild_only()
-    @commands.command(brief='get karma of users or yourself',
-                      description='prefix karma or prefix karma user_mention')
+    @commands.command(brief='get karma of a user, of several users or yourself',
+                      usage='{}karma\n{}karma <@!member_id> [...]'
+                      .format(config['prefix'], config['prefix']))
     async def karma(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
         message = ctx.message
@@ -53,7 +54,8 @@ class KarmaProfile(commands.Cog):
 
     @guild_only()
     @commands.command(brief='get karma profile of a user or yourself',
-                      description='prefix profile or prefix profile user_mention')
+                      usage='{}profile\n{}profile <@!member_id>'
+                      .format(config['prefix'], config['prefix']))
     async def profile(self, ctx):
         guild_id: str = str(ctx.message.guild.id)
         guild = self.bot.get_guild(int(guild_id))
@@ -98,6 +100,8 @@ class KarmaProfile(commands.Cog):
                 else:
                     embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=True)
             if len(channel_list) % 3 != 0:
+                embed.add_field(name='\u200b', value='\u200b')
+            if (len(channel_list) + 1) % 3 != 0:
                 embed.add_field(name='\u200b', value='\u200b')
             embed.set_field_at(index=0, name="**total**", value=str(total_karma), inline=False)
             return embed
