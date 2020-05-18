@@ -45,11 +45,11 @@ class SettingsManager(commands.Cog):
 
     def build_config_embed(self) -> Embed():
         config_embed: Embed = Embed(title='Aura Configuration Panel',
-                                    description='Shows all possible configuration parameters '
-                                                + 'that can be changed on runtime and their expected ' +
+                                    description='Shows all possible configuration keys '
+                                                + 'that can be changed on runtime and their possible ' +
                                                 'config values',
                                     colour=Color.dark_gold())
-        config_embed.add_field(name='**blacklist entity**', value='any string')
+        config_embed.add_field(name='**blacklist entity**', value='any string for contact dm')
         config_embed.add_field(name='**blacklist emote**', value='true, false')
         config_embed.add_field(name='**blacklist message**', value='true, false')
         config_embed.add_field(name='**channel log**', value='channel id')
@@ -59,7 +59,7 @@ class SettingsManager(commands.Cog):
         config_embed.add_field(name='**karma emote**', value='true, false')
         config_embed.add_field(name='**karma log**', value='true, false')
         config_embed.add_field(name='**karma message**', value='true, false')
-        config_embed.add_field(name='**profile channels**', value='num_value (top num_value channels in profile)')
+        config_embed.add_field(name='**profile channels**', value='number of channels in profile')
         config_embed.add_field(name='**roles admin**', value='name of admin role')
         config_embed.add_field(name='**roles moderator**', value='name of moderator role')
         config_embed.set_footer(text='token, prefix, database, logging level only only changeable before runtime')

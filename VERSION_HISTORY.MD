@@ -84,7 +84,7 @@ dashboard, mongodb and discord bot. (**done**)
 
 ### 1.1.0 config and help command
 * rework help command (**done**)
-* rework config command
+* change some config command values (**done**)
 * add prefix and mention of bot for commands (**done**)
 
 ### 1.x.0
