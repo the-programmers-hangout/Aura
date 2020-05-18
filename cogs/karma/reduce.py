@@ -7,7 +7,7 @@ from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 
-from util.config import roles
+from util.config import roles, config
 
 log = logging.getLogger(__name__)
 
@@ -22,11 +22,15 @@ class KarmaReducer(commands.Cog):
     # remove all karma from member
     @guild_only()
     @has_any_role(roles()['admin'], roles()['moderator'])
-    @commands.command(brief='Reset all karma of a member, requires admin or moderator',
-                      description='prefix reset member_id')
+    @commands.command(brief='Reset all karma of a member in the guild',
+                      usage='{}reset member_id\n{}reset <@!member_id>'
+                      .format(config['prefix'], config['prefix']))
     async def reset(self, ctx, member):
         guild_id: str = str(ctx.message.guild.id)
-        self.karma_service.delete_all_karma(KarmaMember(guild_id, member))
+        if len(ctx.message.mentions) == 1:
+            self.karma_service.delete_all_karma(KarmaMember(guild_id, ctx.message.mentions[0].id))
+        else:
+            self.karma_service.delete_all_karma(KarmaMember(guild_id, member))
         await ctx.channel.send('Removed all Karma from {}'.format(member))
 
 
@@ -38,8 +42,9 @@ class KarmaBlocker(commands.Cog):
 
     @guild_only()
     @has_role(roles()['admin'])
-    @commands.command(brief='blacklists a member from this bot, requires admin',
-                      description='prefix blacklist member')
+    @commands.command(brief='blacklists a member from giving karma',
+                      usage='{}blacklist member_id\n{}blacklist <@!member_id>'
+                      .format(config['prefix'], config['prefix']))
     async def blacklist(self, ctx, member):
         if len(ctx.message.mentions) == 1:
             self.blocker_service.blacklist(Member(ctx.message.guild.id, ctx.message.mentions[0].id))
@@ -49,8 +54,9 @@ class KarmaBlocker(commands.Cog):
 
     @guild_only()
     @has_role(roles()['admin'])
-    @commands.command(brief='removes existing blacklists of a member from this bot, requires admin',
-                      description='prefix whitelist member')
+    @commands.command(brief='removes existing blacklist of the guild member',
+                      usage='{}whitelist member_id\n{}whitelist <@!member_id>'
+                      .format(config['prefix'], config['prefix']))
     async def whitelist(self, ctx, *, member):
         if len(ctx.message.mentions) == 1:
             self.blocker_service.whitelist(Member(ctx.message.guild.id, ctx.message.mentions[0].id))
