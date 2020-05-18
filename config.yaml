@@ -1,17 +1,16 @@
 blacklist:
-  entity: Modmail
   emote: 'true'
+  entity: Modmail
   message: 'true'
-logging: 'INFO'
 channel:
   log: '707943244998115341'
 cooldown: '20'
 database:
   connection:
     host: mongo
+    password: example
     port: 27017
     username: root
-    password: example
   name: aura
 karma:
   emote: 'true'
@@ -19,6 +18,7 @@ karma:
   message: 'false'
   time-emote: 'true'
   time-message: 'false'
+logging: INFO
 prefix: aura!
 profile:
   channels: 5
@@ -26,4 +26,3 @@ roles:
   admin: Admin
   moderator: Staff
 token:
-
