@@ -2,7 +2,7 @@ import logging
 
 from discord import Embed, Color
 from discord.ext import commands
-from discord.ext.commands import guild_only, has_any_role
+from discord.ext.commands import guild_only, has_any_role, CommandError
 
 from util.config import roles, config
 
@@ -14,19 +14,18 @@ class HelpMenu(commands.Cog):
         self.bot = bot
 
     @guild_only()
-    @has_any_role(roles()['admin'], roles()['moderator'])
     @commands.command(brief='show all commands or show help text of a single command',
                       usage='{}help\n{}help command'.format(config['prefix'], config['prefix']))
     async def help(self, ctx, *, params: str = ""):
         args = params.split()
         log.info('Called help command with args: {}'.format(args))
         if len(args) <= 1:
-            embed = self.build_help_embed(args)
+            embed = await self.build_help_embed(ctx, args)
             await ctx.channel.send(embed=embed)
         else:
             await ctx.channel.send('You passed too many arguments to the help command.')
 
-    def build_help_embed(self, args) -> Embed:
+    async def build_help_embed(self, ctx, args) -> Embed:
         embed = Embed(colour=Color.dark_gold())
         if len(args) == 0:
             embed.title = 'Help Menu'
@@ -38,8 +37,15 @@ class HelpMenu(commands.Cog):
                 if len(command_list) > 0:
                     embed_val = ''
                     for command in command_list:
-                        embed_val += command.name + '\n'
-                    embed.add_field(name='**' + cog + '**', value=embed_val, inline=True)
+                        is_executable = False
+                        try:
+                            is_executable = await command.can_run(ctx)
+                        except CommandError:
+                            pass
+                        if is_executable:
+                            embed_val += command.name + '\n'
+                    if embed_val != '':
+                        embed.add_field(name='**' + cog + '**', value=embed_val, inline=True)
                 else:
                     not_rendered_counter -= 1
             if (len(cog_mapping) - not_rendered_counter) % 3 != 0:
@@ -48,8 +54,16 @@ class HelpMenu(commands.Cog):
                 embed.add_field(name='\u200b', value='\u200b')
         else:
             command = self.bot.get_command(args[0])
-            if command is not None:
+            is_executable = False
+            try:
+                is_executable = await command.can_run(ctx)
+            except CommandError:
+                pass
+            if command is not None and is_executable:
                 embed.title = command.name
                 embed.description = command.brief
                 embed.add_field(name='**'+'Structure'+'**', value=command.usage)
+            else:
+                embed.title = 'Error: Command'
+                embed.description = 'Command does not exist or you do not have the permissions to view it'
         return embed
