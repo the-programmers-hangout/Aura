@@ -32,27 +32,28 @@ class KarmaProducer(commands.Cog):
     async def on_message(self, message):
         guild_id: int = message.guild.id
         guild = self.bot.get_guild(guild_id)
-        if await self.validate_message(message):
-            if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
-                if message.author.id not in self._members_on_cooldown[guild.id]:
-                    await self.give_karma(message, guild, True)
+        if not message.author.bot:
+            if await self.validate_message(message):
+                if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
+                    if message.author.id not in self._members_on_cooldown[guild.id]:
+                        await self.give_karma(message, guild, True)
+                    else:
+                        log.info('Sending configured cooldown response to {} in guild {}'
+                                 .format(message.author.id, guild_id))
+                        if str(config['karma']['time-emote']).lower() == "true":
+                            await message.add_reaction('🕒')
+                        if str(config['karma']['time-message']).lower() == "true":
+                            await self.bot.get_channel(message.channel.id) \
+                                .send('Sorry {}, your karma needs time to recharge'
+                                      .format(message.author.mention))
                 else:
-                    log.info('Sending configured cooldown response to {} in guild {}'
-                             .format(message.author.id, guild_id))
-                    if str(config['karma']['time-emote']).lower() == "true":
-                        await message.add_reaction('🕒')
-                    if str(config['karma']['time-message']).lower() == "true":
-                        await self.bot.get_channel(message.channel.id) \
-                            .send('Sorry {}, your karma needs time to recharge'
-                                  .format(message.author.mention))
-            else:
-                if str(config['blacklist']['message']).lower() == 'true':
-                    log.info('Sending Blacklist dm to {} in guild {}'.format(message.author.id, guild_id))
-                    await message.author.send('You have been blacklisted from giving out Karma, '
-                                              'if you believe this to be an error contact {}.'
-                                              .format(config['blacklist']['entity']))
-                if str(config['blacklist']['emote']).lower() == 'true':
-                    await message.add_reaction('☠️')
+                    if str(config['blacklist']['message']).lower() == 'true':
+                        log.info('Sending Blacklist dm to {} in guild {}'.format(message.author.id, guild_id))
+                        await message.author.send('You have been blacklisted from giving out Karma, '
+                                                  'if you believe this to be an error contact {}.'
+                                                  .format(config['blacklist']['entity']))
+                    if str(config['blacklist']['emote']).lower() == 'true':
+                        await message.add_reaction('☠️')
 
     # remove karma on deleted message of said karma message
     @guild_only()
