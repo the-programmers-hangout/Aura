@@ -25,8 +25,8 @@ class KarmaReducer(commands.Cog):
                       usage='{}reset member_id\n{}reset <@!member_id>'
                       .format(config['prefix'], config['prefix']))
     async def reset(self, ctx, *, args=''):
-        member_list = await convert_content_to_member_set(ctx, args.split())
-        for member in member_list:
+        member_set = await convert_content_to_member_set(ctx, args.split())
+        for member in member_set:
             self.karma_service.delete_all_karma(KarmaMember(ctx.guild.id, member.id))
             await ctx.channel.send('Removed all Karma from {}'.format(member.mention))
 
@@ -43,8 +43,8 @@ class KarmaBlocker(commands.Cog):
                       usage='{}blacklist member_id\n{}blacklist <@!member_id>'
                       .format(config['prefix'], config['prefix']))
     async def blacklist(self, ctx, *, args):
-        member_list = await convert_content_to_member_set(ctx, args.split())
-        for member in member_list:
+        member_set = await convert_content_to_member_set(ctx, args.split())
+        for member in member_set:
             self.blocker_service.blacklist(Member(ctx.guild.id, member.id))
             await ctx.channel.send('Blacklisted {}'.format(member.mention))
 
@@ -54,8 +54,8 @@ class KarmaBlocker(commands.Cog):
                       usage='{}whitelist member_id\n{}whitelist <@!member_id>'
                       .format(config['prefix'], config['prefix']))
     async def whitelist(self, ctx, *, args):
-        member_list = await convert_content_to_member_set(ctx, args.split())
-        for member in member_list:
+        member_set = await convert_content_to_member_set(ctx, args.split())
+        for member in member_set:
             self.blocker_service.whitelist(Member(ctx.guild.id, member.id))
             await ctx.channel.send('Whitelisted {}'.format(member.mention))
 
