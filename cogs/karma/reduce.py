@@ -27,7 +27,7 @@ class KarmaReducer(commands.Cog):
     async def reset(self, ctx, *, args=''):
         member_list = await convert_content_to_member_list(ctx, args.split())
         for member in member_list:
-            self.karma_service.delete_karma_member(KarmaMember(ctx.guild.id, member.id))
+            self.karma_service.delete_all_karma(KarmaMember(ctx.guild.id, member.id))
             await ctx.channel.send('Removed all Karma from {}'.format(member.mention))
 
 
