@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
@@ -11,8 +12,11 @@ from cogs.karma.reduce import KarmaReducer, KarmaBlocker
 from cogs.settings import SettingsManager
 from util.config import config, read_config
 
+read_config()
+logging.basicConfig(level=config['logging'], format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    stream=sys.stdout)
+
 if __name__ == '__main__':
-    read_config()
     client = commands.Bot(command_prefix=when_mentioned_or(config['prefix']))
     client.remove_command('help')
     client.add_cog(KarmaProducer(client))
@@ -22,5 +26,4 @@ if __name__ == '__main__':
     client.add_cog(SettingsManager(client))
     client.add_cog(CommandErrorHandler(client))
     client.add_cog(HelpMenu(client))
-    logging.basicConfig(level=config['logging'], format='%(levelname)s %(name)s %(message)s')
     client.run(config['token'])
