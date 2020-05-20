@@ -40,8 +40,8 @@ class KarmaProfile(commands.Cog):
                 return_msg += '{} has earned a total of {} karma'.format(ctx.message.author.name + '#'
                                                                          + ctx.message.author.discriminator, karma)
         else:
-            member_list = await convert_content_to_member_set(ctx, args.split())
-            for member in member_list:
+            member_set = await convert_content_to_member_set(ctx, args.split())
+            for member in member_set:
                 karma_member = KarmaMember(ctx.guild.id, member.id)
                 karma = self.karma_service.aggregate_member_by_karma(karma_member)
                 if karma is None:
@@ -69,8 +69,8 @@ class KarmaProfile(commands.Cog):
 
             await ctx.channel.send(embed=embed)
         else:
-            member_list = await convert_content_to_member_set(ctx, args.split())
-            member = member_list[0]
+            member_set = await convert_content_to_member_set(ctx, args.split())
+            member = member_set[0]
             karma_member = KarmaMember(ctx.guild.id, member.id)
             embed = await self.build_profile_embed(karma_member, ctx.guild)
             if member.nick is None:
