@@ -105,18 +105,20 @@ class KarmaProducer(commands.Cog):
         if str(config['karma']['log']).lower() == 'true':
             if member.nick is None:
                 await self.bot.get_channel(int(config['channel']['log'])).send(
-                    '{} earned karma in {}'
+                    '{} earned karma in {}. {}'
                         .format(member.name + '#'
                                 + member.discriminator,
-                                message.channel.mention))
+                                message.channel.mention,
+                                message.jump_url))
             else:
                 await self.bot.get_channel(int(config['channel']['log'])).send(
-                    '{} ({}) earned karma in {}'.format(member.name + '#'
+                    '{} ({}) earned karma in {}. {}'.format(member.name + '#'
                                                         + member.discriminator,
                                                         member.nick,
-                                                        message.channel.mention))
+                                                        message.channel.mention,
+                                                        message.jump_url))
         if str(config['karma']['message']).lower() == 'true':
-            await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned a karma.'
+            await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma.'
                                                                 .format(member.mention))
         if str(config['karma']['emote']).lower() == 'true':
             await message.add_reaction('👍')

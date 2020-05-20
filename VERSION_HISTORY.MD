@@ -113,6 +113,9 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.1.8
 * fix multiple karma thanks filter out duplicates (**done**)
 
+### 1.1.9
+* add message link to log messages of karma gain (**done**)
+
 ### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.
 * add tests for every major functionality that does require mocking the discord library
