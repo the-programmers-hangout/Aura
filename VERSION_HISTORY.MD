@@ -110,6 +110,9 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.1.7
 * let conversion return a set of members to prevent spamming (**done**)
 
+### 1.1.8
+* fix multiple karma thanks filter out duplicates (**done**)
+
 ### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.
 * add tests for every major functionality that does require mocking the discord library
