@@ -84,7 +84,7 @@ class KarmaProducer(commands.Cog):
     # cooldown author after successfully giving karma
     async def give_karma(self, message: discord.Message, guild: discord.Guild, inc: bool):
         karma_given = 0
-        for mention in message.mentions:
+        for mention in set(message.mentions):
             member = mention
             if member.id != message.author.id and member.id != self.bot.user.id and not \
                     self.bot.get_user(member.id).bot:
