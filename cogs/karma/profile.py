@@ -12,6 +12,7 @@ from core.service.karma_service import KarmaService
 # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
 # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 from util.config import profile, config
+from util.conversion import convert_content_to_member_list
 
 log = logging.getLogger(__name__)
 
@@ -27,24 +28,10 @@ class KarmaProfile(commands.Cog):
     @commands.command(brief='get karma of a user, of several users or yourself',
                       usage='{}karma\n{}karma <@!member_id> [...]'
                       .format(config['prefix'], config['prefix']))
-    async def karma(self, ctx):
-        guild_id: str = str(ctx.message.guild.id)
-        message = ctx.message
+    async def karma(self, ctx, *, args=''):
         return_msg = ''
-        if len(message.mentions) > 0:
-            for member in message.mentions:
-                karma_member = KarmaMember(guild_id, member.id)
-                karma = self.karma_service.aggregate_member_by_karma(karma_member)
-                if not member.bot:
-                    if karma is None:
-                        return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#'
-                                                                                   + member.discriminator, 0)
-                    else:
-                        return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#'
-                                                                                   + member.discriminator,
-                                                                                   karma)
-        elif len(message.mentions) == 0:
-            karma_member = KarmaMember(guild_id, ctx.message.author.id)
+        if len(args) == 0:
+            karma_member = KarmaMember(ctx.guild.id, ctx.message.author.id)
             karma = self.karma_service.aggregate_member_by_karma(karma_member)
             if karma is None:
                 return_msg += '{} has earned a total of {} karma\n'.format(ctx.message.author.name + '#'
@@ -52,18 +39,28 @@ class KarmaProfile(commands.Cog):
             else:
                 return_msg += '{} has earned a total of {} karma'.format(ctx.message.author.name + '#'
                                                                          + ctx.message.author.discriminator, karma)
+        else:
+            member_list = await convert_content_to_member_list(ctx, args.split())
+            for member in member_list:
+                karma_member = KarmaMember(ctx.guild.id, member.id)
+                karma = self.karma_service.aggregate_member_by_karma(karma_member)
+                if karma is None:
+                    return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#'
+                                                                               + member.discriminator, 0)
+                else:
+                    return_msg += '{} has earned a total of {} karma\n'.format(member.name + '#'
+                                                                               + member.discriminator,
+                                                                               karma)
         await ctx.channel.send(return_msg)
 
     @guild_only()
     @commands.command(brief='get karma profile of a user or yourself',
                       usage='{}profile\n{}profile <@!member_id>'
                       .format(config['prefix'], config['prefix']))
-    async def profile(self, ctx):
-        guild_id: str = str(ctx.message.guild.id)
-        guild = self.bot.get_guild(int(guild_id))
-        if len(ctx.message.mentions) == 0:
-            karma_member = KarmaMember(guild_id, ctx.message.author.id)
-            embed = await self.build_profile_embed(karma_member, guild)
+    async def profile(self, ctx, *, args = ''):
+        if len(args) == 0:
+            karma_member = KarmaMember(ctx.guild.id, ctx.message.author.id)
+            embed = await self.build_profile_embed(karma_member, ctx.guild)
             if ctx.message.author.nick is None:
                 embed.title = "Profile of {}".format(ctx.message.author.name + "#" + ctx.message.author.discriminator)
             else:
@@ -71,19 +68,17 @@ class KarmaProfile(commands.Cog):
             embed.set_thumbnail(url=ctx.author.avatar_url)
 
             await ctx.channel.send(embed=embed)
-        elif len(ctx.message.mentions) == 1:
-            message = ctx.message
-            member = message.mentions[0]
-            if not self.bot.get_user(self.bot.user.id).mentioned_in(message) and guild.get_member(
-                    member.id).mentioned_in(message):
-                karma_member = KarmaMember(guild_id, member.id)
-                embed = await self.build_profile_embed(karma_member, guild)
-                if member.nick is None:
-                    embed.title = "Profile of {}".format(member.name + "#" + member.discriminator)
-                else:
-                    embed.title = "Profile of {}".format(member.nick)
-                embed.set_thumbnail(url=member.avatar_url)
-                await ctx.channel.send(embed=embed)
+        else:
+            member_list = await convert_content_to_member_list(ctx, args.split())
+            member = member_list[0]
+            karma_member = KarmaMember(ctx.guild.id, member.id)
+            embed = await self.build_profile_embed(karma_member, ctx.guild)
+            if member.nick is None:
+                embed.title = "Profile of {}".format(member.name + "#" + member.discriminator)
+            else:
+                embed.title = "Profile of {}".format(member.nick)
+            embed.set_thumbnail(url=member.avatar_url)
+            await ctx.channel.send(embed=embed)
 
     async def build_profile_embed(self, karma_member: KarmaMember, guild) -> discord.Embed:
         channel_cursor = self.karma_service.aggregate_member_by_channels(karma_member)
