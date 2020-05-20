@@ -99,6 +99,11 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.1.4
 * hotfix message author karma thanks (**done**)
 
+### 1.1.5
+* fix logging (**done**)
+* fix profile and karma messages with bot mention and id usage (**done**)
+* fix blacklist, whitelist, reset with bot mention and id usage (**done**)
+
 ### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.
 * add tests for every major functionality that does require mocking the discord library
