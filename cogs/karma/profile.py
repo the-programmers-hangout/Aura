@@ -12,7 +12,7 @@ from core.service.karma_service import KarmaService
 # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
 # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 from util.config import profile, config
-from util.conversion import convert_content_to_member_list
+from util.conversion import convert_content_to_member_set
 
 log = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class KarmaProfile(commands.Cog):
                 return_msg += '{} has earned a total of {} karma'.format(ctx.message.author.name + '#'
                                                                          + ctx.message.author.discriminator, karma)
         else:
-            member_list = await convert_content_to_member_list(ctx, args.split())
+            member_list = await convert_content_to_member_set(ctx, args.split())
             for member in member_list:
                 karma_member = KarmaMember(ctx.guild.id, member.id)
                 karma = self.karma_service.aggregate_member_by_karma(karma_member)
@@ -69,7 +69,7 @@ class KarmaProfile(commands.Cog):
 
             await ctx.channel.send(embed=embed)
         else:
-            member_list = await convert_content_to_member_list(ctx, args.split())
+            member_list = await convert_content_to_member_set(ctx, args.split())
             member = member_list[0]
             karma_member = KarmaMember(ctx.guild.id, member.id)
             embed = await self.build_profile_embed(karma_member, ctx.guild)

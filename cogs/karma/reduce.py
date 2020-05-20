@@ -8,7 +8,7 @@ from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 
 from util.config import roles, config
-from util.conversion import convert_content_to_member_list
+from util.conversion import convert_content_to_member_set
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class KarmaReducer(commands.Cog):
                       usage='{}reset member_id\n{}reset <@!member_id>'
                       .format(config['prefix'], config['prefix']))
     async def reset(self, ctx, *, args=''):
-        member_list = await convert_content_to_member_list(ctx, args.split())
+        member_list = await convert_content_to_member_set(ctx, args.split())
         for member in member_list:
             self.karma_service.delete_all_karma(KarmaMember(ctx.guild.id, member.id))
             await ctx.channel.send('Removed all Karma from {}'.format(member.mention))
@@ -43,7 +43,7 @@ class KarmaBlocker(commands.Cog):
                       usage='{}blacklist member_id\n{}blacklist <@!member_id>'
                       .format(config['prefix'], config['prefix']))
     async def blacklist(self, ctx, *, args):
-        member_list = await convert_content_to_member_list(ctx, args.split())
+        member_list = await convert_content_to_member_set(ctx, args.split())
         for member in member_list:
             self.blocker_service.blacklist(Member(ctx.guild.id, member.id))
             await ctx.channel.send('Blacklisted {}'.format(member.mention))
@@ -54,7 +54,7 @@ class KarmaBlocker(commands.Cog):
                       usage='{}whitelist member_id\n{}whitelist <@!member_id>'
                       .format(config['prefix'], config['prefix']))
     async def whitelist(self, ctx, *, args):
-        member_list = await convert_content_to_member_list(ctx, args.split())
+        member_list = await convert_content_to_member_set(ctx, args.split())
         for member in member_list:
             self.blocker_service.whitelist(Member(ctx.guild.id, member.id))
             await ctx.channel.send('Whitelisted {}'.format(member.mention))
