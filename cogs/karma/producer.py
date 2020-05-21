@@ -57,8 +57,7 @@ class KarmaProducer(commands.Cog):
     @guild_only()
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        if await self.validate_message(message):
-            await self.give_karma(message, message.guild, False)
+        await self.give_karma(message, message.guild, False)
 
     # remove karma on deleted reaction of said karma message
     @guild_only()
