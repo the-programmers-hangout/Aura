@@ -30,12 +30,11 @@ class KarmaProducer(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         guild_id: int = message.guild.id
-        guild = self.bot.get_guild(guild_id)
         if not message.author.bot:
             if await self.validate_message(message):
                 if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
-                    if message.author.id not in self._members_on_cooldown[guild.id]:
-                        await self.give_karma(message, guild, True)
+                    if message.author.id not in self._members_on_cooldown[guild_id]:
+                        await self.give_karma(message, message.guild, True)
                     else:
                         log.info('Sending configured cooldown response to {} in guild {}'
                                  .format(message.author.id, guild_id))
@@ -58,9 +57,8 @@ class KarmaProducer(commands.Cog):
     @guild_only()
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        guild_id: int = message.guild.id
-        guild = self.bot.get_guild(guild_id)
-        await self.give_karma(message, guild, False)
+        if await self.validate_message(message):
+            await self.give_karma(message, message.guild, False)
 
     # remove karma on deleted reaction of said karma message
     @guild_only()
@@ -131,10 +129,10 @@ class KarmaProducer(commands.Cog):
             else:
                 await self.bot.get_channel(int(config['channel']['log'])).send(
                     '{} ({}) earned karma in {}. {}'.format(member.name + '#'
-                                                        + member.discriminator,
-                                                        member.nick,
-                                                        message.channel.mention,
-                                                        message.jump_url))
+                                                            + member.discriminator,
+                                                            member.nick,
+                                                            message.channel.mention,
+                                                            message.jump_url))
         if str(config['karma']['message']).lower() == 'true':
             await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma.'
                                                                 .format(member.mention))
