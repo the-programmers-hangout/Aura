@@ -23,7 +23,7 @@ def profile():
 
 
 def thanks_list():
-    return config['thanks']
+    return config['thanks'].split(",")
 
 
 def version():

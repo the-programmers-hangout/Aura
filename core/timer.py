@@ -33,19 +33,22 @@ class PeriodicTimer:
 
 # SingleActionTimer that removes a user from the cooldown list
 class KarmaSingleActionTimer(PeriodicTimer):
-    def __init__(self, func, time, guild_id, member_id):
+    def __init__(self, func, time, guild_id, giver_id, receiver_id):
         super().__init__(func, time)
         self.guild_id = guild_id
-        self.member_id = member_id
+        self.giver_id = giver_id
+        self.receiver_id = receiver_id
 
     async def start(self):
-        logging.info('Started KarmaSingleActionTimer for {} in guild {}'.format(self.member_id, self.guild_id))
+        logging.info('Started KarmaSingleActionTimer for giver: {} and receiver: {} in guild {}'
+                     .format(self.giver_id, self.receiver_id, self.guild_id))
         if not self.is_started:
             self.is_started = True
             # Start task to call func once:
-            self._task = asyncio.ensure_future(self._run_with(guild_id=self.guild_id, member_id=self.member_id))
+            self._task = asyncio.ensure_future(self._run_with(guild_id=self.guild_id, giver_id=self.giver_id,
+                                                              receiver_id=self.receiver_id))
 
-    async def _run_with(self, guild_id, member_id):
+    async def _run_with(self, guild_id, giver_id, receiver_id):
         await asyncio.sleep(self.time)
-        await self.func(guild_id, member_id)
+        await self.func(guild_id, giver_id, receiver_id)
         await self.stop()
