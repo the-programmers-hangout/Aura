@@ -24,3 +24,15 @@ def profile():
 
 def thanks_list():
     return ['thanks', 'ty', 'thank you']
+
+
+def version():
+    return dict(aura_version='1.1.9', python_version='3.8.2', discord_version='1.3.3')
+
+
+def author_discord():
+    return 'arkencl#5579'
+
+
+def repository():
+    return '[[Github]](https://github.com/arkencl)'

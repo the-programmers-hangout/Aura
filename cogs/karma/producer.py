@@ -10,7 +10,6 @@ from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaSingleActionTimer
-
 from util.config import config, thanks_list
 
 log = logging.getLogger(__name__)

@@ -5,7 +5,7 @@ import mongomock
 
 from cogs.karma.producer import KarmaProducer
 from core.model.member import KarmaMember
-from core.service.karma_service import KarmaService, BlockerService
+from core.service.karma_service import KarmaService
 
 if __name__ == '__main__':
     unittest.main()
