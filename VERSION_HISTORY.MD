@@ -119,6 +119,9 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.1.10
 * fix profile not working with args (**done**)
 
+### 1.1.11
+* fix profile taking not only the first user arg (**done**)
+
 ### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.
 * add tests for every major functionality that does require mocking the discord library
