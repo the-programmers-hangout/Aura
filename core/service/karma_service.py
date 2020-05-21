@@ -1,9 +1,8 @@
 import logging
 
 from core.model.member import KarmaMember, Member
-
 # karma database service class, perform operations on the configured mongodb.
-from util.config import config, profile
+from util.config import profile
 
 log = logging.getLogger(__name__)
 

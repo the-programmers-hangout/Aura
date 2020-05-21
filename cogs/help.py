@@ -1,10 +1,13 @@
+import datetime
 import logging
+import time
 
 from discord import Embed, Color
 from discord.ext import commands
-from discord.ext.commands import guild_only, has_any_role, CommandError
+from discord.ext.commands import guild_only, CommandError
 
-from util.config import roles, config
+from util.config import config, author_discord, version, repository
+from util.conversion import strfdelta
 
 log = logging.getLogger(__name__)
 
@@ -12,6 +15,29 @@ log = logging.getLogger(__name__)
 class HelpMenu(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.start_time = time.time()
+
+    @guild_only()
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if self.bot.user.mentioned_in(message) and len(message.content) == len('<@!{}>'.format(self.bot.user.id)):
+            embed: Embed = Embed()
+            embed.title = self.bot.user.name + "#" + self.bot.user.discriminator
+            embed.description = 'A bot for handling karma points.'
+            embed.add_field(name='Prefix', value=config['prefix'], inline=True)
+            embed.add_field(name='Contributors', value=author_discord(), inline=True)
+            version_field = '```\nVersion: {}\ndiscord.py: {}\npython: {}```' \
+                .format(version()['aura_version'], version()['discord_version'], version()['python_version'])
+            embed.add_field(name='Build Info', value=version_field, inline=False)
+            current_time = time.time()
+            difference = int(round(current_time - self.start_time))
+            uptime = datetime.timedelta(seconds=difference)
+            embed.add_field(name='Uptime',
+                            value=strfdelta(uptime, '{hours} hours, {minutes} minutes, {seconds} seconds'),
+                            inline=False)
+            embed.add_field(name='Source', value=repository(), inline=False)
+            embed.set_thumbnail(url=self.bot.user.avatar_url)
+            await self.bot.get_channel(message.channel.id).send(embed=embed)
 
     @guild_only()
     @commands.command(brief='show all commands or show help text of a single command',
@@ -63,7 +89,7 @@ class HelpMenu(commands.Cog):
             if command is not None and is_executable:
                 embed.title = command.name
                 embed.description = command.brief
-                embed.add_field(name='**'+'Structure'+'**', value=command.usage)
+                embed.add_field(name='**' + 'Structure' + '**', value=command.usage)
             else:
                 embed.title = 'Error: Command not found'
                 embed.description = 'Command does not exist or you do not have the permissions to view it'

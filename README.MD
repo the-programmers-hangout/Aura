@@ -19,7 +19,7 @@ a point system called karma. It has the following features:
 total karma and karma breakdown by top x channels configured, single mention or no mention for message author profile.
 * Cooldown Members from giving out karma after giving it out or set the timer to 0.
 * Reset all Karma of a Member in a guild.
-* Delete karma from Members on message delete of the message that gave out karma.
+* Delete karma from Members on message delete, reaction clear and reaction remove of the message that gave out karma.
 * Change most configuration on the fly by providing keys from the config.yaml.
 * This should work on multiple guilds with following caveats:
    * Global Configuration unless several instances
