@@ -122,9 +122,9 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.1.11
 * fix profile taking not only the first user arg (**done**)
 
-### 1.2.0
+### 1.2.0 embed and reaction removal event
 * add information embed on @mention of bot (**done**)
-* remove karma on removing the reaction if the upvote emote config is set to true
+* remove karma on removing the reaction (**done**)
 
 ### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.
