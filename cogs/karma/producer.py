@@ -10,7 +10,6 @@ from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaSingleActionTimer
-
 from util.config import config, thanks_list
 
 log = logging.getLogger(__name__)
@@ -63,6 +62,24 @@ class KarmaProducer(commands.Cog):
         guild = self.bot.get_guild(guild_id)
         await self.give_karma(message, guild, False)
 
+    # remove karma on deleted reaction of said karma message
+    @guild_only()
+    @commands.Cog.listener()
+    async def on_reaction_remove(self, reaction: discord.Reaction, user):
+        if user.id == self.bot.user.id:
+            log.info(reaction.emoji)
+            if reaction.emoji == '👍':
+                await self.give_karma(reaction.message, reaction.message.guild, False)
+
+    @guild_only()
+    @commands.Cog.listener()
+    async def on_reaction_clear(self, message, reactions):
+        for reaction in reactions:
+            if reaction.emoji == '👍':
+                log.info('here')
+                if reaction.me:
+                    await self.give_karma(message, message.guild, False)
+
     # check if message is a valid message for karma
     async def validate_message(self, message) -> bool:
         # check if message has any variation of thanks
@@ -96,6 +113,7 @@ class KarmaProducer(commands.Cog):
                     karma_given += 1
                     await self.notify_member(message, member)
                 else:
+                    karma_member.karma = 1
                     self.karma_service.delete_karma_member(karma_member)
         if karma_given > 0:
             await self.cooldown_user(guild.id, message.author.id)

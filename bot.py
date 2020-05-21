@@ -6,8 +6,8 @@ from discord.ext.commands import when_mentioned_or
 
 from cogs.error import CommandErrorHandler
 from cogs.help import HelpMenu
-from cogs.karma.profile import KarmaProfile
 from cogs.karma.producer import KarmaProducer
+from cogs.karma.profile import KarmaProfile
 from cogs.karma.reduce import KarmaReducer, KarmaBlocker
 from cogs.settings import SettingsManager
 from util.config import config, read_config
