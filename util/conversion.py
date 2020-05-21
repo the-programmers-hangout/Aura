@@ -1,8 +1,6 @@
 import logging
 import re
 
-import discord
-
 log = logging.getLogger(__name__)
 
 mention_pattern = r'[^@!<>]+'
@@ -23,3 +21,10 @@ async def convert_content_to_member_set(ctx, argument_list):
         if member is not None and not member.bot:
             pure_list.append(member)
     return set(pure_list)
+
+
+def strfdelta(tdelta, fmt):
+    d = {}
+    d["hours"], rem = divmod(tdelta.seconds, 3600)
+    d["minutes"], d["seconds"] = divmod(rem, 60)
+    return fmt.format(**d)
