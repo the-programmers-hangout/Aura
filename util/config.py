@@ -23,7 +23,7 @@ def profile():
 
 
 def thanks_list():
-    return ['thanks', 'ty', 'thank you']
+    return config['thanks']
 
 
 def version():

@@ -25,4 +25,5 @@ profile:
 roles:
   admin: Admin
   moderator: Staff
+thanks: 'thanks,ty,thank you'
 token:
