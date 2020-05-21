@@ -18,7 +18,6 @@ async def convert_content_to_member_set(ctx, argument_list):
     for content in argument_list:
         result = re.search(mention_regex, content)
         if result is not None:
-            log.info(result.group(0))
             content = result.group(0)
         member = guild.get_member(int(content))
         if member is not None and not member.bot:
