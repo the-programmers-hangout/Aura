@@ -69,7 +69,9 @@ class KarmaProfile(commands.Cog):
 
             await ctx.channel.send(embed=embed)
         else:
-            member_set = await convert_content_to_member_set(ctx, args.split())
+            member_list = args.split()
+            member_id = member_list[0]
+            member_set = await convert_content_to_member_set(ctx, [member_id])
             for member in member_set:
                 karma_member = KarmaMember(ctx.guild.id, member.id)
                 embed = await self.build_profile_embed(karma_member, ctx.guild)
