@@ -54,6 +54,7 @@ class SettingsManager(commands.Cog):
         config_embed.add_field(name='**blacklist message**', value='true, false')
         config_embed.add_field(name='**channel log**', value='channel id')
         config_embed.add_field(name='**cooldown**', value='time in seconds')
+        config_embed.add_field(name='**thanks**', value='comma separated keyword list')
         config_embed.add_field(name='**karma time-emote**', value='true, false')
         config_embed.add_field(name='**karma time-message**', value='true, false')
         config_embed.add_field(name='**karma emote**', value='true, false')

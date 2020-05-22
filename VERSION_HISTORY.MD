@@ -129,6 +129,14 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.2.1
 * fix karma on message deletion not working correctly (**done**)
 
+### 1.3.0 cooldown, thank you keywords configureable
+* thank you keyword list configureable (**done**)
+* cooldown based on giver-receiver instead of only giver (**done**)
+* log karma deletes into the log as well (**done**)
+
+
+### 1.4.0
+
 ### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.
 * add tests for every major functionality that does require mocking the discord library
