@@ -23,7 +23,7 @@ class HelpMenu(commands.Cog):
         if self.bot.user.mentioned_in(message) and len(message.content) == len('<@!{}>'.format(self.bot.user.id)):
             embed: Embed = Embed()
             embed.title = self.bot.user.name + "#" + self.bot.user.discriminator
-            embed.description = 'A bot for handling karma points.'
+            embed.description = 'A bot for handling karma points of non-bot guild members.'
             embed.add_field(name='Prefix', value=config['prefix'], inline=True)
             embed.add_field(name='Contributors', value=author_discord(), inline=True)
             version_field = '```\nVersion: {}\ndiscord.py: {}\npython: {}```' \
