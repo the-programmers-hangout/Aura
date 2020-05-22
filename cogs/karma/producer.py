@@ -49,7 +49,7 @@ class KarmaProducer(commands.Cog):
     async def on_message_delete(self, message):
         # validating with a changed keyword list can lead to old messages not being recognized
         # only message deletion has this restriction
-        if self.validate_message(message):
+        if await self.validate_message(message):
             await self.remove_karma(message, message.guild, 'message delete')
 
     # remove karma on deleted reaction of said karma message
