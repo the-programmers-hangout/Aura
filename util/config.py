@@ -27,7 +27,7 @@ def thanks_list():
 
 
 def version():
-    return dict(aura_version='1.1.9', python_version='3.8.2', discord_version='1.3.3')
+    return dict(aura_version='1.3.1', python_version='3.8.2', discord_version='1.3.3')
 
 
 def author_discord():
