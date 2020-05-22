@@ -129,6 +129,10 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.2.1
 * fix karma on message deletion not working correctly (**done**)
 
+### 1.3.1
+* fix message delete await validate message
+* fix version string in info embed
+
 ### 1.3.0 cooldown, thank you keywords configureable
 * thank you keyword list configureable (**done**)
 * cooldown based on giver-receiver instead of only giver (**done**)
