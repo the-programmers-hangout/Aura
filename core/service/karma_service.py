@@ -50,6 +50,10 @@ class KarmaService:
         # return cursor containing documents generated through the pipeline
         return doc_cursor
 
+    # filter message id
+    def find_message(self, message_id: str):
+        return self._karma.find_one(filter=dict(message_id=message_id))
+
 
 class BlockerService:
 

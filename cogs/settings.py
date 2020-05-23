@@ -18,7 +18,7 @@ class SettingsManager(commands.Cog):
     # no checks on non existing configuration
     @guild_only()
     @has_role(roles()['admin'])
-    @commands.command(brief='configuration panel or configuration modification',
+    @commands.command(brief='configuration menu or configuration modification',
                       usage='{}config\n{}config keys new_value'
                       .format(config['prefix'], config['prefix']))
     async def config(self, ctx, *, params: str = ""):
@@ -47,7 +47,7 @@ class SettingsManager(commands.Cog):
                             'Configuration parameter {} has been changed to {}'.format(args[0], args[1]))
 
     def build_config_embed(self) -> Embed:
-        config_embed: Embed = Embed(title='Aura Configuration Panel',
+        config_embed: Embed = Embed(title='Aura Configuration Menu',
                                     description='Shows all possible configuration keys '
                                                 + 'and their current values ',
                                     colour=Color.dark_gold())
