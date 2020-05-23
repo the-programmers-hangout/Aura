@@ -149,6 +149,11 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.4.2
 * fix version string in info embed (**done**)
 
+### 1.4.3
+* fix config help embed formatting (**done**)
+
+### 1.4.4
+* fix version string in info embed (**done**)
 
 ### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.
