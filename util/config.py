@@ -1,3 +1,6 @@
+from collections import defaultdict
+from copy import deepcopy
+
 import yaml
 
 
@@ -55,7 +58,43 @@ def repository():
 
 
 class ConfigDescription:
-    def __init__(self, keys, description, values):
-        self.keys: str = keys  # 'channel log'
+    def __init__(self, description, values=None):
+        if values is None:
+            self.values = ['true', 'false']
+        else:
+            self.values: [] = values  # possible values
         self.description: str = description  # 'which channel aura should log karma gain, removals and other messages'
-        self.values: [] = values  # possible values
+
+
+descriptions = deepcopy(config)
+descriptions['blacklist']['emote'] = ConfigDescription('should aura react with a skull on blacklisted giver messages')
+descriptions['blacklist']['dm'] = ConfigDescription('should aura dm the blacklisted member that he is blacklisted'
+                                                    + ', if this is set you have to change blacklist contact')
+descriptions['blacklist']['contact'] = ConfigDescription('who to mention in the blacklist dm to contact for the user'
+                                                         + 'to resolve his blacklist', ['Any String'])
+descriptions['karma']['emote'] = ConfigDescription('should aura react with a thumps up emoji on karma gain')
+descriptions['karma']['log'] = ConfigDescription('should aura log karma gain messages')
+descriptions['karma']['message'] = ConfigDescription('should aura respond with a mention message'
+                                                     + 'right where the karma gain happened')
+descriptions['karma']['time-emote'] = ConfigDescription('should aura react with a clock if the giver-receiver is '
+                                                        + 'on cooldown')
+descriptions['karma']['time-message'] = ConfigDescription('should aura send a cooldown message in the channel of '
+                                                          + 'the attempted karma message')
+descriptions['karma']['keywords'] = ConfigDescription('the karma keyword list to check messages for',
+                                                      ['thanks,ty,thank you'])
+
+descriptions['profile']['channels'] = ConfigDescription('how many top channels to include in profile',
+                                                        ['Any positive number including 0'])
+
+descriptions['roles']['admin'] = ConfigDescription('admin role can change configuration and do all of the'
+                                                   + 'commands', ['Admin'])
+
+descriptions['roles']['moderator'] = ConfigDescription('staff role can do anything but configure the bot',
+                                                       ['Staff'])
+
+descriptions['cooldown'] = ConfigDescription('Cooldown applied to karma thanks message in seconds',
+                                             ['Any positive number including 0'])
+
+descriptions['channel']['log'] = ConfigDescription('which channel to post log messages to',
+                                                   ['Any channel id'])
+
