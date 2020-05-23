@@ -17,9 +17,12 @@ class HelpMenu(commands.Cog):
         self.bot = bot
         self.start_time = time.time()
 
+    # build info embed
     @guild_only()
     @commands.Cog.listener()
     async def on_message(self, message):
+        # if bot mentioned and the content is in equal length
+        # to the mention of user id, then it has to be an empty message
         if self.bot.user.mentioned_in(message) and len(message.content) == len('<@!{}>'.format(self.bot.user.id)):
             embed: Embed = Embed()
             embed.title = self.bot.user.name + "#" + self.bot.user.discriminator
@@ -45,6 +48,8 @@ class HelpMenu(commands.Cog):
     async def help(self, ctx, *, params: str = ""):
         args = params.split()
         log.info('Called help command with args: {}'.format(args))
+        # help command only works without any arguments or one argument
+        # since args can't ever be smaller than 0, this check is fine
         if len(args) <= 1:
             embed = await self.build_help_embed(ctx, args)
             await ctx.channel.send(embed=embed)
@@ -54,6 +59,7 @@ class HelpMenu(commands.Cog):
     # build the help embed that is to be returned to the user
     async def build_help_embed(self, ctx, args) -> Embed:
         embed = Embed(colour=Color.dark_gold())
+        # if no args, show help overview (all commands executable by user)
         if len(args) == 0:
             embed.title = 'Help Menu'
             embed.description = 'Use {}help <command> for more information'.format(config['prefix'])
@@ -64,28 +70,33 @@ class HelpMenu(commands.Cog):
                 if len(command_list) > 0:
                     embed_val = ''
                     for command in command_list:
+                        # check if command is executable for caller
                         is_executable = False
                         try:
                             is_executable = await command.can_run(ctx)
                         except CommandError:
                             pass
                         if is_executable:
+                            # if it is include in the embed, otherwise no need for user to know about the command.
                             embed_val += command.name + '\n'
                     if embed_val != '':
                         embed.add_field(name='**' + cog + '**', value=embed_val, inline=True)
                 else:
                     not_rendered_counter -= 1
+            # use the not rendered counter to insert zero width space fields to properly align the embed
             if (len(cog_mapping) - not_rendered_counter) % 3 != 0:
                 embed.add_field(name='\u200b', value='\u200b')
             if (len(cog_mapping) - not_rendered_counter + 1) % 3 != 0:
                 embed.add_field(name='\u200b', value='\u200b')
         else:
+            # return help for the command
             command = self.bot.get_command(args[0])
             is_executable = False
             try:
                 is_executable = await command.can_run(ctx)
             except CommandError:
                 pass
+            # check if command exists if it does if command is executable by the user like above
             if command is not None and is_executable:
                 embed.title = command.name
                 embed.description = command.brief
