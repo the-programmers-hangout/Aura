@@ -71,15 +71,16 @@ descriptions['blacklist']['emote'] = ConfigDescription('should aura react with a
 descriptions['blacklist']['dm'] = ConfigDescription('should aura dm the blacklisted member that he is blacklisted'
                                                     + ', if this is set you have to change blacklist contact')
 descriptions['blacklist']['contact'] = ConfigDescription('who to mention in the blacklist dm to contact for the user'
-                                                         + 'to resolve his blacklist', ['Any String'])
+                                                         + ' to resolve his blacklist', ['Any String'])
 descriptions['karma']['emote'] = ConfigDescription('should aura react with a thumps up emoji on karma gain')
 descriptions['karma']['log'] = ConfigDescription('should aura log karma gain messages')
 descriptions['karma']['message'] = ConfigDescription('should aura respond with a mention message'
-                                                     + 'right where the karma gain happened')
-descriptions['karma']['time-emote'] = ConfigDescription('should aura react with a clock if the giver-receiver is '
-                                                        + 'on cooldown')
-descriptions['karma']['time-message'] = ConfigDescription('should aura send a cooldown message in the channel of '
-                                                          + 'the attempted karma message')
+                                                     + ' right where the karma gain happened')
+descriptions['karma']['time-emote'] = ConfigDescription('should aura react with a clock if the giver-receiver '
+                                                        + ' combination is'
+                                                        + ' on cooldown')
+descriptions['karma']['time-message'] = ConfigDescription('should aura send a cooldown message in the channel of'
+                                                          + ' the attempted karma message')
 descriptions['karma']['keywords'] = ConfigDescription('the karma keyword list to check messages for',
                                                       ['thanks,ty,thank you'])
 
