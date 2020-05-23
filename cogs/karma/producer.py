@@ -31,15 +31,19 @@ class KarmaProducer(commands.Cog):
     async def on_message(self, message):
         guild_id: int = message.guild.id
         if not message.author.bot:
+            # validate the message, is it a karma message?
             if await self.validate_message(message):
+                # check if member is blacklisted
                 if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
+                    # not blacklisted try to give karma
                     await self.give_karma(message, message.guild)
                 else:
-                    if str(config['blacklist']['message']).lower() == 'true':
+                    # is blacklisted, check configuration on how to tell the user he is blacklisted
+                    if str(config['blacklist']['dm']).lower() == 'true':
                         log.info('Sending Blacklist dm to {} in guild {}'.format(message.author.id, guild_id))
                         await message.author.send('You have been blacklisted from giving out Karma, '
                                                   'if you believe this to be an error contact {}.'
-                                                  .format(config['blacklist']['entity']))
+                                                  .format(config['blacklist']['contact']))
                     if str(config['blacklist']['emote']).lower() == 'true':
                         await message.add_reaction('☠️')
 
@@ -47,27 +51,34 @@ class KarmaProducer(commands.Cog):
     @guild_only()
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        # validating with a changed keyword list can lead to old messages not being recognized
-        # only message deletion has this restriction
-        if await self.validate_message(message):
+        # find message id in db
+        if self.karma_service.find_message(str(message.id)) is not None:
             await self.remove_karma(message, message.guild, 'message delete')
 
     # remove karma on deleted reaction of said karma message
     @guild_only()
     @commands.Cog.listener()
     async def on_reaction_remove(self, reaction: discord.Reaction, user):
+        # user args is the one who made the reaction according to docs
         if user.id == self.bot.user.id:
+            # if aura made this reaction then it was very clearly a karma mesasge
             if reaction.emoji == '👍':
                 message = reaction.message
-                await self.remove_karma(message, message.guild, 'reaction remove')
+                # find message id in db
+                if self.karma_service.find_message(str(message.id)) is not None:
+                    await self.remove_karma(message, message.guild, 'reaction remove')
 
     @guild_only()
     @commands.Cog.listener()
     async def on_reaction_clear(self, message, reactions):
         for reaction in reactions:
             if reaction.emoji == '👍':
+                # reaction me is very much the same as checking the user id
+                # was the reaction made by aura
                 if reaction.me:
-                    await self.remove_karma(message, message.guild, 'reaction clear')
+                    # find message id in db
+                    if self.karma_service.find_message(str(message.id)) is not None:
+                        await self.remove_karma(message, message.guild, 'reaction clear')
 
     # check if message is a valid message for karma
     async def validate_message(self, message) -> bool:
@@ -87,12 +98,15 @@ class KarmaProducer(commands.Cog):
 
     # give karma to all users in a message except author, other bots or aura itself.
     # logged to a configured channel with member name & discriminator, optionally with nickname
-    # cooldown author after successfully giving karma
+    # cooldown giver-receiver combo after successfully giving karma
     async def give_karma(self, message: discord.Message, guild: discord.Guild):
+        # walk through the mention list which contains discord: Members
         for mention in set(message.mentions):
             member = mention
+            # filter out message author, aura and other bots
             if member.id != message.author.id and member.id != self.bot.user.id and not \
                     self.bot.get_user(member.id).bot:
+                # check if giver-receiver combo on cooldown
                 if member.id not in self._members_on_cooldown[guild.id][message.author.id]:
                     karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
                     self.karma_service.upsert_karma_member(karma_member)
@@ -110,7 +124,9 @@ class KarmaProducer(commands.Cog):
                             .send('Sorry {}, your karma for {} needs time to recharge'
                                   .format(message.author.mention, member.name))
 
+    # remove karma with event
     async def remove_karma(self, message: discord.Message, guild: discord.Guild, reason: str):
+        # walk through the mention list which contains discord: Members
         for mention in set(message.mentions):
             member = mention
             karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)

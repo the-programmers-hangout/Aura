@@ -10,9 +10,8 @@ from cogs.karma.producer import KarmaProducer
 from cogs.karma.profile import KarmaProfile
 from cogs.karma.reduce import KarmaReducer, KarmaBlocker
 from cogs.settings import SettingsManager
-from util.config import config, read_config
+from util.config import config
 
-read_config()
 logging.basicConfig(level=config['logging'], format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     stream=sys.stdout)
 
