@@ -19,8 +19,8 @@ class SettingsManager(commands.Cog):
     @guild_only()
     @has_role(roles()['admin'])
     @commands.command(brief='configuration menu or configuration modification',
-                      usage='{}config\n{}config keys new_value'
-                      .format(config['prefix'], config['prefix']))
+                      usage='{}config\n{}config [keys] [new_value]\n{}config help [keys]'
+                      .format(config['prefix'], config['prefix'], config['prefix']))
     async def config(self, ctx, *, params: str = ""):
         args = params.split()
         if len(args) > 3:
@@ -92,7 +92,9 @@ class SettingsManager(commands.Cog):
         result = ''
         if len(value_list) > 1:
             for value in value_list:
-                result += value + ','
+                result += value + ", "
+            result = result[:-1]
+            result = result[:-1]
         else:
             result = value_list[0]
         return result
