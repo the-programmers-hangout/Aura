@@ -141,7 +141,7 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.4.0
 * rework config menu (**done**)
 * make deletion logging more consistent (**done**)
-* add config help command
+* add config help command (**done**)
 
 ### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.

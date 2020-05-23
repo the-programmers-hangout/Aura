@@ -4,7 +4,7 @@ from discord import Embed, Color
 from discord.ext import commands
 from discord.ext.commands import has_role, guild_only
 
-from util.config import config, write_config, roles, karma, profile, blacklist
+from util.config import config, write_config, roles, karma, profile, blacklist, descriptions
 
 log = logging.getLogger(__name__)
 
@@ -23,13 +23,15 @@ class SettingsManager(commands.Cog):
                       .format(config['prefix'], config['prefix']))
     async def config(self, ctx, *, params: str = ""):
         args = params.split()
-        if len(args) == 0:
-            embed = self.build_config_embed()
-            await ctx.channel.send(embed=embed)
+        if len(args) > 3:
+            await ctx.channel.send('You provided too many arguments to the config command')
         else:
-            if config[args[0]] is not None:
+            if len(args) == 0:
+                embed = self.build_config_embed()
+                await ctx.channel.send(embed=embed)
+            else:
                 if args[0] == 'help':
-                    embed = self.build_config_help_embed()
+                    embed = self.build_config_help_embed(args)
                     await ctx.channel.send(embed=embed)
                 elif args[0] != 'token' and args[0] != 'prefix' \
                         and args[0] != 'database' and args[0] != 'logging':
@@ -48,7 +50,7 @@ class SettingsManager(commands.Cog):
 
     def build_config_embed(self) -> Embed:
         config_embed: Embed = Embed(title='Aura Configuration Menu',
-                                    description='Shows all possible configuration keys '
+                                    description='Shows all changeable configuration keys '
                                                 + 'and their current values ',
                                     colour=Color.dark_gold())
         config_embed.add_field(name='**blacklist contact**', value=blacklist()['contact'])
@@ -69,5 +71,28 @@ class SettingsManager(commands.Cog):
         config_embed.set_footer(text='token, prefix, database, logging level only only changeable before runtime')
         return config_embed
 
-    def build_config_help_embed(self) -> Embed:
-        print()
+    def build_config_help_embed(self, args) -> Embed:
+        config_help_embed: Embed = Embed(colour=Color.dark_gold())
+        # args[0] == help
+        if len(args) == 2:
+            config_help_embed.title = args[1]
+            config_description = descriptions[args[1]]
+            config_help_embed.description = config_description.description
+            config_help_embed.add_field(name='Possible Values',
+                                        value=self.build_possible_values(config_description.values))
+        else:
+            config_help_embed.title = args[1] + ' ' + args[2]
+            config_description = descriptions[args[1]][args[2]]
+            config_help_embed.description = config_description.description
+            config_help_embed.add_field(name='Possible Values',
+                                        value=self.build_possible_values(config_description.values))
+        return config_help_embed
+
+    def build_possible_values(self, value_list):
+        result = ''
+        if len(value_list) > 1:
+            for value in value_list:
+                result += value + ','
+        else:
+            result = value_list[0]
+        return result
