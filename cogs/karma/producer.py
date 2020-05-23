@@ -51,9 +51,8 @@ class KarmaProducer(commands.Cog):
     @guild_only()
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        # validating with a changed keyword list can lead to old messages not being recognized
-        # only message deletion has this restriction
-        if await self.validate_message(message):
+        # find message id in db
+        if self.karma_service.find_message(str(message.id)) is not None:
             await self.remove_karma(message, message.guild, 'message delete')
 
     # remove karma on deleted reaction of said karma message
@@ -65,7 +64,9 @@ class KarmaProducer(commands.Cog):
             # if aura made this reaction then it was very clearly a karma mesasge
             if reaction.emoji == '👍':
                 message = reaction.message
-                await self.remove_karma(message, message.guild, 'reaction remove')
+                # find message id in db
+                if self.karma_service.find_message(str(message.id)) is not None:
+                    await self.remove_karma(message, message.guild, 'reaction remove')
 
     @guild_only()
     @commands.Cog.listener()
@@ -75,7 +76,9 @@ class KarmaProducer(commands.Cog):
                 # reaction me is very much the same as checking the user id
                 # was the reaction made by aura
                 if reaction.me:
-                    await self.remove_karma(message, message.guild, 'reaction clear')
+                    # find message id in db
+                    if self.karma_service.find_message(str(message.id)) is not None:
+                        await self.remove_karma(message, message.guild, 'reaction clear')
 
     # check if message is a valid message for karma
     async def validate_message(self, message) -> bool:

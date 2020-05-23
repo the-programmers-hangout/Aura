@@ -139,7 +139,8 @@ dashboard, mongodb and discord bot. (**done**)
 * fix version string in info embed (**done**)
 
 ### 1.4.0
-* rework config embed
+* rework config menu (**done**)
+* make deletion logging more consistent (**done**)
 * add config help command
 
 ### 1.x.0
