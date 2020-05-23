@@ -146,6 +146,10 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.4.1
 * fix some help config descriptions (**done**)
 
+### 1.4.2
+* fix version string in info embed (**done**)
+
+
 ### 1.x.0
 * rework python models and mongodb queries, should not change anything about the api.
 * add tests for every major functionality that does require mocking the discord library
