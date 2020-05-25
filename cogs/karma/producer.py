@@ -90,6 +90,21 @@ class KarmaProducer(commands.Cog):
                 if reaction.message.author.id == user.id:
                     await self.remove_karma(reaction.message, reaction.message.guild, 'self emoji clear')
 
+    @guild_only()
+    @commands.Cog.listener()
+    async def on_message_edit(self, before: discord.Message, after: discord.Message):
+        if str(config['edit']).lower() == 'true':
+            before_valid = self.validate_message(before)
+            after_valid = self.validate_message(after)
+            if before_valid and after_valid:
+                print()
+            elif before_valid and not after_valid:
+                # remove karma given out through karma message.
+                await self.remove_karma(after, after.guild, 'message edit')
+            elif after_valid and not before_valid:
+                # all new karma to give out
+                await self.give_karma(after, after.guild)
+
     # check if message is a valid message for karma
     async def validate_message(self, message) -> bool:
         # check if message has any variation of thanks + at least one user mention
@@ -163,10 +178,10 @@ class KarmaProducer(commands.Cog):
             else:
                 await self.bot.get_channel(int(config['channel']['log'])).send(
                     '{} ({}) earned karma in {}. {}'.format(member.name + '#'
-                                                             + member.discriminator,
-                                                             member.nick,
-                                                             message.channel.mention,
-                                                             message.jump_url)
+                                                            + member.discriminator,
+                                                            member.nick,
+                                                            message.channel.mention,
+                                                            message.jump_url)
                     + revoke_string)
         if str(config['karma']['message']).lower() == 'true':
             await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma from {}. '
@@ -176,17 +191,19 @@ class KarmaProducer(commands.Cog):
             await message.add_reaction('👍')
 
     async def notify_member_removal(self, message, member, event_type):
-        if event_type == 'message delete':
-            await self.bot.get_channel(int(config['channel']['log'])).send(
-                'karma for {} was removed through event: {} :: in {}'.format(member.name + '#' + member.discriminator,
-                                                                             event_type, message.channel.mention))
-        else:
-            await self.bot.get_channel(int(config['channel']['log'])).send(
-                'karma for {} was removed through event: {} :: in {} :: {}'.format(
-                    member.name + '#' + member.discriminator,
-                    event_type,
-                    message.channel.mention,
-                    message.jump_url))
+        if config['karma']['log']:
+            if event_type == 'message delete':
+                await self.bot.get_channel(int(config['channel']['log'])).send(
+                    'karma for {} was removed through event: {} :: in {}'.format(
+                        member.name + '#' + member.discriminator,
+                        event_type, message.channel.mention))
+            else:
+                await self.bot.get_channel(int(config['channel']['log'])).send(
+                    'karma for {} was removed through event: {} :: in {} :: {}'.format(
+                        member.name + '#' + member.discriminator,
+                        event_type,
+                        message.channel.mention,
+                        message.jump_url))
 
     # create new timer and add the user to it
     async def cooldown_user(self, guild_id: int, giver_id: int, receiver_id: int) -> None:

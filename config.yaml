@@ -1,7 +1,7 @@
 blacklist:
-  emote: 'true'
   contact: Modmail
   dm: 'true'
+  emote: 'true'
 channel:
   log: '707943244998115341'
 cooldown: '20'
@@ -14,11 +14,12 @@ database:
   name: aura
 karma:
   emote: 'true'
+  keywords: thanks,ty,thank you
   log: 'true'
-  message: 'false'
+  message: 'true'
   time-emote: 'true'
   time-message: 'false'
-  keywords: 'thanks,ty,thank you'
+  edit: 'false'
 logging: INFO
 prefix: aura!
 profile:
@@ -27,5 +28,3 @@ roles:
   admin: Admin
   moderator: Staff
 token:
-
-
