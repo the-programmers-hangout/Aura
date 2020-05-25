@@ -10,9 +10,11 @@ from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaSingleActionTimer
-from util.config import config, thanks_list
+from util.config import config, thanks_list, roles
 
 log = logging.getLogger(__name__)
+
+revoke_string = 'If you {}, didn\'t intend to give karma to this person, react to your thanks message with a 👎'
 
 
 # Class that gives positive karma and negative karma on message deletion (take back last action)
@@ -80,6 +82,14 @@ class KarmaProducer(commands.Cog):
                     if self.karma_service.find_message(str(message.id)) is not None:
                         await self.remove_karma(message, message.guild, 'reaction clear')
 
+    @guild_only()
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction: discord.Reaction, user):
+        if self.karma_service.find_message(str(reaction.message.id)) is not None:
+            if reaction.emoji == '👎':
+                if reaction.message.author.id == user.id:
+                    await self.remove_karma(reaction.message, reaction.message.guild, 'self emoji clear')
+
     # check if message is a valid message for karma
     async def validate_message(self, message) -> bool:
         # check if message has any variation of thanks + at least one user mention
@@ -92,8 +102,9 @@ class KarmaProducer(commands.Cog):
     def contains_valid_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
         invalid_pattern = r'\"{}\b{}\b{}\"'
-        invalid_regex = '[0-9a-zA-z\s]*' # message containing " and any character in between
+        invalid_regex = '[0-9a-zA-z\s]*'  # message containing " and any character in between
         for thanks in thanks_list():
+            thanks: str = thanks.strip()
             valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
             invalid_match = re.search(re.compile(invalid_pattern.format(invalid_regex, thanks, invalid_regex)), message)
             if valid_match is not None and invalid_match is None:
@@ -152,13 +163,15 @@ class KarmaProducer(commands.Cog):
             else:
                 await self.bot.get_channel(int(config['channel']['log'])).send(
                     '{} ({}) earned karma in {}. {}'.format(member.name + '#'
-                                                            + member.discriminator,
-                                                            member.nick,
-                                                            message.channel.mention,
-                                                            message.jump_url))
+                                                             + member.discriminator,
+                                                             member.nick,
+                                                             message.channel.mention,
+                                                             message.jump_url)
+                    + revoke_string)
         if str(config['karma']['message']).lower() == 'true':
-            await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma.'
-                                                                .format(member.mention))
+            await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma from {}. '
+                                                                .format(member.mention, message.author.mention)
+                                                                + revoke_string.format(message.author.mention))
         if str(config['karma']['emote']).lower() == 'true':
             await message.add_reaction('👍')
 
