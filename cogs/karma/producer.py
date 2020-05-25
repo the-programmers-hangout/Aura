@@ -83,16 +83,20 @@ class KarmaProducer(commands.Cog):
     # check if message is a valid message for karma
     async def validate_message(self, message) -> bool:
         # check if message has any variation of thanks + at least one user mention
-        if self.has_thanks(message.content) and len(message.mentions) > 0:
+        if self.contains_valid_thanks(message.content) and len(message.mentions) > 0:
             return True
         else:
             return False
 
     # check if message has thanks by using regex
-    def has_thanks(self, message) -> bool:
+    def contains_valid_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
+        invalid_pattern = r'\{}\b{}\b\{}'
+        invalid_regex = '"[0-9a-zA-z\s]*' # message containing " and any character in between
         for thanks in thanks_list():
-            if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message) is not None:
+            valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
+            invalid_match = re.search(re.compile(invalid_pattern.format(invalid_regex, thanks, invalid_regex)), message)
+            if valid_match is not None and invalid_match is None:
                 return True
         return False
 
