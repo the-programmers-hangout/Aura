@@ -91,8 +91,8 @@ class KarmaProducer(commands.Cog):
     # check if message has thanks by using regex
     def contains_valid_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
-        invalid_pattern = r'\{}\b{}\b\{}'
-        invalid_regex = '"[0-9a-zA-z\s]*' # message containing " and any character in between
+        invalid_pattern = r'\"{}\b{}\b{}\"'
+        invalid_regex = '[0-9a-zA-z\s]*' # message containing " and any character in between
         for thanks in thanks_list():
             valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
             invalid_match = re.search(re.compile(invalid_pattern.format(invalid_regex, thanks, invalid_regex)), message)
