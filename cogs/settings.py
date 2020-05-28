@@ -64,10 +64,14 @@ class SettingsManager(commands.Cog):
         config_embed.add_field(name='**karma emote**', value=karma()['emote'])
         config_embed.add_field(name='**karma log**', value=karma()['log'])
         config_embed.add_field(name='**karma message**', value=karma()['message'])
+        config_embed.add_field(name='**karma edit**', value=karma()['edit'])
         config_embed.add_field(name='**profile channels**', value=profile()['channels'])
         config_embed.add_field(name='**roles admin**', value=roles()['admin'])
         config_embed.add_field(name='**roles moderator**', value=roles()['moderator'])
-        config_embed.add_field(name='\u200b', value='\u200b')
+        if len(config_embed.fields) % 3 != 0:
+            config_embed.add_field(name='\u200b', value='\u200b')
+            if (len(config_embed.fields) + 1) % 3 != 0:
+                config_embed.add_field(name='\u200b', value='\u200b')
         config_embed.set_footer(text='token, prefix, database, logging level only only changeable before runtime')
         return config_embed
 
