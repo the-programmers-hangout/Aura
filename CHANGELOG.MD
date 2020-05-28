@@ -158,7 +158,7 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.5.0
 * filter out messages where the thanks is inside of " " (**done**)
 * remove cooldown on karma removal
-* track message edits
+* track partial message edits (**done**)
 * add ways for normal members to revoke karma given out (**done**)
 
 ### 1.x.0

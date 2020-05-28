@@ -100,8 +100,8 @@ class KarmaProfile(commands.Cog):
                     embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=True)
             if len(channel_list) % 3 != 0:
                 embed.add_field(name='\u200b', value='\u200b')
-            if (len(channel_list) + 1) % 3 != 0:
-                embed.add_field(name='\u200b', value='\u200b')
+                if (len(channel_list) + 1) % 3 != 0:
+                    embed.add_field(name='\u200b', value='\u200b')
             embed.set_field_at(index=0, name="**total**", value=str(total_karma), inline=False)
             return embed
         else:
