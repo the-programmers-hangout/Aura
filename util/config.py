@@ -57,6 +57,9 @@ def repository():
     return '[[Github]](https://github.com/arkencl/aura)'
 
 
+max_message_length = 2000
+
+
 class ConfigDescription:
     def __init__(self, description, values=None):
         if values is None:
@@ -101,7 +104,7 @@ descriptions['channel']['log'] = ConfigDescription('which channel to post log me
 
 descriptions['karma']['edit'] = ConfigDescription('whether aura should track message edits for karma gain / deletion'
                                                   + '\n' + 'currently only supports' +
-                                                           ' messages that were karma messages before but aren\'t'
-                                                           + ' after the edit or'
-                                                           + ' become karma messages after the edit but weren\'t before'
+                                                  ' messages that were karma messages before but aren\'t'
+                                                  + ' after the edit or'
+                                                  + ' become karma messages after the edit but weren\'t before'
                                                   )

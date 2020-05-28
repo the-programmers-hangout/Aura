@@ -1,12 +1,15 @@
 import logging
+import tempfile
+from io import BytesIO
 
+from discord import File
 from discord.ext import commands
 from discord.ext.commands import has_any_role, guild_only
 
 from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
-from util.config import roles, config
+from util.config import roles, config, max_message_length
 from util.conversion import convert_content_to_member_set
 
 log = logging.getLogger(__name__)
@@ -57,4 +60,27 @@ class KarmaBlocker(commands.Cog):
         for member in member_set:
             self.blocker_service.whitelist(Member(ctx.guild.id, member.id))
             await ctx.channel.send('Whitelisted {}'.format(member.mention))
+
+    @guild_only()
+    @has_any_role(roles()['admin'], roles()['moderator'])
+    @commands.command(name='showblacklist', brief='list all blacklisted members in the guild the command was invoked in',
+                      usage='{}showblackist'
+                      .format(config['prefix'], config['prefix']))
+    async def show_blacklist(self, ctx):
+        blacklist = list(self.blocker_service.find_all_blacklisted(str(ctx.guild.id)))
+        return_message = ''
+        for blacklisted in blacklist:
+            member = ctx.guild.get_member(int(blacklisted['member_id']))
+            if member is not None:
+                return_message += member.name + '#' + member.discriminator + ' :: ' + str(member.id) \
+                                  + '\n'
+            else:
+                return_message += return_message + str(blacklisted['member_id']) + '\n'
+        if len(return_message) != 0:
+            if len(return_message) <= max_message_length:
+                await ctx.channel.send(return_message)
+            else:
+                await ctx.channel.send(file=File(fp=BytesIO(bytes(return_message, 'utf-8')), filename='Blacklist'))
+        else:
+            await ctx.channel.send('Blacklist is empty')
 
