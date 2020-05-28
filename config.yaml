@@ -4,7 +4,7 @@ blacklist:
   emote: 'true'
 channel:
   log: '707943244998115341'
-cooldown: '20'
+cooldown: '5'
 database:
   connection:
     host: mongo
@@ -13,13 +13,13 @@ database:
     username: root
   name: aura
 karma:
+  edit: 'false'
   emote: 'true'
   keywords: thanks,ty,thank you
   log: 'true'
   message: 'true'
   time-emote: 'true'
   time-message: 'false'
-  edit: 'false'
 logging: INFO
 prefix: aura!
 profile:
