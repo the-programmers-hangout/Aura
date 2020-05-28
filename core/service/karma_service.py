@@ -72,3 +72,7 @@ class BlockerService:
     def find_member(self, member: Member):
         # returns the member if it finds it
         return self._blacklist.find_one(filter=vars(member))
+
+    def find_all_blacklisted(self, guild_id):
+        # returns a cursor of all blacklisted members found in the guild
+        return self._blacklist.find(filter=dict(guild_id=guild_id), projection=dict(member_id=True))

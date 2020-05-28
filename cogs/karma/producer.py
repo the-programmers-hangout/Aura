@@ -10,9 +10,11 @@ from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaSingleActionTimer
-from util.config import config, thanks_list
+from util.config import config, thanks_list, roles, karma
 
 log = logging.getLogger(__name__)
+
+revoke_string = 'If you {}, didn\'t intend to give karma to this person, react to your thanks message with a 👎'
 
 
 # Class that gives positive karma and negative karma on message deletion (take back last action)
@@ -80,19 +82,47 @@ class KarmaProducer(commands.Cog):
                     if self.karma_service.find_message(str(message.id)) is not None:
                         await self.remove_karma(message, message.guild, 'reaction clear')
 
+    @guild_only()
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction: discord.Reaction, user):
+        if self.karma_service.find_message(str(reaction.message.id)) is not None:
+            if reaction.emoji == '👎':
+                if reaction.message.author.id == user.id:
+                    await self.remove_karma(reaction.message, reaction.message.guild, 'self emoji clear')
+
+    @guild_only()
+    @commands.Cog.listener()
+    async def on_message_edit(self, before: discord.Message, after: discord.Message):
+        if str(karma()['edit']).lower() == 'true':
+            before_valid = self.validate_message(before)
+            after_valid = self.validate_message(after)
+            if before_valid and after_valid:
+                print()  # TODO implement search on message id to find all members thanked
+            elif before_valid and not after_valid:
+                # remove karma given out through karma message.
+                await self.remove_karma(after, after.guild, 'message edit')
+            elif after_valid and not before_valid:
+                # all new karma to give out
+                await self.give_karma(after, after.guild)
+
     # check if message is a valid message for karma
     async def validate_message(self, message) -> bool:
         # check if message has any variation of thanks + at least one user mention
-        if self.has_thanks(message.content) and len(message.mentions) > 0:
+        if self.contains_valid_thanks(message.content) and len(message.mentions) > 0:
             return True
         else:
             return False
 
     # check if message has thanks by using regex
-    def has_thanks(self, message) -> bool:
+    def contains_valid_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
+        invalid_pattern = r'\"{}\b{}\b{}\"'
+        invalid_regex = '[0-9a-zA-z\s]*'  # message containing " and any character in between
         for thanks in thanks_list():
-            if re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message) is not None:
+            thanks: str = thanks.strip()
+            valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
+            invalid_match = re.search(re.compile(invalid_pattern.format(invalid_regex, thanks, invalid_regex)), message)
+            if valid_match is not None and invalid_match is None:
                 return True
         return False
 
@@ -151,25 +181,29 @@ class KarmaProducer(commands.Cog):
                                                             + member.discriminator,
                                                             member.nick,
                                                             message.channel.mention,
-                                                            message.jump_url))
+                                                            message.jump_url)
+                    + revoke_string)
         if str(config['karma']['message']).lower() == 'true':
-            await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma.'
-                                                                .format(member.mention))
+            await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma from {}. '
+                                                                .format(member.mention, message.author.mention)
+                                                                + revoke_string.format(message.author.mention))
         if str(config['karma']['emote']).lower() == 'true':
             await message.add_reaction('👍')
 
     async def notify_member_removal(self, message, member, event_type):
-        if event_type == 'message delete':
-            await self.bot.get_channel(int(config['channel']['log'])).send(
-                'karma for {} was removed through event: {} :: in {}'.format(member.name + '#' + member.discriminator,
-                                                                             event_type, message.channel.mention))
-        else:
-            await self.bot.get_channel(int(config['channel']['log'])).send(
-                'karma for {} was removed through event: {} :: in {} :: {}'.format(
-                    member.name + '#' + member.discriminator,
-                    event_type,
-                    message.channel.mention,
-                    message.jump_url))
+        if config['karma']['log']:
+            if event_type == 'message delete':
+                await self.bot.get_channel(int(config['channel']['log'])).send(
+                    'karma for {} was removed through event: {} :: in {}'.format(
+                        member.name + '#' + member.discriminator,
+                        event_type, message.channel.mention))
+            else:
+                await self.bot.get_channel(int(config['channel']['log'])).send(
+                    'karma for {} was removed through event: {} :: in {} :: {}'.format(
+                        member.name + '#' + member.discriminator,
+                        event_type,
+                        message.channel.mention,
+                        message.jump_url))
 
     # create new timer and add the user to it
     async def cooldown_user(self, guild_id: int, giver_id: int, receiver_id: int) -> None:
