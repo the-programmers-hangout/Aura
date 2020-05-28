@@ -10,7 +10,7 @@ from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaSingleActionTimer
-from util.config import config, thanks_list, roles
+from util.config import config, thanks_list, roles, karma
 
 log = logging.getLogger(__name__)
 
@@ -93,11 +93,11 @@ class KarmaProducer(commands.Cog):
     @guild_only()
     @commands.Cog.listener()
     async def on_message_edit(self, before: discord.Message, after: discord.Message):
-        if str(config['edit']).lower() == 'true':
+        if str(karma()['edit']).lower() == 'true':
             before_valid = self.validate_message(before)
             after_valid = self.validate_message(after)
             if before_valid and after_valid:
-                print()
+                print()  # TODO implement search on message id to find all members thanked
             elif before_valid and not after_valid:
                 # remove karma given out through karma message.
                 await self.remove_karma(after, after.guild, 'message edit')
