@@ -99,3 +99,9 @@ descriptions['cooldown'] = ConfigDescription('Cooldown applied to karma thanks m
 descriptions['channel']['log'] = ConfigDescription('which channel to post log messages to',
                                                    ['Any channel id'])
 
+descriptions['karma']['edit'] = ConfigDescription('whether aura should track message edits for karma gain / deletion'
+                                                  + '\n' + 'currently only supports' +
+                                                           ' messages that were karma messages before but aren\'t'
+                                                           + ' after the edit or'
+                                                           + ' become karma messages after the edit but weren\'t before'
+                                                  )
