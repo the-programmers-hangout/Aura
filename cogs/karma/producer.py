@@ -14,7 +14,7 @@ from util.config import config, thanks_list, roles, karma
 
 log = logging.getLogger(__name__)
 
-revoke_string = 'If you {}, didn\'t intend to give karma to this person, react to your thanks message with a 👎'
+revoke_string = 'If you {}, didn\'t intend to give karma to this person, react to the 👎 of your original thanks message'
 
 
 # Class that gives positive karma and negative karma on message deletion (take back last action)
@@ -189,6 +189,7 @@ class KarmaProducer(commands.Cog):
                                                                 + revoke_string.format(message.author.mention))
         if str(config['karma']['emote']).lower() == 'true':
             await message.add_reaction('👍')
+            await message.add_reaction('👎')
 
     async def notify_member_removal(self, message, member, event_type):
         if config['karma']['log']:

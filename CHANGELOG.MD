@@ -176,9 +176,12 @@ dashboard, mongodb and discord bot. (**done**)
 * improve config change on karma keywords with handling whitespaces and such (**done**)
 
 ### 1.6.0
+* add thumps down automatically (**done**)
+
+### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
 
-### 1.x.0
+### 1.y.0
 * rework python models and mongodb queries, should not change anything about the api.
 * add tests for every major functionality that does require mocking the discord library
