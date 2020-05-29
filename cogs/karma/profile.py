@@ -95,9 +95,11 @@ class KarmaProfile(commands.Cog):
                 total_karma += document['karma']
                 channel = guild.get_channel(int(document['_id']['channel_id']))
                 if (index % 3) == 0 and index != 0:
-                    embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=False)
+                    if channel is None:
+                        embed.add_field(name="**{}**".format('deleted channel'), value=document['karma'], inline=False)
                 else:
-                    embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=True)
+                    if channel is None:
+                        embed.add_field(name="**{}**".format('deleted channel'), value=document['karma'], inline=True)
             if len(channel_list) % 3 != 0:
                 embed.add_field(name='\u200b', value='\u200b')
                 if (len(channel_list) + 1) % 3 != 0:
