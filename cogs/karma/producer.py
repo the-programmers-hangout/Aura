@@ -11,15 +11,9 @@ from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaSingleActionTimer
 from util.config import config, thanks_list, karma
+from util.constants import skull, thumps_up, thumps_down, clock, revoke_message
 
 log = logging.getLogger(__name__)
-
-thumps_up = '👍'  # used to indicate positive karma gain
-thumps_down = '👎'  # used to indicate that karma gain can be reverted by the user
-clock = '🕒'  # used to indicate cooldown periods
-skull = '☠️'  # used to indicate that user is blacklisted
-revoke_message = 'If you {}, didn\'t intend to give karma to this person,' + \
-                ' react to the' + thumps_down + 'of your original thanks message'
 
 
 # Class that gives positive karma and negative karma on message deletion (take back last action)

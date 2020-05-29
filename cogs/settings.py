@@ -5,6 +5,7 @@ from discord.ext import commands
 from discord.ext.commands import has_role, guild_only
 
 from util.config import config, write_config, roles, karma, profile, blacklist, descriptions
+from util.constants import zero_width_space
 
 log = logging.getLogger(__name__)
 
@@ -73,9 +74,9 @@ class SettingsManager(commands.Cog):
         config_embed.add_field(name='**roles admin**', value=roles()['admin'])
         config_embed.add_field(name='**roles moderator**', value=roles()['moderator'])
         if len(config_embed.fields) % 3 != 0:
-            config_embed.add_field(name='\u200b', value='\u200b')
+            config_embed.add_field(name=zero_width_space, value=zero_width_space)
             if (len(config_embed.fields) + 1) % 3 != 0:
-                config_embed.add_field(name='\u200b', value='\u200b')
+                config_embed.add_field(name=zero_width_space, value=zero_width_space)
         config_embed.set_footer(text='token, prefix, database, logging level only only changeable before runtime')
         return config_embed
 
