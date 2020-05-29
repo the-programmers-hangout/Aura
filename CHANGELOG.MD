@@ -178,6 +178,9 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.6.0
 * add thumps down automatically (**done**)
 
+### 1.6.1
+* fix profile changes (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
