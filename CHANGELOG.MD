@@ -172,6 +172,9 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.5.3
 * add handling for deleted channels inside profile (**done**)
 
+### 1.5.4
+* improve config change on karma keywords with handling whitespaces and such (**done**)
+
 ### 1.6.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
