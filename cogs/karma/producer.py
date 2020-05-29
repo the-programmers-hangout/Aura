@@ -94,8 +94,8 @@ class KarmaProducer(commands.Cog):
     @commands.Cog.listener()
     async def on_message_edit(self, before: discord.Message, after: discord.Message):
         if str(karma()['edit']).lower() == 'true':
-            before_valid = self.validate_message(before)
-            after_valid = self.validate_message(after)
+            before_valid = await self.validate_message(before)
+            after_valid = await self.validate_message(after)
             if before_valid and after_valid:
                 print()  # TODO implement search on message id to find all members thanked
             elif before_valid and not after_valid:
