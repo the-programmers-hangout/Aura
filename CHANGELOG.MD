@@ -185,6 +185,9 @@ dashboard, mongodb and discord bot. (**done**)
 * fix bugged logging of karma thanks (**done**)
 * fix config panel bug (**done**)
 
+### 1.6.3
+* fix edit bug (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
