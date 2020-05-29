@@ -163,6 +163,15 @@ dashboard, mongodb and discord bot. (**done**)
 * fix config embed spacing (**done**)
 * add command to view all blacklisted members (**done**)
 
+### 1.5.1
+* again version string (**done**)
+
+### 1.5.2
+* lowering the max message length before something is put into an file embed from 2000 (discord max) to 800. (**done**)
+
+### 1.5.3
+* add handling for deleted channels inside profile (**done**)
+
 ### 1.6.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
