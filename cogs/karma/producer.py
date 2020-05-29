@@ -181,8 +181,7 @@ class KarmaProducer(commands.Cog):
                                                             + member.discriminator,
                                                             member.nick,
                                                             message.channel.mention,
-                                                            message.jump_url)
-                    + revoke_string)
+                                                            message.jump_url))
         if str(config['karma']['message']).lower() == 'true':
             await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma from {}. '
                                                                 .format(member.mention, message.author.mention)
