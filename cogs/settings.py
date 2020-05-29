@@ -23,6 +23,10 @@ class SettingsManager(commands.Cog):
                       .format(config['prefix'], config['prefix'], config['prefix']))
     async def config(self, ctx, *, params: str = ""):
         args = params.split()
+        if args[0] == 'karma' and args[1] == 'keywords':
+            keywords = params.replace('karma keywords', '')
+            args[2] = keywords.strip()
+            args = args[:3]
         if len(args) > 3:
             await ctx.channel.send('You provided too many arguments to the config command')
         else:
