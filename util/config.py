@@ -44,7 +44,7 @@ def thanks_list():
 
 # version dict
 def version():
-    return dict(aura_version='1.6.0', python_version='3.8.2', discord_version='1.3.3')
+    return dict(aura_version='1.6.1', python_version='3.8.2', discord_version='1.3.3')
 
 
 # return the discord tag of the author of this bot
