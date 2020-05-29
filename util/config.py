@@ -44,7 +44,7 @@ def thanks_list():
 
 # version dict
 def version():
-    return dict(aura_version='1.5.1', python_version='3.8.2', discord_version='1.3.3')
+    return dict(aura_version='1.5.2', python_version='3.8.2', discord_version='1.3.3')
 
 
 # return the discord tag of the author of this bot
@@ -57,7 +57,7 @@ def repository():
     return '[[Github]](https://github.com/arkencl/aura)'
 
 
-max_message_length = 2000
+max_message_length = 800
 
 
 class ConfigDescription:
