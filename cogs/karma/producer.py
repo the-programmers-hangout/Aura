@@ -10,7 +10,7 @@ from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaSingleActionTimer
-from util.config import config, thanks_list, roles, karma
+from util.config import config, thanks_list, karma
 
 log = logging.getLogger(__name__)
 
@@ -90,6 +90,7 @@ class KarmaProducer(commands.Cog):
     @guild_only()
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user):
+        # make sure karma has not been removed from another action
         if self.karma_service.find_message(str(reaction.message.id)) is not None:
             if reaction.emoji == thumps_down:
                 if reaction.message.author.id == user.id:
@@ -118,7 +119,7 @@ class KarmaProducer(commands.Cog):
         else:
             return False
 
-    # check if message has thanks by using regex
+    # check if message has one of the configured keywords in a valid pattern by using regex
     def contains_valid_thanks(self, message) -> bool:
         pattern = r'\b{}\b'
         invalid_pattern = r'\"{}\b{}\b{}\"'
@@ -168,10 +169,11 @@ class KarmaProducer(commands.Cog):
             karma_member.karma = 1
             deletion_result = self.karma_service.delete_karma_member(karma_member)
             if deletion_result.deleted_count == 1:
-                await self.notify_member_removal(message, member, reason)
+                await self.log_karma_removal(message, member, reason)
 
     # notify user about successful karma gain
     async def notify_member_gain(self, message, member):
+        # this channel can be private
         if str(config['karma']['log']).lower() == 'true':
             if member.nick is None:
                 await self.bot.get_channel(int(config['channel']['log'])).send(
@@ -195,7 +197,7 @@ class KarmaProducer(commands.Cog):
             await message.add_reaction(thumps_up)
             await message.add_reaction(thumps_down)
 
-    async def notify_member_removal(self, message, member, event_type):
+    async def log_karma_removal(self, message, member, event_type):
         if config['karma']['log']:
             if event_type == 'message delete':
                 await self.bot.get_channel(int(config['channel']['log'])).send(
