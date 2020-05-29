@@ -97,9 +97,14 @@ class KarmaProfile(commands.Cog):
                 if (index % 3) == 0 and index != 0:
                     if channel is None:
                         embed.add_field(name="**{}**".format('deleted channel'), value=document['karma'], inline=False)
+                    else:
+                        embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=False)
                 else:
                     if channel is None:
                         embed.add_field(name="**{}**".format('deleted channel'), value=document['karma'], inline=True)
+                    else:
+                        embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=True)
+
             if len(channel_list) % 3 != 0:
                 embed.add_field(name='\u200b', value='\u200b')
                 if (len(channel_list) + 1) % 3 != 0:
