@@ -13,6 +13,7 @@ from core.service.karma_service import KarmaService
 from util.config import profile, config
 from util.constants import zero_width_space
 from util.conversion import convert_content_to_member_set
+from util.embedutil import add_filler_fields
 
 log = logging.getLogger(__name__)
 
@@ -107,10 +108,7 @@ class KarmaProfile(commands.Cog):
                     else:
                         embed.add_field(name=bold_field.format(channel.name), value=document['karma'], inline=True)
 
-            if len(channel_list) % 3 != 0:
-                embed.add_field(name=zero_width_space, value=zero_width_space)
-                if (len(channel_list) + 1) % 3 != 0:
-                    embed.add_field(name=zero_width_space, value=zero_width_space)
+            embed = add_filler_fields(embed, channel_list)
             embed.set_field_at(index=0, name="**total**", value=str(total_karma), inline=False)
             return embed
         else:

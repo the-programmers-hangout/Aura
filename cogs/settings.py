@@ -6,6 +6,7 @@ from discord.ext.commands import has_role, guild_only
 
 from util.config import config, write_config, roles, karma, profile, blacklist, descriptions
 from util.constants import zero_width_space
+from util.embedutil import add_filler_fields
 
 log = logging.getLogger(__name__)
 
@@ -73,10 +74,7 @@ class SettingsManager(commands.Cog):
         config_embed.add_field(name='**profile channels**', value=profile()['channels'])
         config_embed.add_field(name='**roles admin**', value=roles()['admin'])
         config_embed.add_field(name='**roles moderator**', value=roles()['moderator'])
-        if len(config_embed.fields) % 3 != 0:
-            config_embed.add_field(name=zero_width_space, value=zero_width_space)
-            if (len(config_embed.fields) + 1) % 3 != 0:
-                config_embed.add_field(name=zero_width_space, value=zero_width_space)
+        config_embed = add_filler_fields(config_embed, config_embed.fields)
         config_embed.set_footer(text='token, prefix, database, logging level only only changeable before runtime')
         return config_embed
 
@@ -102,8 +100,7 @@ class SettingsManager(commands.Cog):
         if len(value_list) > 1:
             for value in value_list:
                 result += value + ", "
-            result = result[:-1]
-            result = result[:-1]
+            result = result[:-2]
         else:
             result = value_list[0]
         return result
