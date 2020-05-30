@@ -59,13 +59,14 @@ class HelpMenu(commands.Cog):
             await ctx.channel.send('You passed too many arguments to the help command.')
 
     # build the help embed that is to be returned to the user
-    async def build_help_embed(self, ctx, args) -> Embed:
+    async def build_help_embed(self, ctx, arg) -> Embed:
         embed = Embed(colour=Color.dark_gold())
-        if len(args) == 0:
+        if len(arg) == 0:
             # if no args, show help overview (all commands executable by user)
             embed = await self.overview_embed(embed, ctx)
         else:
-            embed = await self.command_info_embed(embed, ctx, args)
+            # show info on command in args (all commands executable by user)
+            embed = await self.command_info_embed(embed, ctx, arg)
         return embed
 
     async def overview_embed(self, embed, ctx):
@@ -95,9 +96,9 @@ class HelpMenu(commands.Cog):
         embed = add_filler_fields(embed, cog_mapping, '-', not_rendered_counter)
         return embed
 
-    async def command_info_embed(self, embed, ctx, args):
+    async def command_info_embed(self, embed, ctx, arg):
         # return help for the command
-        command = self.bot.get_command(args[0])
+        command = self.bot.get_command(arg[0])
         is_executable = False
         try:
             is_executable = await command.can_run(ctx)
