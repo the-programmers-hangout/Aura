@@ -7,7 +7,9 @@ from discord.ext import commands
 from discord.ext.commands import guild_only, CommandError
 
 from util.config import config, author_discord, version, repository
+from util.constants import zero_width_space
 from util.conversion import strfdelta
+from util.embedutil import add_filler_fields
 
 log = logging.getLogger(__name__)
 
@@ -84,10 +86,7 @@ class HelpMenu(commands.Cog):
                 else:
                     not_rendered_counter -= 1
             # use the not rendered counter to insert zero width space fields to properly align the embed
-            if (len(cog_mapping) - not_rendered_counter) % 3 != 0:
-                embed.add_field(name='\u200b', value='\u200b')
-            if (len(cog_mapping) - not_rendered_counter + 1) % 3 != 0:
-                embed.add_field(name='\u200b', value='\u200b')
+            embed = add_filler_fields(embed, cog_mapping, '-', not_rendered_counter)
         else:
             # return help for the command
             command = self.bot.get_command(args[0])

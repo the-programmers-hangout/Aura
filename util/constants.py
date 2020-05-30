@@ -5,3 +5,4 @@ clock = '🕒'  # used to indicate cooldown periods
 skull = '☠️'  # used to indicate that user is blacklisted
 revoke_message = 'If you {}, didn\'t intend to give karma to this person,' + \
                  ' react to the' + thumps_down + 'of your original thanks message'
+embed_max_columns = 3  # 3 because discord embeds can have three fields in a line
