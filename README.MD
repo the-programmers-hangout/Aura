@@ -10,7 +10,7 @@ a point system called karma. It has the following features:
     * Ignores message author mentions.
 * Configurable Feedback on karma gain
     - Logging to a channel.
-    - Thumps up reaction to the message.
+    - Thumbs up reaction to the message.
     - Affirmation Message in same channel as the thank you message.
 * Blacklist and Whitelist Members from giving out karma.
     * Blacklisted Members will get a DM specifying who to contact to dispute it.
