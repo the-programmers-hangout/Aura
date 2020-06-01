@@ -5,7 +5,6 @@ from discord.ext import commands
 from discord.ext.commands import has_role, guild_only
 
 from util.config import config, write_config, roles, karma, profile, blacklist, descriptions
-from util.constants import zero_width_space
 from util.embedutil import add_filler_fields
 
 log = logging.getLogger(__name__)
