@@ -88,7 +88,7 @@ class HelpMenu(commands.Cog):
                         # if it is include in the embed, otherwise no need for user to know about the command.
                         embed_val += command.name + '\n'
                 if embed_val != '':
-                    embed.add_field(name='**' + cog + '**', value=embed_val, inline=True)
+                    embed.add_field(name='**' + cog + '**', value=f'```apache\n{embed_val}```', inline=True)
             else:
                 not_rendered_counter -= 1
         # use the not rendered counter to insert zero width space fields to properly align the embed
