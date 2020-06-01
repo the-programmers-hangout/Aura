@@ -7,7 +7,6 @@ from discord.ext import commands
 from discord.ext.commands import guild_only, CommandError
 
 from util.config import config, author_discord, version, repository
-from util.constants import zero_width_space
 from util.conversion import strfdelta
 from util.embedutil import add_filler_fields
 
