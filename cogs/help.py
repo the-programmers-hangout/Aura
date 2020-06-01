@@ -30,7 +30,7 @@ class HelpMenu(commands.Cog):
             embed.description = 'A bot for handling karma points of non-bot guild members.'
             embed.add_field(name='Prefix', value=config['prefix'], inline=True)
             embed.add_field(name='Contributors', value=author_discord(), inline=True)
-            version_field = '```\nVersion: {}\ndiscord.py: {}\npython: {}```' \
+            version_field = '```\nVersion: {}\nDiscord.py: {}\nPython: {}```' \
                 .format(version()['aura_version'], version()['discord_version'], version()['python_version'])
             embed.add_field(name='Build Info', value=version_field, inline=False)
             current_time = time.time()
