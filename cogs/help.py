@@ -2,7 +2,7 @@ import datetime
 import logging
 import time
 
-from discord import Embed, Color
+from discord import Embed
 from discord.ext import commands
 from discord.ext.commands import guild_only, CommandError
 
