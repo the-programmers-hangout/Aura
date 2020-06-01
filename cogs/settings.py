@@ -1,6 +1,6 @@
 import logging
 
-from discord import Embed, Color
+from discord import Embed
 from discord.ext import commands
 from discord.ext.commands import has_role, guild_only
 
