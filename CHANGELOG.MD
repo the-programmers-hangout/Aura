@@ -188,6 +188,10 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.6.3
 * fix edit bug (**done**)
 
+### 1.7.0
+* refactoring code (**done**)
+* various small changes (info embed uptime, help & info embed color, etc.) (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
