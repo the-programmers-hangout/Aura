@@ -25,19 +25,19 @@ class HelpMenu(commands.Cog):
         # if bot mentioned and the content is in equal length
         # to the mention of user id, then it has to be an empty message
         if self.bot.user.mentioned_in(message) and len(message.content) == len('<@!{}>'.format(self.bot.user.id)):
-            embed: Embed = Embed()
+            embed: Embed = Embed(colour=Color.dark_gold())
             embed.title = self.bot.user.name + "#" + self.bot.user.discriminator
             embed.description = 'A bot for handling karma points of non-bot guild members.'
             embed.add_field(name='Prefix', value=config['prefix'], inline=True)
             embed.add_field(name='Contributors', value=author_discord(), inline=True)
-            version_field = '```\nVersion: {}\nDiscord.py: {}\nPython: {}```' \
+            version_field = '```fix\nVersion: {}\nDiscord.py: {}\nPython: {}```' \
                 .format(version()['aura_version'], version()['discord_version'], version()['python_version'])
             embed.add_field(name='Build Info', value=version_field, inline=False)
             current_time = time.time()
             difference = int(round(current_time - self.start_time))
             uptime = datetime.timedelta(seconds=difference)
             embed.add_field(name='Uptime',
-                            value=strfdelta(uptime, '{hours} hours, {minutes} minutes, {seconds} seconds'),
+                            value=strfdelta(uptime, '{days} days, {hours} hours, {minutes} minutes, {seconds} seconds'),
                             inline=False)
             embed.add_field(name='Source', value=repository(), inline=False)
             embed.set_thumbnail(url=self.bot.user.avatar_url)
