@@ -7,6 +7,7 @@ from discord.ext import commands
 from discord.ext.commands import guild_only, CommandError
 
 from util.config import config, author_discord, version, repository
+from util.constants import embed_color
 from util.conversion import strfdelta
 from util.embedutil import add_filler_fields
 
@@ -25,7 +26,7 @@ class HelpMenu(commands.Cog):
         # if bot mentioned and the content is in equal length
         # to the mention of user id, then it has to be an empty message
         if self.bot.user.mentioned_in(message) and len(message.content) == len('<@!{}>'.format(self.bot.user.id)):
-            embed: Embed = Embed(colour=Color.dark_gold())
+            embed: Embed = Embed(colour=embed_color)
             embed.title = self.bot.user.name + "#" + self.bot.user.discriminator
             embed.description = 'A bot for handling karma points of non-bot guild members.'
             embed.add_field(name='Prefix', value=config['prefix'], inline=True)
@@ -59,7 +60,7 @@ class HelpMenu(commands.Cog):
 
     # build the help embed that is to be returned to the user
     async def build_help_embed(self, ctx, arg) -> Embed:
-        embed = Embed(colour=Color.dark_gold())
+        embed = Embed(colour=embed_color)
         if len(arg) == 0:
             # if no args, show help overview (all commands executable by user)
             embed = await self.overview_embed(embed, ctx)

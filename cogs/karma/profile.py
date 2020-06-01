@@ -11,6 +11,7 @@ from core.service.karma_service import KarmaService
 # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
 # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 from util.config import profile, config
+from util.constants import embed_color
 from util.conversion import convert_content_to_member_set
 from util.embedutil import add_filler_fields
 
@@ -86,7 +87,7 @@ class KarmaProfile(commands.Cog):
 
     async def build_profile_embed(self, karma_member: KarmaMember, guild) -> discord.Embed:
         channel_cursor = self.karma_service.aggregate_member_by_channels(karma_member)
-        embed: discord.Embed = discord.Embed(colour=Color.dark_gold())
+        embed: discord.Embed = discord.Embed(colour=embed_color)
         embed.description = 'Karma Profile with breakdown of top {} channels'.format(profile()['channels'])
         total_karma: int = 0
         channel_list = list(channel_cursor)
