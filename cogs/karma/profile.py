@@ -1,20 +1,22 @@
 import logging
 
 import discord
-from discord import Color
 from discord.ext import commands
 from discord.ext.commands import guild_only
 
 from core import datasource
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
-
 # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
 # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 from util.config import profile, config
+from util.constants import embed_color
 from util.conversion import convert_content_to_member_set
+from util.embedutil import add_filler_fields
 
 log = logging.getLogger(__name__)
+
+bold_field = "**{}**"
 
 
 class KarmaProfile(commands.Cog):
@@ -84,7 +86,7 @@ class KarmaProfile(commands.Cog):
 
     async def build_profile_embed(self, karma_member: KarmaMember, guild) -> discord.Embed:
         channel_cursor = self.karma_service.aggregate_member_by_channels(karma_member)
-        embed: discord.Embed = discord.Embed(colour=Color.dark_gold())
+        embed: discord.Embed = discord.Embed(colour=embed_color)
         embed.description = 'Karma Profile with breakdown of top {} channels'.format(profile()['channels'])
         total_karma: int = 0
         channel_list = list(channel_cursor)
@@ -96,19 +98,16 @@ class KarmaProfile(commands.Cog):
                 channel = guild.get_channel(int(document['_id']['channel_id']))
                 if (index % 3) == 0 and index != 0:
                     if channel is None:
-                        embed.add_field(name="**{}**".format('deleted channel'), value=document['karma'], inline=False)
+                        embed.add_field(name=bold_field.format('deleted channel'), value=document['karma'], inline=False)
                     else:
-                        embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=False)
+                        embed.add_field(name=bold_field.format(channel.name), value=document['karma'], inline=False)
                 else:
                     if channel is None:
-                        embed.add_field(name="**{}**".format('deleted channel'), value=document['karma'], inline=True)
+                        embed.add_field(name=bold_field.format('deleted channel'), value=document['karma'], inline=True)
                     else:
-                        embed.add_field(name="**{}**".format(channel.name), value=document['karma'], inline=True)
+                        embed.add_field(name=bold_field.format(channel.name), value=document['karma'], inline=True)
 
-            if len(channel_list) % 3 != 0:
-                embed.add_field(name='\u200b', value='\u200b')
-                if (len(channel_list) + 1) % 3 != 0:
-                    embed.add_field(name='\u200b', value='\u200b')
+            embed = add_filler_fields(embed, channel_list)
             embed.set_field_at(index=0, name="**total**", value=str(total_karma), inline=False)
             return embed
         else:

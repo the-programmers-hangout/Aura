@@ -1,10 +1,12 @@
 import logging
 
-from discord import Embed, Color
+from discord import Embed
 from discord.ext import commands
 from discord.ext.commands import has_role, guild_only
 
 from util.config import config, write_config, roles, karma, profile, blacklist, descriptions
+from util.constants import embed_color
+from util.embedutil import add_filler_fields
 
 log = logging.getLogger(__name__)
 
@@ -56,7 +58,7 @@ class SettingsManager(commands.Cog):
         config_embed: Embed = Embed(title='Aura Configuration Menu',
                                     description='Shows all changeable configuration keys '
                                                 + 'and their current values ',
-                                    colour=Color.dark_gold())
+                                    colour=embed_color)
         config_embed.add_field(name='**blacklist contact**', value=blacklist()['contact'])
         config_embed.add_field(name='**blacklist emote**', value=blacklist()['emote'])
         config_embed.add_field(name='**blacklist dm**', value=blacklist()['dm'])
@@ -72,15 +74,12 @@ class SettingsManager(commands.Cog):
         config_embed.add_field(name='**profile channels**', value=profile()['channels'])
         config_embed.add_field(name='**roles admin**', value=roles()['admin'])
         config_embed.add_field(name='**roles moderator**', value=roles()['moderator'])
-        if len(config_embed.fields) % 3 != 0:
-            config_embed.add_field(name='\u200b', value='\u200b')
-            if (len(config_embed.fields) + 1) % 3 != 0:
-                config_embed.add_field(name='\u200b', value='\u200b')
+        config_embed = add_filler_fields(config_embed, config_embed.fields)
         config_embed.set_footer(text='token, prefix, database, logging level only only changeable before runtime')
         return config_embed
 
     def build_config_help_embed(self, args) -> Embed:
-        config_help_embed: Embed = Embed(colour=Color.dark_gold())
+        config_help_embed: Embed = Embed(colour=embed_color)
         # args[0] == help
         if len(args) == 2:
             config_help_embed.title = args[1]
@@ -101,8 +100,7 @@ class SettingsManager(commands.Cog):
         if len(value_list) > 1:
             for value in value_list:
                 result += value + ", "
-            result = result[:-1]
-            result = result[:-1]
+            result = result[:-2]
         else:
             result = value_list[0]
         return result

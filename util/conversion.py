@@ -24,7 +24,7 @@ async def convert_content_to_member_set(ctx, argument_list):
 
 
 def strfdelta(tdelta, fmt):
-    d = {}
+    d = {"days": tdelta.days}
     d["hours"], rem = divmod(tdelta.seconds, 3600)
     d["minutes"], d["seconds"] = divmod(rem, 60)
     return fmt.format(**d)
