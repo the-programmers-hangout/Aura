@@ -18,7 +18,8 @@ emoji:
   karma_delete: "\u274C"
   karma_gain: "\U0001F44D"
 karma:
-  edit: 'true'
+  edit: 'false'
+  self_deletion: 'false'
   emote: 'true'
   keywords: thanks, ty, thank you
   log: 'true'
