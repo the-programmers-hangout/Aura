@@ -103,8 +103,8 @@ descriptions['karma']['edit'] = ConfigDescription('whether aura should track mes
                                                   + ' after the edit or'
                                                   + ' become karma messages after the edit but weren\'t before'
                                                   )
-descriptions['karma']['self_deletion'] = ConfigDescription('if aura should allow the self deletion of karma, also ' +
-                                                           'disables deletion emoji')
+descriptions['karma']['self_delete'] = ConfigDescription('if aura should allow the self deletion of karma, also ' +
+                                                         'disables karma deletion emoji')
 descriptions['profile']['channels'] = ConfigDescription('how many top channels to include in profile',
                                                         ['Any positive number including 0'])
 

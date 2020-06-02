@@ -184,9 +184,14 @@ class KarmaProducer(commands.Cog):
                                                             message.channel.mention,
                                                             message.jump_url))
         if str(karma()['message']).lower() == 'true':
-            await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma from {}. '
-                                                                .format(member.mention, message.author.mention)
-                                                                + revoke_message.format(message.author.mention))
+            if str(karma()['self_delete']).lower() == 'true':
+                await self.bot.get_channel(message.channel.id).send(
+                    'Congratulations {}, you have earned karma from {}. '
+                    .format(member.mention, message.author.mention)
+                    + revoke_message.format(message.author.mention))
+            else:
+                await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma from {}.'
+                                                                    .format(member.mention, message.author.mention))
         if str(karma()['emote']).lower() == 'true':
             await message.add_reaction(reaction_emoji()['karma_gain'])
             if str(karma()['self_delete']).lower() == 'true':
