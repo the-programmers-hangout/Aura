@@ -10,8 +10,8 @@ from core import datasource
 from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from core.timer import KarmaSingleActionTimer
-from util.config import config, thanks_list, karma
-from util.constants import skull, thumps_up, thumps_down, clock, revoke_message
+from util.config import config, thanks_list, karma, reaction_emoji
+from util.constants import revoke_message
 
 log = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ class KarmaProducer(commands.Cog):
                                                   'if you believe this to be an error contact {}.'
                                                   .format(config['blacklist']['contact']))
                     if str(config['blacklist']['emote']).lower() == 'true':
-                        await message.add_reaction(skull)
+                        await message.add_reaction(reaction_emoji()['karma_blacklist'])
 
     # remove karma on deleted message of said karma message
     @guild_only()
@@ -63,7 +63,7 @@ class KarmaProducer(commands.Cog):
         # user args is the one who made the reaction according to docs
         if user.id == self.bot.user.id:
             # if aura made this reaction then it was very clearly a karma message
-            if reaction.emoji == thumps_up:
+            if reaction.emoji == reaction_emoji()['karma_gain']:
                 message = reaction.message
                 # find message id in db
                 if self.karma_service.find_message(str(message.id)) is not None:
@@ -73,7 +73,7 @@ class KarmaProducer(commands.Cog):
     @commands.Cog.listener()
     async def on_reaction_clear(self, message, reactions):
         for reaction in reactions:
-            if reaction.emoji == thumps_up:
+            if reaction.emoji == reaction_emoji()['karma_gain']:
                 # reaction me is very much the same as checking the user id
                 # was the reaction made by aura
                 if reaction.me:
@@ -86,7 +86,7 @@ class KarmaProducer(commands.Cog):
     async def on_reaction_add(self, reaction: discord.Reaction, user):
         # make sure karma has not been removed from another action
         if self.karma_service.find_message(str(reaction.message.id)) is not None:
-            if reaction.emoji == thumps_down:
+            if reaction.emoji == reaction_emoji()['karma_delete']:
                 if reaction.message.author.id == user.id:
                     await self.remove_karma(reaction.message, reaction.message.guild, 'self emoji clear')
 
@@ -148,7 +148,7 @@ class KarmaProducer(commands.Cog):
                     log.info('Sending configured cooldown response to {} in guild {}'
                              .format(message.author.id, guild.id))
                     if str(config['karma']['time-emote']).lower() == "true":
-                        await message.add_reaction(clock)
+                        await message.add_reaction(reaction_emoji()['karma_cooldown'])
                     if str(config['karma']['time-message']).lower() == "true":
                         await self.bot.get_channel(message.channel.id) \
                             .send('Sorry {}, your karma for {} needs time to recharge'
@@ -188,8 +188,8 @@ class KarmaProducer(commands.Cog):
                                                                 .format(member.mention, message.author.mention)
                                                                 + revoke_message.format(message.author.mention))
         if str(config['karma']['emote']).lower() == 'true':
-            await message.add_reaction(thumps_up)
-            await message.add_reaction(thumps_down)
+            await message.add_reaction(reaction_emoji()['karma_gain'])
+            await message.add_reaction(reaction_emoji()['karma_delete'])
 
     async def log_karma_removal(self, message, member, event_type):
         if config['karma']['log']:

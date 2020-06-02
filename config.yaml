@@ -12,10 +12,15 @@ database:
     port: 27017
     username: root
   name: aura
+emoji:
+  karma_blacklist: "\u2620\uFE0F"
+  karma_cooldown: "\U0001F552"
+  karma_delete: "\u274C"
+  karma_gain: "\U0001F44D"
 karma:
-  edit: 'false'
+  edit: 'true'
   emote: 'true'
-  keywords: thanks,ty,thank you
+  keywords: thanks, ty, thank you
   log: 'true'
   message: 'true'
   time-emote: 'true'
