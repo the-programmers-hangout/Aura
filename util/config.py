@@ -41,6 +41,11 @@ def thanks_list():
     return config['karma']['keywords'].split(",")
 
 
+# emoji config shorthand
+def reaction_emoji():
+    return config['emoji']
+
+
 # version dict
 def version():
     return dict(aura_version='1.7.0', python_version='3.8.2', discord_version='1.3.3')
@@ -57,6 +62,11 @@ def repository():
 
 
 max_message_length = 500
+
+karma_gain_emoji = reaction_emoji()['karma_gain']  # used to indicate positive karma gain
+karma_delete_emoji = reaction_emoji()['karma_delete']  # used to indicate that karma gain can be reverted by the user
+karma_cooldown_emoji = reaction_emoji()['karma_cooldown']  # used to indicate cooldown periods
+karma_blacklist_emoji = reaction_emoji()['karma_blacklist']  # used to indicate that user is blacklisted
 
 
 class ConfigDescription:
@@ -107,3 +117,11 @@ descriptions['karma']['edit'] = ConfigDescription('whether aura should track mes
                                                   + ' after the edit or'
                                                   + ' become karma messages after the edit but weren\'t before'
                                                   )
+descriptions['emoji']['karma_gain'] = ConfigDescription('Emoji to show for when a user gives out karma',
+                                                        [':emoji_name:', 'unicode emoji'])
+descriptions['emoji']['karma_delete'] = ConfigDescription('Emoji to show for self deletion of karma',
+                                                          [':emoji_name:', 'unicode emoji'])
+descriptions['emoji']['karma_cooldown'] = ConfigDescription('Emoji to show for active cooldowns on karma giving',
+                                                            [':emoji_name:', 'unicode emoji'])
+descriptions['emoji']['karma_blacklist'] = ConfigDescription('Emoji to show to blacklisted members',
+                                                             [':emoji_name:', 'unicode emoji'])
