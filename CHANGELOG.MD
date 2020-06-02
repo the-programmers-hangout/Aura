@@ -192,6 +192,11 @@ dashboard, mongodb and discord bot. (**done**)
 * refactoring code (**done**)
 * various small changes (info embed uptime, help & info embed color, etc.) (**done**)
 
+### 1.8.0
+* self deletion is configureable (**done**)
+* emojis are configureable (**done**)
+* change descriptions of config values in the help command (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
