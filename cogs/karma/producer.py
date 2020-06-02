@@ -87,7 +87,7 @@ class KarmaProducer(commands.Cog):
         # make sure karma has not been removed from another action
         if self.karma_service.find_message(str(reaction.message.id)) is not None:
             if reaction.emoji == reaction_emoji()['karma_delete']:
-                if reaction.message.author.id == user.id:
+                if str(karma()['self_delete']).lower() == 'true' and reaction.message.author.id == user.id:
                     await self.remove_karma(reaction.message, reaction.message.guild, 'self emoji clear')
 
     @guild_only()
@@ -168,7 +168,7 @@ class KarmaProducer(commands.Cog):
     # notify user about successful karma gain
     async def notify_member_gain(self, message, member):
         # this channel can be private
-        if str(config['karma']['log']).lower() == 'true':
+        if str(karma()['log']).lower() == 'true':
             if member.nick is None:
                 await self.bot.get_channel(int(config['channel']['log'])).send(
                     '{} earned karma in {}. {}'
@@ -183,16 +183,17 @@ class KarmaProducer(commands.Cog):
                                                             member.nick,
                                                             message.channel.mention,
                                                             message.jump_url))
-        if str(config['karma']['message']).lower() == 'true':
+        if str(karma()['message']).lower() == 'true':
             await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma from {}. '
                                                                 .format(member.mention, message.author.mention)
                                                                 + revoke_message.format(message.author.mention))
-        if str(config['karma']['emote']).lower() == 'true':
+        if str(karma()['emote']).lower() == 'true':
             await message.add_reaction(reaction_emoji()['karma_gain'])
-            await message.add_reaction(reaction_emoji()['karma_delete'])
+            if str(karma()['self_delete']).lower() == 'true':
+                await message.add_reaction(reaction_emoji()['karma_delete'])
 
     async def log_karma_removal(self, message, member, event_type):
-        if config['karma']['log']:
+        if karma()['log']:
             if event_type == 'message delete':
                 await self.bot.get_channel(int(config['channel']['log'])).send(
                     'karma for {} was removed through event: {} :: in {}'.format(
