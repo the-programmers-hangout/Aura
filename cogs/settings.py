@@ -63,8 +63,8 @@ class SettingsManager(commands.Cog):
         for key in config.keys():
             if key != 'token' and key != 'prefix' and key != 'database' and key != 'logging':
                 if isinstance(config[key], Mapping):
-                    for otherKey in config[key].keys():
-                        config_embed.add_field(name=f'**{key} {otherKey}**', value=config[key][otherKey])
+                    for other_key in config[key].keys():
+                        config_embed.add_field(name=f'**{key} {other_key}**', value=config[key][other_key])
                 else:
                     config_embed.add_field(name=f'**{key}**', value=config[key])
         config_embed = add_filler_fields(config_embed, config_embed.fields)
