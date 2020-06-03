@@ -1,10 +1,11 @@
 import logging
+from collections import Mapping
 
 from discord import Embed
 from discord.ext import commands
 from discord.ext.commands import has_role, guild_only
 
-from util.config import config, write_config, roles, karma, profile, blacklist, descriptions
+from util.config import config, write_config, roles, descriptions
 from util.constants import embed_color
 from util.embedutil import add_filler_fields
 
@@ -59,21 +60,13 @@ class SettingsManager(commands.Cog):
                                     description='Shows all changeable configuration keys '
                                                 + 'and their current values ',
                                     colour=embed_color)
-        config_embed.add_field(name='**blacklist contact**', value=blacklist()['contact'])
-        config_embed.add_field(name='**blacklist emote**', value=blacklist()['emote'])
-        config_embed.add_field(name='**blacklist dm**', value=blacklist()['dm'])
-        config_embed.add_field(name='**channel log**', value=config['channel']['log'])
-        config_embed.add_field(name='**cooldown**', value=config['cooldown'])
-        config_embed.add_field(name='**karma keywords**', value=karma()['keywords'])
-        config_embed.add_field(name='**karma time-emote**', value=karma()['time-emote'])
-        config_embed.add_field(name='**karma time-message**', value=karma()['time-message'])
-        config_embed.add_field(name='**karma emote**', value=karma()['emote'])
-        config_embed.add_field(name='**karma log**', value=karma()['log'])
-        config_embed.add_field(name='**karma message**', value=karma()['message'])
-        config_embed.add_field(name='**karma edit**', value=karma()['edit'])
-        config_embed.add_field(name='**profile channels**', value=profile()['channels'])
-        config_embed.add_field(name='**roles admin**', value=roles()['admin'])
-        config_embed.add_field(name='**roles moderator**', value=roles()['moderator'])
+        for key in config.keys():
+            if key != 'token' and key != 'prefix' and key != 'database' and key != 'logging':
+                if isinstance(config[key], Mapping):
+                    for other_key in config[key].keys():
+                        config_embed.add_field(name=f'**{key} {other_key}**', value=config[key][other_key])
+                else:
+                    config_embed.add_field(name=f'**{key}**', value=config[key])
         config_embed = add_filler_fields(config_embed, config_embed.fields)
         config_embed.set_footer(text='token, prefix, database, logging level only only changeable before runtime')
         return config_embed
