@@ -197,6 +197,9 @@ dashboard, mongodb and discord bot. (**done**)
 * emojis are configureable (**done**)
 * change descriptions of config values in the help command (**done**)
 
+### 1.8.1
+* improve on config embed by iterating over the dict and filtering out the unchangeable keys (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
