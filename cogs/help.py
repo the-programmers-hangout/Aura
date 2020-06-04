@@ -66,8 +66,7 @@ class HelpMenu(commands.Cog):
                               + '\n```'
                         , inline=False)
         embed.add_field(name='**What happens after giving out karma?**',
-                        value='You and the helper are placed on a cooldown, '
-                              + ' for the karma to recharge over time.'
+                        value='You are placed on a cooldown for the particular helper.'
                               + ' In the meantime you are still able to give karma to someone you didn\'t before.',
                         inline=False)
         feedback = ''
@@ -79,7 +78,7 @@ class HelpMenu(commands.Cog):
             feedback += 'Aura will react with a {} to show that at least one user is on a cooldown with you. \n' \
                 .format(emoji['karma_cooldown'])
         if str(karma()['self_delete']).lower() == 'true':
-            feedback += 'Aura will react with a {} for you to revert giving out the karma, if you want to.\n'\
+            feedback += 'Aura will react with a {} for you to revert giving out the karma, by reacting to it.\n'\
                 .format(emoji['karma_delete'])
         if str(blacklist()['emote']).lower() == 'true':
             feedback += 'Aura will react with a {} if you are blacklisted from giving out karma. \n' \
