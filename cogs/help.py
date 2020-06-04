@@ -6,7 +6,7 @@ from discord import Embed
 from discord.ext import commands
 from discord.ext.commands import guild_only, CommandError
 
-from util.config import config, author_discord, version, repository
+from util.config import config, author_discord, version, repository, karma, thanks_list, blacklist, reaction_emoji
 from util.constants import embed_color
 from util.conversion import strfdelta
 from util.embedutil import add_filler_fields
@@ -43,6 +43,57 @@ class HelpMenu(commands.Cog):
             embed.add_field(name='Source', value=repository(), inline=False)
             embed.set_thumbnail(url=self.bot.user.avatar_url)
             await self.bot.get_channel(message.channel.id).send(embed=embed)
+
+    @guild_only()
+    @commands.command(brief='explain the karma system to the caller based on the current configuration',
+                      usage='{}explain'.format(config['prefix']))
+    async def explain(self, ctx):
+        embed = Embed(colour=embed_color)
+        embed.title = 'Karma Tutor'
+        embed.description = 'Explains the karma system under the current configuration.'
+        keywords = thanks_list()
+        embed.add_field(name='**General**',
+                        value='Karma is a way for you to show gratitude to helpers with karma points.')
+        embed.add_field(name='**How do I give karma?**',
+                        value='You can give karma by including one of the following case insensitive keywords:{}'
+                        .format(keywords)
+                              + ' and one user mention for each helper you want to show gratitude to.')
+        embed.add_field(name='**Examples**',
+                        value=f'```fix\n{keywords[0]}, this really was a xy problem after all @moe.\n'
+                              + 'Hey so i pondered for a while and what you said earlier was really helpful, '
+                              + f'{keywords[0]} @moe.\n'
+                              + f'{keywords[0]} so much for @moe helping me out all the time.'
+                              + '\n```'
+                        , inline=False)
+        embed.add_field(name='**What happens after giving out karma?**',
+                        value='You and the helper are placed on a cooldown, '
+                              + ' for the karma to recharge over time.'
+                              + ' In the meantime you are still able to give karma to someone you didn\'t before.',
+                        inline=False)
+        feedback = ''
+        emoji = reaction_emoji()
+        if str(karma()['emote']).lower() == 'true':
+            feedback += 'Aura will react with a {} to verify that you have given out karma. \n' \
+                .format(emoji['karma_gain'])
+        if str(karma()['time-emote']).lower() == 'true':
+            feedback += 'Aura will react with a {} to show that at least one user is on a cooldown with you. \n' \
+                .format(emoji['karma_cooldown'])
+        if str(karma()['self_delete']).lower() == 'true':
+            feedback += 'Aura will react with a {} for you to revert giving out the karma, if you want to.\n'\
+                .format(emoji['karma_delete'])
+        if str(blacklist()['emote']).lower() == 'true':
+            feedback += 'Aura will react with a {} if you are blacklisted from giving out karma. \n' \
+                .format(emoji['karma_blacklist'])
+        if str(karma()['message']).lower() == 'true':
+            feedback += 'Aura will congratulate the user/s in chat.\n'
+        if str(karma()['time-message']).lower() == 'true':
+            feedback += 'Aura will remind you of the cooldown in the chat.\n'
+        if str(blacklist()['dm']).lower() == 'true':
+            feedback += 'Aura will contact you privately, if you are blacklisted.\n'
+        if str(karma()['edit']).lower() == 'true':
+            feedback += 'Aura will partially track message edits.\n'
+        embed.add_field(name='**Aura Feedback**', value=feedback)
+        await ctx.channel.send(embed=embed)
 
     @guild_only()
     @commands.command(brief='show all commands or show help text of a single command',

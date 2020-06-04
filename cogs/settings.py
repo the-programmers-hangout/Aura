@@ -42,7 +42,7 @@ class SettingsManager(commands.Cog):
                     await ctx.channel.send(embed=embed)
                 elif args[0] != 'token' and args[0] != 'prefix' \
                         and args[0] != 'database' and args[0] != 'logging':
-                    if len(args) == 3:
+                    if len(args) == 3 and config[args[0]] is not None:
                         if config[args[0]][args[1]] is not None:
                             config[args[0]][args[1]] = args[2]
                             write_config()

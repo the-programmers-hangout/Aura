@@ -200,6 +200,10 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.8.1
 * improve on config embed by iterating over the dict and filtering out the unchangeable keys (**done**)
 
+### 1.9.1
+* fix config values of length 1 to add config keys (**done**)
+* add a tutor command that explains the karma system under the current configuration (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
