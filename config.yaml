@@ -22,8 +22,8 @@ karma:
   emote: 'true'
   keywords: thanks, ty, thank you
   log: 'true'
-  message: 'true'
-  self_delete: 'false'
+  message: 'false'
+  self_delete: 'true'
   time-emote: 'true'
   time-message: 'false'
 logging: INFO
