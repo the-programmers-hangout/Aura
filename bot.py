@@ -6,6 +6,7 @@ from discord.ext.commands import when_mentioned_or
 
 from cogs.error import CommandErrorHandler
 from cogs.help import HelpMenu
+from cogs.karma.leaderboard import KarmaLeaderboard
 from cogs.karma.producer import KarmaProducer
 from cogs.karma.profile import KarmaProfile
 from cogs.karma.reduce import KarmaReducer, KarmaBlocker
@@ -22,6 +23,7 @@ if __name__ == '__main__':
     client.add_cog(KarmaBlocker(client))
     client.add_cog(KarmaReducer(client))
     client.add_cog(KarmaProfile(client))
+    client.add_cog(KarmaLeaderboard(client))
     client.add_cog(SettingsManager(client))
     client.add_cog(CommandErrorHandler(client))
     client.add_cog(HelpMenu(client))

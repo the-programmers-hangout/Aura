@@ -2,7 +2,7 @@ import logging
 
 from core.model.member import KarmaMember, Member
 # karma database service class, perform operations on the configured mongodb.
-from util.config import profile
+from util.config import profile, config
 
 log = logging.getLogger(__name__)
 
@@ -45,6 +45,15 @@ class KarmaService:
         pipeline = [{"$unwind": "$karma"}, {"$match": dict(member_id=member.member_id, guild_id=member.guild_id)},
                     {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
                                 "karma": {"$sum": "$karma"}}}, {"$limit": profile()['channels']},
+                    {"$sort": {"karma": -1}}]
+        doc_cursor = self._karma.aggregate(pipeline)
+        # return cursor containing documents generated through the pipeline
+        return doc_cursor
+
+    def aggregate_top_karma_members(self, guild_id: str):
+        pipeline = [{"$unwind": "$karma"}, {"$match": dict(guild_id=guild_id)},
+                    {"$group": {"_id": {"member_id": "$member_id"},
+                                "karma": {"$sum": "$karma"}}}, {"$limit": int(config['leaderboard'])},
                     {"$sort": {"karma": -1}}]
         doc_cursor = self._karma.aggregate(pipeline)
         # return cursor containing documents generated through the pipeline
