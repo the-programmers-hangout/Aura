@@ -69,6 +69,18 @@ class HelpMenu(commands.Cog):
                         value='You are placed on a cooldown for the particular helper.'
                               + ' In the meantime you are still able to give karma to someone you didn\'t before.',
                         inline=False)
+        embed = self.create_feedback_fields(embed)
+        await ctx.channel.send(embed=embed)
+
+    @guild_only()
+    @commands.command(brief='shows the ways aura reacts based on the current configuration',
+                      usage='{}reactions'.format(config['prefix']))
+    async def reactions(self, ctx):
+        embed = Embed(colour=embed_color)
+        embed.title = 'Aura Feedback'
+        await ctx.channel.send(embed=self.create_feedback_fields(embed))
+
+    def create_feedback_fields(self, embed):
         feedback = ''
         emoji = reaction_emoji()
         if str(karma()['emote']).lower() == 'true':
@@ -78,7 +90,7 @@ class HelpMenu(commands.Cog):
             feedback += 'Aura will react with a {} to show that at least one user is on a cooldown with you. \n' \
                 .format(emoji['karma_cooldown'])
         if str(karma()['self_delete']).lower() == 'true':
-            feedback += 'Aura will react with a {} for you to revert giving out the karma, by reacting to it.\n'\
+            feedback += 'Aura will react with a {} for you to revert giving out the karma, by reacting to it.\n' \
                 .format(emoji['karma_delete'])
         if str(blacklist()['emote']).lower() == 'true':
             feedback += 'Aura will react with a {} if you are blacklisted from giving out karma. \n' \
@@ -92,7 +104,7 @@ class HelpMenu(commands.Cog):
         if str(karma()['edit']).lower() == 'true':
             feedback += 'Aura will partially track message edits.\n'
         embed.add_field(name='**Aura Feedback**', value=feedback)
-        await ctx.channel.send(embed=embed)
+        return embed
 
     @guild_only()
     @commands.command(brief='show all commands or show help text of a single command',
