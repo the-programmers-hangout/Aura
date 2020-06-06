@@ -50,14 +50,27 @@ class KarmaService:
         # return cursor containing documents generated through the pipeline
         return doc_cursor
 
-    def aggregate_top_karma_members(self, guild_id: str):
-        pipeline = [{"$unwind": "$karma"}, {"$match": dict(guild_id=guild_id)},
-                    {"$group": {"_id": {"member_id": "$member_id"},
-                                "karma": {"$sum": "$karma"}}}, {"$limit": int(config['leaderboard'])},
-                    {"$sort": {"karma": -1}}]
-        doc_cursor = self._karma.aggregate(pipeline)
-        # return cursor containing documents generated through the pipeline
-        return doc_cursor
+    def aggregate_top_karma_members(self, guild_id: str, channel_id: str = '', time_span: str = ''):
+        if channel_id == '':
+            if time_span == '':
+                pipeline = [{"$unwind": "$karma"}, {"$match": dict(guild_id=guild_id)},
+                            {"$group": {"_id": {"member_id": "$member_id"},
+                                        "karma": {"$sum": "$karma"}}}, {"$limit": int(config['leaderboard'])},
+                            {"$sort": {"karma": -1}}]
+                doc_cursor = self._karma.aggregate(pipeline)
+                # return cursor containing documents generated through the pipeline
+                return doc_cursor
+        else:
+            if time_span == '':
+                pipeline = [{"$unwind": "$karma"}, {"$match": dict(guild_id=guild_id, channel_id=channel_id)},
+                            {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
+                                        "karma": {"$sum": "$karma"}}}, {"$limit": int(config['leaderboard'])},
+                            {"$sort": {"karma": -1}}]
+                doc_cursor = self._karma.aggregate(pipeline)
+                # return cursor containing documents generated through the pipeline
+                return doc_cursor
+            else:
+                print()
 
     # filter message id
     def find_message(self, message_id: str):
