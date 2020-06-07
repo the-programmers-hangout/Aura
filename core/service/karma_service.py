@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from core.model.member import KarmaMember, Member
@@ -50,9 +51,9 @@ class KarmaService:
         # return cursor containing documents generated through the pipeline
         return doc_cursor
 
-    def aggregate_top_karma_members(self, guild_id: str, channel_id: str = '', time_span: str = ''):
+    def aggregate_top_karma_members(self, guild_id: str, channel_id: str = '', time_span: int = 0):
         if channel_id == '':
-            if time_span == '':
+            if time_span == 0:
                 pipeline = [{"$unwind": "$karma"}, {"$match": dict(guild_id=guild_id)},
                             {"$group": {"_id": {"member_id": "$member_id"},
                                         "karma": {"$sum": "$karma"}}},
@@ -60,8 +61,20 @@ class KarmaService:
                 doc_cursor = self._karma.aggregate(pipeline)
                 # return cursor containing documents generated through the pipeline
                 return doc_cursor
+            else:
+                pipeline = [{"$unwind": "$karma"},
+                            {"$match": {"guild_id": guild_id,
+                                        "created_date":
+                                            {"$gt": datetime.datetime.utcnow() -
+                                                    datetime.timedelta(days=time_span)}}},
+                            {"$group": {"_id": {"member_id": "$member_id"},
+                                        "karma": {"$sum": "$karma"}}},
+                            {"$sort": {"karma": -1}}, {"$limit": int(config['leaderboard'])}]
+                doc_cursor = self._karma.aggregate(pipeline)
+                # return cursor containing documents generated through the pipeline
+                return doc_cursor
         else:
-            if time_span == '':
+            if time_span == 0:
                 pipeline = [{"$unwind": "$karma"}, {"$match": dict(guild_id=guild_id, channel_id=channel_id)},
                             {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
                                         "karma": {"$sum": "$karma"}}},
@@ -70,7 +83,18 @@ class KarmaService:
                 # return cursor containing documents generated through the pipeline
                 return doc_cursor
             else:
-                print()
+                pipeline = [{"$unwind": "$karma"},
+                            {"$match": {"guild_id": guild_id,
+                                        "channel_id": channel_id,
+                                        "created_date":
+                                            {"$gt": datetime.datetime.utcnow() -
+                                                    datetime.timedelta(days=time_span)}}},
+                            {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
+                                        "karma": {"$sum": "$karma"}}},
+                            {"$sort": {"karma": -1}}, {"$limit": int(config['leaderboard'])}]
+                doc_cursor = self._karma.aggregate(pipeline)
+                # return cursor containing documents generated through the pipeline
+                return doc_cursor
 
     # filter message id
     def find_message(self, message_id: str):
