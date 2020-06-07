@@ -216,6 +216,9 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.10.2
 * using converters instead of loops and fixing channel leaderboards (**done**)
 
+### 1.10.3
+* catch exception for converter  (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
