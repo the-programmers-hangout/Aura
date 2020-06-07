@@ -48,7 +48,7 @@ def reaction_emoji():
 
 # version dict
 def version():
-    return dict(aura_version='1.10.4', python_version='3.8.2', discord_version='1.3.3')
+    return dict(aura_version='1.10.5', python_version='3.8.2', discord_version='1.3.3')
 
 
 # return the discord tag of the author of this bot
