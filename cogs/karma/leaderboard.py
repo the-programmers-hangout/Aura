@@ -22,7 +22,7 @@ class KarmaLeaderboard(commands.Cog):
     @commands.command(brief='get a global karma leaderboard or a channel leaderboard',
                       usage='{}leaderboard\n{}leaderboard <#channel_mention> [...]'.format(config['prefix'],
                                                                                            config['prefix']))
-    async def leaderboard(self, ctx, channel_mention: str = "", time_span: str = ""):
+    async def leaderboard(self, ctx, channel_mention="", time_span: str = ""):
         embed = discord.Embed(colour=embed_color)
         guild = ctx.message.guild
         channel = ''
@@ -59,3 +59,5 @@ class KarmaLeaderboard(commands.Cog):
                                         value=f'{karma} karma', inline=False)
                         count += 1
                     await ctx.channel.send(embed=embed)
+                else:
+                    await ctx.channel.send('No leaderboard exists for this channel.')
