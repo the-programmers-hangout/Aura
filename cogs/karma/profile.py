@@ -7,18 +7,16 @@ from discord.ext.commands import guild_only
 from core import datasource
 from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
-# Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
-# Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 from util.config import profile, config
-from util.constants import embed_color
+from util.constants import embed_color, bold_field
 from util.conversion import convert_content_to_member_set
 from util.embedutil import add_filler_fields
 
 log = logging.getLogger(__name__)
 
-bold_field = "**{}**"
 
-
+# Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
+# Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 class KarmaProfile(commands.Cog):
 
     def __init__(self, bot, karma_service=KarmaService(datasource.karma)):

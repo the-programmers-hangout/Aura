@@ -204,6 +204,12 @@ dashboard, mongodb and discord bot. (**done**)
 * fix config values of length 1 to add config keys (**done**)
 * add a tutor command that explains the karma system under the current configuration (**done**)
 
+### 1.10.0
+* add module load, unload, reload (**done**)
+* add global leaderboard, add channel specific leaderboard (**done**)
+* refactoring tutor descriptions and embeds (**done**)
+* remove all reactions on click of removal reactione emoji (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
