@@ -222,6 +222,9 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.10.4
 * another fix for channel leaderboards (**done**)
 
+### 1.10.5
+* another fix for channel leaderboards (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions

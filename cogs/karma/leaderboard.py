@@ -53,7 +53,8 @@ class KarmaLeaderboard(commands.Cog):
                 if not ctx.message.author.permissions_in(input_channel).view_channel:
                     await ctx.channel.send('Channel does not exist or lacking permissions to view it.')
                 else:
-                    leaderboard = list(self.karma_service.aggregate_top_karma_members(str(guild.id), str(input_channel.id)))
+                    leaderboard = list(
+                        self.karma_service.aggregate_top_karma_members(str(guild.id), str(input_channel.id)))
                     limit = config['leaderboard']
                     embed.title = f'Top {limit} most helpful people in {input_channel_name}'
                     if len(leaderboard) > 0:
@@ -61,10 +62,11 @@ class KarmaLeaderboard(commands.Cog):
                         for document in leaderboard:
                             member = guild.get_member(int(document['_id']['member_id']))
                             karma = document['karma']
-                            embed.add_field(name=f'{count}) ' + bold_field.format(member.name + '#'
-                                                                                  + member.discriminator),
-                                            value=f'{karma} karma', inline=False)
-                            count += 1
+                            if member is not None:
+                                embed.add_field(name=f'{count}) ' + bold_field.format(member.name + '#'
+                                                                                      + member.discriminator),
+                                                value=f'{karma} karma', inline=False)
+                                count += 1
                         await ctx.channel.send(embed=embed)
                     else:
                         await ctx.channel.send('No leaderboard exists for this channel.')
