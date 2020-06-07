@@ -46,7 +46,7 @@ class KarmaService:
         pipeline = [{"$unwind": "$karma"}, {"$match": dict(member_id=member.member_id, guild_id=member.guild_id)},
                     {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
                                 "karma": {"$sum": "$karma"}}},
-                    {"$sort": {"karma": -1}}, {"$limit": profile()['channels']}]
+                    {"$sort": {"karma": -1}}, {"$limit": int(profile()['channels'])}]
         doc_cursor = self._karma.aggregate(pipeline)
         # return cursor containing documents generated through the pipeline
         return doc_cursor

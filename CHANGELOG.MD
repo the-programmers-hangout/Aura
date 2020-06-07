@@ -232,6 +232,10 @@ dashboard, mongodb and discord bot. (**done**)
 * creating a timed leaderboard of global or channel (**done**)
 
 ### 1.11.1
+* fix profile bug (**done**)
+
+
+### 1.11.1
 * fix leaderboard help command (**done**)
 
 
