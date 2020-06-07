@@ -7,7 +7,7 @@ from discord.ext.commands import guild_only, TextChannelConverter, CommandError
 from core import datasource
 from core.service.karma_service import KarmaService
 from util.config import config
-from util.constants import embed_color, bold_field
+from util.constants import embed_color, bold_field, leaderboard_usage
 
 log = logging.getLogger(__name__)
 
@@ -19,10 +19,11 @@ class KarmaLeaderboard(commands.Cog):
         self.karma_service = karma_service
 
     @guild_only()
-    @commands.command(brief='get a global karma leaderboard or a channel leaderboard',
-                      usage='{}leaderboard\n{}leaderboard <#channel_mention>\n{}leaderboard global days' +
-                            '\n{}leaderboard <#channel_mention> days'
-                      .format(config['prefix'], config['prefix']))
+    @commands.command(brief='get a global karma leaderboard or a channel leaderboard, '
+                            + 'optionally you can provide days as an argument',
+                      usage=leaderboard_usage
+                            .format(config['prefix'], config['prefix'], config['prefix'], config['prefix'],
+                                    config['prefix']))
     async def leaderboard(self, ctx, channel_mention="", time_span: int = 0):
         embed = discord.Embed(colour=embed_color)
         guild = ctx.message.guild

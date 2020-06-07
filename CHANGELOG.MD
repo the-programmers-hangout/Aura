@@ -231,6 +231,10 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.11.0
 * creating a timed leaderboard of global or channel (**done**)
 
+### 1.11.1
+* fix leaderboard help command (**done**)
+
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
