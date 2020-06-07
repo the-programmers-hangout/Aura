@@ -41,8 +41,10 @@ class KarmaLeaderboard(commands.Cog):
                     await ctx.channel.send(embed=embed)
         else:
             input_channel = None
+            input_channel_name = ''
             try:
                 input_channel = await TextChannelConverter().convert(ctx=ctx, argument=channel_mention)
+                input_channel_name = input_channel.name
             except CommandError as e:
                 log.error(e)
             if input_channel is None:
@@ -53,7 +55,7 @@ class KarmaLeaderboard(commands.Cog):
                 else:
                     leaderboard = list(self.karma_service.aggregate_top_karma_members(str(guild.id), str(input_channel.id)))
                     limit = config['leaderboard']
-                    embed.title = f'Top {limit} most helpful people in {input_channel.name}'
+                    embed.title = f'Top {limit} most helpful people in {input_channel_name}'
                     if len(leaderboard) > 0:
                         count: int = 1
                         for document in leaderboard:
