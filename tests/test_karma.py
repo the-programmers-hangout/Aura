@@ -18,16 +18,15 @@ class KarmaChange(unittest.TestCase):
     karma_member = KarmaMember('1', '1', '1', '1')
 
     def test_karma_increases(self):
-        self.karma_service.upsert_karma_member(self.karma_member, True)
+        self.karma_service.upsert_karma_member(self.karma_member)
         assert self.karma_service.aggregate_member_by_karma(self.karma_member) == 1
-        self.karma_service.upsert_karma_member(self.karma_member, True)
+        self.karma_service.upsert_karma_member(self.karma_member)
         assert self.karma_service.aggregate_member_by_karma(self.karma_member) == 2
         for doc in self.karma_service.aggregate_member_by_channels(self.karma_member):
             assert doc['karma'] == 2
 
     def test_karma_resets(self):
-        self.karma_service.delete_all_karma(self.karma_member.guild_id,
-                                            self.karma_member.member_id)
+        self.karma_service.delete_all_karma(self.karma_member)
         assert self.karma_service.aggregate_member_by_karma(self.karma_member) is None
 
 
