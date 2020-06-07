@@ -14,7 +14,7 @@ from util.embedutil import add_filler_fields
 log = logging.getLogger(__name__)
 
 
-class HelpMenu(commands.Cog):
+class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.start_time = time.time()
@@ -61,15 +61,26 @@ class HelpMenu(commands.Cog):
         embed.add_field(name='**Examples**',
                         value=f'```fix\n{keywords[0]}, this really was a xy problem after all @moe.\n'
                               + 'Hey so i pondered for a while and what you said earlier was really helpful, '
-                              + f'{keywords[0]} @moe.\n'
-                              + f'{keywords[0]} so much for @moe helping me out all the time.'
+                              + f'{keywords[0]} @moe @doe.\n'
+                              + f'{keywords[0]} so much for @moe @doe @noe helping me out all the time.'
                               + '\n```'
                         , inline=False)
         embed.add_field(name='**What happens after giving out karma?**',
-                        value='You and the helper are placed on a cooldown, '
-                              + ' for the karma to recharge over time.'
+                        value='You are placed on a cooldown for the particular helper.'
                               + ' In the meantime you are still able to give karma to someone you didn\'t before.',
                         inline=False)
+        embed = self.create_feedback_fields(embed)
+        await ctx.channel.send(embed=embed)
+
+    @guild_only()
+    @commands.command(brief='shows the ways aura reacts based on the current configuration',
+                      usage='{}reactions'.format(config['prefix']))
+    async def reactions(self, ctx):
+        embed = Embed(colour=embed_color)
+        embed.title = 'Aura Reactions'
+        await ctx.channel.send(embed=self.create_feedback_fields(embed))
+
+    def create_feedback_fields(self, embed):
         feedback = ''
         emoji = reaction_emoji()
         if str(karma()['emote']).lower() == 'true':
@@ -79,7 +90,7 @@ class HelpMenu(commands.Cog):
             feedback += 'Aura will react with a {} to show that at least one user is on a cooldown with you. \n' \
                 .format(emoji['karma_cooldown'])
         if str(karma()['self_delete']).lower() == 'true':
-            feedback += 'Aura will react with a {} for you to revert giving out the karma, if you want to.\n'\
+            feedback += 'Aura will react with a {} for you to revert giving out the karma, by reacting to it.\n' \
                 .format(emoji['karma_delete'])
         if str(blacklist()['emote']).lower() == 'true':
             feedback += 'Aura will react with a {} if you are blacklisted from giving out karma. \n' \
@@ -93,7 +104,7 @@ class HelpMenu(commands.Cog):
         if str(karma()['edit']).lower() == 'true':
             feedback += 'Aura will partially track message edits.\n'
         embed.add_field(name='**Aura Feedback**', value=feedback)
-        await ctx.channel.send(embed=embed)
+        return embed
 
     @guild_only()
     @commands.command(brief='show all commands or show help text of a single command',

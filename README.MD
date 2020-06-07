@@ -17,7 +17,8 @@ a point system called karma. It has the following features:
 * Get Karma of one or multiple Members through Mentions, or message author without mentions.
 * Karma Profile with the Profile Picture, full name (name + discriminator) or nick,
 total karma and karma breakdown by top x channels configured, single mention or no mention for message author profile.
-* Cooldown Members from giving out karma after giving it out or set the timer to 0.
+* Members receive a cooldown in a one-way pair (giver-receiver) after giving it out or set the timer to 0,
+this means that theoretically the initial receiver can thank the giver while the cooldown period is still ticking.
 * Reset all Karma of a Member in a guild.
 * Delete karma from Members on message delete, reaction clear and reaction remove of the message that gave out karma.
 * Change most configuration on the fly by providing keys from the config.yaml.
@@ -43,6 +44,17 @@ everything under the database key
 Every other value can be updated by executing \<prefix>
 config \<key> or config \<key> \<key> etc. for the
 according key in the config yaml with a user that has the configured admin role.
+
+## Running it locally
+Since this bot has a docker-compose file, all you need to start your own Aura locally is:
+```
+docker-compose up --build
+```
+or
+```
+docker-compose down ; docker-compose build ; docker-compose up
+```
+while being in the root directory of aura.
 
 ## Running the tests
 

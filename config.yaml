@@ -30,6 +30,7 @@ logging: INFO
 prefix: aura!
 profile:
   channels: 5
+leaderboard: 10
 roles:
   admin: Admin
   moderator: Staff
