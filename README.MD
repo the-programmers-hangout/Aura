@@ -45,6 +45,17 @@ Every other value can be updated by executing \<prefix>
 config \<key> or config \<key> \<key> etc. for the
 according key in the config yaml with a user that has the configured admin role.
 
+## Running it locally
+Since this bot has a docker-compose file, all you need to start your own Aura locally is:
+```
+docker-compose up --build
+```
+or
+```
+docker-compose down ; docker-compose build ; docker-compose up
+```
+while being in the root directory of aura.
+
 ## Running the tests
 
 ```

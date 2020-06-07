@@ -5,6 +5,7 @@ from discord.ext import commands
 from discord.ext.commands import guild_only
 
 from core import datasource
+from core.model.member import KarmaMember
 from core.service.karma_service import KarmaService
 from util.config import config
 from util.constants import embed_color, bold_field
@@ -55,7 +56,8 @@ class KarmaLeaderboard(commands.Cog):
                     for document in leaderboard:
                         member = guild.get_member(int(document['_id']['member_id']))
                         karma = document['karma']
+                        total = self.karma_service.aggregate_member_by_karma(KarmaMember(guild.id, member.id))
                         embed.add_field(name=f'{count}) ' + bold_field.format(member.name + '#' + member.discriminator),
-                                        value=f'{karma} karma', inline=False)
+                                        value=f'{karma} karma (global {total} karma)', inline=False)
                         count += 1
                     await ctx.channel.send(embed=embed)
