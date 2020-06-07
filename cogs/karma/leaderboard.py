@@ -2,7 +2,7 @@ import logging
 
 import discord
 from discord.ext import commands
-from discord.ext.commands import guild_only
+from discord.ext.commands import guild_only, TextChannelConverter
 
 from core import datasource
 from core.service.karma_service import KarmaService
@@ -25,7 +25,6 @@ class KarmaLeaderboard(commands.Cog):
     async def leaderboard(self, ctx, channel_mention="", time_span: str = ""):
         embed = discord.Embed(colour=embed_color)
         guild = ctx.message.guild
-        channel = ''
         if channel_mention == "":
             if time_span == "":
                 leaderboard = list(self.karma_service.aggregate_top_karma_members(str(guild.id)))
@@ -41,23 +40,25 @@ class KarmaLeaderboard(commands.Cog):
                         count += 1
                     await ctx.channel.send(embed=embed)
         else:
-            for text_channel in guild.text_channels:
-                if channel_mention == text_channel.mention:
-                    channel = guild.get_channel(text_channel.id)
-            if channel == '' or channel is None:
-                await ctx.channel.send('Channel does not exist or argument not a channel mention.')
+            input_channel = await TextChannelConverter().convert(ctx=ctx, argument=channel_mention)
+            if input_channel is None:
+                await ctx.channel.send('Channel does not exist or lacking permissions to view it.')
             else:
-                leaderboard = list(self.karma_service.aggregate_top_karma_members(str(guild.id), str(channel.id)))
-                limit = config['leaderboard']
-                embed.title = f'Top {limit} most helpful people in {channel.name}'
-                if len(leaderboard) > 0:
-                    count: int = 1
-                    for document in leaderboard:
-                        member = guild.get_member(int(document['_id']['member_id']))
-                        karma = document['karma']
-                        embed.add_field(name=f'{count}) ' + bold_field.format(member.name + '#' + member.discriminator),
-                                        value=f'{karma} karma', inline=False)
-                        count += 1
-                    await ctx.channel.send(embed=embed)
+                if not ctx.message.author.permissions_in(input_channel).view_channel:
+                    await ctx.channel.send('Channel does not exist or lacking permissions to view it.')
                 else:
-                    await ctx.channel.send('No leaderboard exists for this channel.')
+                    leaderboard = list(self.karma_service.aggregate_top_karma_members(str(guild.id), str(input_channel.id)))
+                    limit = config['leaderboard']
+                    embed.title = f'Top {limit} most helpful people in {input_channel.name}'
+                    if len(leaderboard) > 0:
+                        count: int = 1
+                        for document in leaderboard:
+                            member = guild.get_member(int(document['_id']['member_id']))
+                            karma = document['karma']
+                            embed.add_field(name=f'{count}) ' + bold_field.format(member.name + '#'
+                                                                                  + member.discriminator),
+                                            value=f'{karma} karma', inline=False)
+                            count += 1
+                        await ctx.channel.send(embed=embed)
+                    else:
+                        await ctx.channel.send('No leaderboard exists for this channel.')
