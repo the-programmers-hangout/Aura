@@ -44,8 +44,8 @@ class KarmaService:
     def aggregate_member_by_channels(self, member: KarmaMember):
         pipeline = [{"$unwind": "$karma"}, {"$match": dict(member_id=member.member_id, guild_id=member.guild_id)},
                     {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
-                                "karma": {"$sum": "$karma"}}}, {"$limit": profile()['channels']},
-                    {"$sort": {"karma": -1}}]
+                                "karma": {"$sum": "$karma"}}},
+                    {"$sort": {"karma": -1}}, {"$limit": profile()['channels']}]
         doc_cursor = self._karma.aggregate(pipeline)
         # return cursor containing documents generated through the pipeline
         return doc_cursor
@@ -55,8 +55,8 @@ class KarmaService:
             if time_span == '':
                 pipeline = [{"$unwind": "$karma"}, {"$match": dict(guild_id=guild_id)},
                             {"$group": {"_id": {"member_id": "$member_id"},
-                                        "karma": {"$sum": "$karma"}}}, {"$limit": int(config['leaderboard'])},
-                            {"$sort": {"karma": -1}}]
+                                        "karma": {"$sum": "$karma"}}},
+                            {"$sort": {"karma": -1}}, {"$limit": int(config['leaderboard'])}]
                 doc_cursor = self._karma.aggregate(pipeline)
                 # return cursor containing documents generated through the pipeline
                 return doc_cursor
@@ -64,8 +64,8 @@ class KarmaService:
             if time_span == '':
                 pipeline = [{"$unwind": "$karma"}, {"$match": dict(guild_id=guild_id, channel_id=channel_id)},
                             {"$group": {"_id": {"member_id": "$member_id", "channel_id": "$channel_id"},
-                                        "karma": {"$sum": "$karma"}}}, {"$limit": int(config['leaderboard'])},
-                            {"$sort": {"karma": -1}}]
+                                        "karma": {"$sum": "$karma"}}},
+                            {"$sort": {"karma": -1}}, {"$limit": int(config['leaderboard'])}]
                 doc_cursor = self._karma.aggregate(pipeline)
                 # return cursor containing documents generated through the pipeline
                 return doc_cursor
