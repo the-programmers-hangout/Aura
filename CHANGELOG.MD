@@ -210,6 +210,12 @@ dashboard, mongodb and discord bot. (**done**)
 * refactoring tutor descriptions and embeds (**done**)
 * remove all reactions on click of removal reactione emoji (**done**)
 
+### 1.10.1
+* fixing karma_service pipeline (**done**)
+
+### 1.10.2
+* using converters instead of loops and fixing channel leaderboards (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
