@@ -61,8 +61,8 @@ class Help(commands.Cog):
         embed.add_field(name='**Examples**',
                         value=f'```fix\n{keywords[0]}, this really was a xy problem after all @moe.\n'
                               + 'Hey so i pondered for a while and what you said earlier was really helpful, '
-                              + f'{keywords[0]} @moe.\n'
-                              + f'{keywords[0]} so much for @moe helping me out all the time.'
+                              + f'{keywords[0]} @moe @doe.\n'
+                              + f'{keywords[0]} so much for @moe @doe @noe helping me out all the time.'
                               + '\n```'
                         , inline=False)
         embed.add_field(name='**What happens after giving out karma?**',
@@ -77,7 +77,7 @@ class Help(commands.Cog):
                       usage='{}reactions'.format(config['prefix']))
     async def reactions(self, ctx):
         embed = Embed(colour=embed_color)
-        embed.title = 'Aura Feedback'
+        embed.title = 'Aura Reactions'
         await ctx.channel.send(embed=self.create_feedback_fields(embed))
 
     def create_feedback_fields(self, embed):
