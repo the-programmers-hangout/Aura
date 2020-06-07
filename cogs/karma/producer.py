@@ -88,6 +88,7 @@ class KarmaProducer(commands.Cog):
         if self.karma_service.find_message(str(reaction.message.id)) is not None:
             if reaction.emoji == reaction_emoji()['karma_delete']:
                 if str(karma()['self_delete']).lower() == 'true' and reaction.message.author.id == user.id:
+                    await reaction.message.clear_reactions()
                     await self.remove_karma(reaction.message, reaction.message.guild, 'self emoji clear')
 
     @guild_only()
