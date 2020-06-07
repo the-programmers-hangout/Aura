@@ -237,6 +237,8 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.11.2
 * fix profile bug (**done**)
 
+### 1.11.3
+* fix profile bug (**done**)
 
 ### 1.11.1
 * fix leaderboard help command (**done**)
