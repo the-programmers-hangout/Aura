@@ -17,11 +17,15 @@ a point system called karma. It has the following features:
 * Get Karma of one or multiple Members through Mentions, or message author without mentions.
 * Karma Profile with the Profile Picture, full name (name + discriminator) or nick,
 total karma and karma breakdown by top x channels configured, single mention or no mention for message author profile.
+* Karma Leaderboard globally or per channel
 * Members receive a cooldown in a one-way pair (giver-receiver) after giving it out or set the timer to 0,
 this means that theoretically the initial receiver can thank the giver while the cooldown period is still ticking.
 * Reset all Karma of a Member in a guild.
 * Delete karma from Members on message delete, reaction clear and reaction remove of the message that gave out karma.
 * Change most configuration on the fly by providing keys from the config.yaml.
+* Module Model, enable and disable features you don't need or like.
+* Karma Help Commands to provide you with all the information on aura and how it works,
+what configuration parameters mean etc.
 * This should work on multiple guilds with following caveats:
    * Global Configuration unless several instances
 
