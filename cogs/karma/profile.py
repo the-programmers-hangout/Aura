@@ -86,13 +86,12 @@ class KarmaProfile(commands.Cog):
         channel_cursor = self.karma_service.aggregate_member_by_channels(karma_member)
         embed: discord.Embed = discord.Embed(colour=embed_color)
         embed.description = 'Karma Profile with breakdown of top {} channels'.format(profile()['channels'])
-        total_karma: int = 0
         channel_list = list(channel_cursor)
+        total_karma = self.karma_service.aggregate_member_by_karma(karma_member)
         if len(channel_list) > 0:
             embed.add_field(name='0', value='0', inline=False)
             index = 0
             for document in channel_list:
-                total_karma += document['karma']
                 channel = guild.get_channel(int(document['_id']['channel_id']))
                 if (index % 3) == 0 and index != 0:
                     if channel is None:
