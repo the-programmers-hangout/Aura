@@ -14,7 +14,7 @@ from util.embedutil import add_filler_fields
 log = logging.getLogger(__name__)
 
 
-class HelpMenu(commands.Cog):
+class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.start_time = time.time()
