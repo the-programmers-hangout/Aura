@@ -2,7 +2,7 @@ import logging
 
 import discord
 from discord.ext import commands
-from discord.ext.commands import guild_only, TextChannelConverter
+from discord.ext.commands import guild_only, TextChannelConverter, CommandError
 
 from core import datasource
 from core.service.karma_service import KarmaService
@@ -40,7 +40,11 @@ class KarmaLeaderboard(commands.Cog):
                         count += 1
                     await ctx.channel.send(embed=embed)
         else:
-            input_channel = await TextChannelConverter().convert(ctx=ctx, argument=channel_mention)
+            input_channel = None
+            try:
+                input_channel = await TextChannelConverter().convert(ctx=ctx, argument=channel_mention)
+            except CommandError as e:
+                log.error(e)
             if input_channel is None:
                 await ctx.channel.send('Channel does not exist or lacking permissions to view it.')
             else:
