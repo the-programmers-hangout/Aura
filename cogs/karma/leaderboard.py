@@ -33,12 +33,17 @@ class KarmaLeaderboard(commands.Cog):
                 if len(leaderboard) > 0:
                     count: int = 1
                     for document in leaderboard:
-                        member = guild.get_member(int(document['_id']['member_id']))
+                        member = self.bot.get_user(int(document['_id']['member_id']))
                         karma = document['karma']
-                        embed.add_field(name=f'{count}) ' + bold_field.format(member.name + '#' + member.discriminator),
-                                        value=str(karma) + ' karma', inline=False)
+                        if member is not None:
+                            embed.add_field(name=f'{count}) ' + bold_field.format(member.name + '#'
+                                                                                  + member.discriminator),
+                                            value=f'{karma} karma', inline=False)
+                        else:
+                            embed.add_field(name=f'{count}) ' + bold_field.format('deleted user'),
+                                            value=f'{karma} karma', inline=False)
                         count += 1
-                    await ctx.channel.send(embed=embed)
+                await ctx.channel.send(embed=embed)
         else:
             input_channel = None
             input_channel_name = ''
@@ -60,13 +65,16 @@ class KarmaLeaderboard(commands.Cog):
                     if len(leaderboard) > 0:
                         count: int = 1
                         for document in leaderboard:
-                            member = guild.get_member(int(document['_id']['member_id']))
+                            member = self.bot.get_user(int(document['_id']['member_id']))
                             karma = document['karma']
                             if member is not None:
                                 embed.add_field(name=f'{count}) ' + bold_field.format(member.name + '#'
                                                                                       + member.discriminator),
                                                 value=f'{karma} karma', inline=False)
-                                count += 1
+                            else:
+                                embed.add_field(name=f'{count}) ' + bold_field.format('deleted user'),
+                                                value=f'{karma} karma', inline=False)
+                            count += 1
                         await ctx.channel.send(embed=embed)
                     else:
                         await ctx.channel.send('No leaderboard exists for this channel.')
