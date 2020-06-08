@@ -22,8 +22,7 @@ class KarmaLeaderboard(commands.Cog):
     @commands.command(brief='get a global karma leaderboard or a channel leaderboard, '
                             + 'optionally you can provide days as an argument',
                       usage=leaderboard_usage
-                            .format(config['prefix'], config['prefix'], config['prefix'], config['prefix'],
-                                    config['prefix']))
+                            .format(config['prefix'], config['prefix'], config['prefix'], config['prefix']))
     async def leaderboard(self, ctx, channel_mention="", time_span: int = 0):
         embed = discord.Embed(colour=embed_color)
         guild = ctx.message.guild

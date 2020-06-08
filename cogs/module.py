@@ -3,7 +3,7 @@ import logging
 from discord.ext import commands
 from discord.ext.commands import has_role
 
-from util.config import roles
+from util.config import roles, config
 from util.constants import cog_mapping
 
 log = logging.getLogger(__name__)
@@ -16,9 +16,9 @@ class ModuleManager(commands.Cog):
         self.bot = bot
 
     @has_role(roles()['admin'])
-    @commands.command()
+    @commands.command(brief='load a module, module names are listed in the help menu overview',
+                      usage='{}load'.format(config['prefix']))
     async def load(self, ctx, *, module: str):
-        """Loads a module."""
         try:
             self.bot.add_cog(cog_mapping[module])
         except Exception as e:
@@ -27,9 +27,9 @@ class ModuleManager(commands.Cog):
             await ctx.channel.send(f'Loaded module {module}')
 
     @has_role(roles()['admin'])
-    @commands.command()
+    @commands.command(brief='unload a module, module names are listed in the help menu overview',
+                      usage='{}unload'.format(config['prefix']))
     async def unload(self, ctx, *, module: str):
-        """Unloads a module."""
         try:
             self.bot.remove_cog(module)
         except Exception as e:
@@ -38,9 +38,9 @@ class ModuleManager(commands.Cog):
             await ctx.channel.send(f'Unloaded module {module}')
 
     @has_role(roles()['admin'])
-    @commands.command(name='reload')
+    @commands.command(name='reload', brief='reload a module, module names are listed in the help menu overview',
+                      usage='{}reload'.format(config['prefix']))
     async def _reload(self, ctx, *, module: str):
-        """Reloads a module."""
         try:
             self.bot.remove_cog(module)
             self.bot.add_cog(cog_mapping[module])

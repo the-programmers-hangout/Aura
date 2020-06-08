@@ -108,7 +108,7 @@ class Help(commands.Cog):
 
     @guild_only()
     @commands.command(brief='show all commands or show help text of a single command',
-                      usage='{}help\n{}help command'.format(config['prefix'], config['prefix']))
+                      usage='{}help\n{}help (command)'.format(config['prefix'], config['prefix']))
     async def help(self, ctx, *, params: str = ""):
         args = params.split()
         log.info('Called help command with args: {}'.format(args))
