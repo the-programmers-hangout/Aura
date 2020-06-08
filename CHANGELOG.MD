@@ -240,6 +240,9 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.11.3
 * fix profile bug (**done**)
 
+### 1.11.4
+* fix edit tracking bug introduced by timestamp (**done**)
+
 ### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions

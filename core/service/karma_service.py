@@ -25,7 +25,8 @@ class KarmaService:
 
     def delete_karma_member(self, member: KarmaMember):
         # return delete result
-        return self._karma.delete_one(filter=vars(member))
+        return self._karma.delete_one(filter=dict(guild_id=member.guild_id, member_id=member.member_id,
+                                                  channel_id=member.channel_id, message_id=member.message_id))
 
     # remove all karma, regardless of channel and message.
     def delete_all_karma(self, member: KarmaMember):
