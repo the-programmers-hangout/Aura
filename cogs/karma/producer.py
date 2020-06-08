@@ -101,9 +101,11 @@ class KarmaProducer(commands.Cog):
                 print()  # TODO implement search on message id to find all members thanked
             elif before_valid and not after_valid:
                 # remove karma given out through karma message.
-                await self.remove_karma(after, after.guild, 'message edit')
+                log.info(f'Removing karma because message: {after.id} not valid after edit')
+                await self.remove_karma(before, after.guild, 'message edit')
             elif after_valid and not before_valid:
                 # all new karma to give out
+                log.info(f'Adding karma because message: {after.id} is valid after edit')
                 await self.give_karma(after, after.guild)
 
     # check if message is a valid message for karma
@@ -160,8 +162,7 @@ class KarmaProducer(commands.Cog):
         # walk through the mention list which contains discord: Members
         for mention in set(message.mentions):
             member = mention
-            karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
-            karma_member.karma = 1
+            karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id, 1)
             deletion_result = self.karma_service.delete_karma_member(karma_member)
             if deletion_result.deleted_count == 1:
                 await self.log_karma_removal(message, member, reason)
