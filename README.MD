@@ -43,6 +43,7 @@ token: <Your Bot Account Token>
 prefix: <prefix>
 role:
     admin: "<Exact Name of Admin role>"
+owner: <id of bot-owner>
 everything under the database key
 ```
 

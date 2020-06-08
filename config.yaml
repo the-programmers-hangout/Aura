@@ -26,12 +26,13 @@ karma:
   self_delete: 'true'
   time-emote: 'true'
   time-message: 'false'
+leaderboard: 10
 logging: INFO
 prefix: aura!
 profile:
-  channels: 5
-leaderboard: 10
+  channels: '5'
 roles:
   admin: Admin
   moderator: Staff
+owner:
 token:
