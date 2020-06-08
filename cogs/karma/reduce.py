@@ -29,7 +29,7 @@ class KarmaReducer(commands.Cog):
     async def reset(self, ctx, *, args=''):
         member_set = await convert_content_to_member_set(ctx, args.split())
         for member in member_set:
-            if member_has_role(member, roles()['admin']):
+            if member_has_role(member, roles()['admin']) and ctx.message.author.id != int(config['owner']):
                 await ctx.channel.send('You cannot reset the karma of an admin.')
             else:
                 if member_has_role(member, roles()['moderator']) \
@@ -54,7 +54,7 @@ class KarmaBlocker(commands.Cog):
     async def blacklist(self, ctx, *, args):
         member_set = await convert_content_to_member_set(ctx, args.split())
         for member in member_set:
-            if member_has_role(member, roles()['admin']):
+            if member_has_role(member, roles()['admin']) and ctx.message.author.id != int(config['owner']):
                 await ctx.channel.send('You cannot blacklist an admin.')
             else:
                 if member_has_role(member, roles()['moderator']) \
@@ -72,7 +72,7 @@ class KarmaBlocker(commands.Cog):
     async def whitelist(self, ctx, *, args):
         member_set = await convert_content_to_member_set(ctx, args.split())
         for member in member_set:
-            if member_has_role(member, roles()['admin']):
+            if member_has_role(member, roles()['admin']) and ctx.message.author.id != int(config['owner']):
                 await ctx.channel.send('You cannot whitelist an admin.')
             else:
                 if member_has_role(member, roles()['moderator']) \
