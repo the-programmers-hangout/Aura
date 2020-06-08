@@ -41,7 +41,7 @@ class SettingsManager(commands.Cog):
                     embed = self.build_config_help_embed(args)
                     await ctx.channel.send(embed=embed)
                 elif args[0] != 'token' and args[0] != 'prefix' \
-                        and args[0] != 'database' and args[0] != 'logging':
+                        and args[0] != 'database' and args[0] != 'logging' and args[0] != 'owner':
                     if len(args) == 3 and config[args[0]] is not None:
                         if config[args[0]][args[1]] is not None:
                             config[args[0]][args[1]] = args[2]
@@ -68,7 +68,7 @@ class SettingsManager(commands.Cog):
                 else:
                     config_embed.add_field(name=f'**{key}**', value=config[key])
         config_embed = add_filler_fields(config_embed, config_embed.fields)
-        config_embed.set_footer(text='token, prefix, database, logging level only only changeable before runtime')
+        config_embed.set_footer(text='token, owner, prefix, database, logging level only only changeable before runtime')
         return config_embed
 
     def build_config_help_embed(self, args) -> Embed:
