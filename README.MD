@@ -18,6 +18,7 @@ a point system called karma. It has the following features:
 * Karma Profile with the Profile Picture, full name (name + discriminator) or nick,
 total karma and karma breakdown by top x channels configured, single mention or no mention for message author profile.
 * Karma Leaderboard globally or per channel
+ * provide optional argument of days to get a timed leaderboard
 * Members receive a cooldown in a one-way pair (giver-receiver) after giving it out or set the timer to 0,
 this means that theoretically the initial receiver can thank the giver while the cooldown period is still ticking.
 * Reset all Karma of a Member in a guild.
