@@ -10,6 +10,7 @@ from core.model.member import KarmaMember, Member
 from core.service.karma_service import KarmaService, BlockerService
 from util.config import roles, config, max_message_length
 from util.conversion import convert_content_to_member_set
+from util.util import member_has_role
 
 log = logging.getLogger(__name__)
 
@@ -28,8 +29,15 @@ class KarmaReducer(commands.Cog):
     async def reset(self, ctx, *, args=''):
         member_set = await convert_content_to_member_set(ctx, args.split())
         for member in member_set:
-            self.karma_service.delete_all_karma(KarmaMember(ctx.guild.id, member.id))
-            await ctx.channel.send('Removed all Karma from {}'.format(member.mention))
+            if member_has_role(member, roles()['admin']):
+                await ctx.channel.send('You cannot reset the karma of an admin.')
+            else:
+                if member_has_role(member, roles()['moderator']) \
+                        and not member_has_role(ctx.message.author, roles()['admin']):
+                    await ctx.channel.send('Only admins can reset the karma of an moderator.')
+                else:
+                    self.karma_service.delete_all_karma(KarmaMember(ctx.guild.id, member.id))
+                    await ctx.channel.send('Removed all Karma from {}'.format(member.mention))
 
 
 class KarmaBlocker(commands.Cog):
@@ -46,8 +54,15 @@ class KarmaBlocker(commands.Cog):
     async def blacklist(self, ctx, *, args):
         member_set = await convert_content_to_member_set(ctx, args.split())
         for member in member_set:
-            self.blocker_service.blacklist(Member(ctx.guild.id, member.id))
-            await ctx.channel.send('Blacklisted {}'.format(member.mention))
+            if member_has_role(member, roles()['admin']):
+                await ctx.channel.send('You cannot blacklist an admin.')
+            else:
+                if member_has_role(member, roles()['moderator']) \
+                        and not member_has_role(ctx.message.author, roles()['admin']):
+                    await ctx.channel.send('Only admins can blacklist an moderator.')
+                else:
+                    self.blocker_service.blacklist(Member(ctx.guild.id, member.id))
+                    await ctx.channel.send('Blacklisted {}'.format(member.mention))
 
     @guild_only()
     @has_any_role(roles()['admin'], roles()['moderator'])
@@ -57,8 +72,15 @@ class KarmaBlocker(commands.Cog):
     async def whitelist(self, ctx, *, args):
         member_set = await convert_content_to_member_set(ctx, args.split())
         for member in member_set:
-            self.blocker_service.whitelist(Member(ctx.guild.id, member.id))
-            await ctx.channel.send('Whitelisted {}'.format(member.mention))
+            if member_has_role(member, roles()['admin']):
+                await ctx.channel.send('You cannot whitelist an admin.')
+            else:
+                if member_has_role(member, roles()['moderator']) \
+                        and not member_has_role(ctx.message.author, roles()['admin']):
+                    await ctx.channel.send('Only admins can whitelist an moderator.')
+                else:
+                    self.blocker_service.whitelist(Member(ctx.guild.id, member.id))
+                    await ctx.channel.send('Whitelisted {}'.format(member.mention))
 
     @guild_only()
     @has_any_role(roles()['admin'], roles()['moderator'])
