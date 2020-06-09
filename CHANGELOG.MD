@@ -246,9 +246,11 @@ dashboard, mongodb and discord bot. (**done**)
 ### 1.12.0
 * apply local role hierarchy to reduce and block commands (**done**)
 * add docs string to everything (**done**)
+* add config file to git ignore, add example file. (**done**)
+
+### 1.13.0
 * check the validity of the data returned from the database
 * complete partial edit tracking
-* add config file to git ignore, add example file. (**done**)
 
 ### 1.x.0
 * remove cooldown on karma removal
