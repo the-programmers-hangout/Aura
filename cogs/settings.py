@@ -56,6 +56,10 @@ class SettingsManager(commands.Cog):
                             'Configuration parameter {} has been changed to {}'.format(args[0], args[1]))
 
     def build_config_embed(self) -> Embed:
+        """
+        Building the config embed with all keys that are changeable current values.
+        :return: discord.Embed
+        """
         config_embed: Embed = Embed(title='Aura Configuration Menu',
                                     description='Shows all changeable configuration keys '
                                                 + 'and their current values ',
@@ -72,6 +76,11 @@ class SettingsManager(commands.Cog):
         return config_embed
 
     def build_config_help_embed(self, args) -> Embed:
+        """
+        Building the configuration help embed to provide more context on configuration value.
+        :param args: configuration keys
+        :return: discord.Embed
+        """
         config_help_embed: Embed = Embed(colour=embed_color)
         # args[0] == help
         if len(args) == 2:
@@ -88,7 +97,12 @@ class SettingsManager(commands.Cog):
                                         value=self.build_possible_values(config_description.values))
         return config_help_embed
 
-    def build_possible_values(self, value_list):
+    def build_possible_values(self, value_list) -> str:
+        """
+        Using the ConfigDescriptions in config.py build a possible value list for the config help embed.
+        :param value_list: list of values
+        :return: result containing the values to show in the config help embed
+        """
         result = ''
         if len(value_list) > 1:
             for value in value_list:

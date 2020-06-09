@@ -15,20 +15,25 @@ from util.embedutil import add_filler_fields
 log = logging.getLogger(__name__)
 
 
-# Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
-# Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 class KarmaProfile(commands.Cog):
+    # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
+    # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 
     def __init__(self, bot, karma_service=KarmaService(datasource.karma)):
         self.bot = bot
         self.karma_service = karma_service
 
-    # get karma of yourself without any arguments, get karma of others with mention
     @guild_only()
     @commands.command(brief='get karma of a user, of several users or yourself',
                       usage='{}karma\n{}karma <@!member_id> [...]'
                       .format(config['prefix'], config['prefix']))
-    async def karma(self, ctx, *, args=''):
+    async def karma(self, ctx, *, args='') -> None:
+        """
+        Return the karma of all members provided to the karma command or self if no arguments.
+        :param ctx: context of the invocation
+        :param args: members to print the karma in the channel
+        :return: None
+        """
         return_msg = ''
         if len(args) == 0:
             karma_member = KarmaMember(ctx.guild.id, ctx.message.author.id)
@@ -57,7 +62,13 @@ class KarmaProfile(commands.Cog):
     @commands.command(brief='get karma profile of a user or yourself',
                       usage='{}profile\n{}profile <@!member_id>'
                       .format(config['prefix'], config['prefix']))
-    async def profile(self, ctx, *, args=''):
+    async def profile(self, ctx, *, args='') -> None:
+        """
+        Return the karma profile of a member or self if no arguments.
+        :param ctx: context of the invocation
+        :param args: args provided to profile command, only take the first one.
+        :return: None
+        """
         if len(args) == 0:
             karma_member = KarmaMember(ctx.guild.id, ctx.message.author.id)
             embed = await self.build_profile_embed(karma_member, ctx.guild)
@@ -82,7 +93,13 @@ class KarmaProfile(commands.Cog):
                 embed.set_thumbnail(url=member.avatar_url)
                 await ctx.channel.send(embed=embed)
 
-    async def build_profile_embed(self, karma_member: KarmaMember, guild) -> discord.Embed:
+    async def build_profile_embed(self, karma_member: KarmaMember, guild: discord.Guild) -> discord.Embed:
+        """
+        Build the profile embed with top channel breakdown configured
+        :param karma_member: member whose profile to show
+        :param guild: the discord guild
+        :return: discord.Embed
+        """
         channel_cursor = self.karma_service.aggregate_member_by_channels(karma_member)
         embed: discord.Embed = discord.Embed(colour=embed_color)
         embed.description = 'Karma Profile with breakdown of top {} channels'.format(profile()['channels'])

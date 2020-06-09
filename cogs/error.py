@@ -11,7 +11,13 @@ class CommandErrorHandler(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx, error) -> None:
+        """
+        Command Error Handler listening to the command error event.
+        :param ctx: context of the invocation
+        :param error: error which was thrown
+        :return: None
+        """
         # This prevents any commands with local handlers being handled here in on_command_error.
         if hasattr(ctx.command, 'on_error'):
             return
