@@ -3,7 +3,7 @@ blacklist:
   dm: 'true'
   emote: 'true'
 channel:
-  log: '707943244998115341'
+  log:
 cooldown: '5'
 database:
   connection:

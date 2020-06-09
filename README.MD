@@ -36,7 +36,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-To run this bot you need to manually fill out the following values in the config.yaml
+To run this bot you need to manually fill out the following values in the config.yaml.example
+and change the file ending to config.yaml for the bot to work.
 
 ```
 token: <Your Bot Account Token>
