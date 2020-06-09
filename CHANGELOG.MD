@@ -248,7 +248,7 @@ dashboard, mongodb and discord bot. (**done**)
 * add docs string to everything (**done**)
 * check the validity of the data returned from the database
 * complete partial edit tracking
-* add config file to git ignore, add example file.
+* add config file to git ignore, add example file. (**done**)
 
 ### 1.x.0
 * remove cooldown on karma removal
