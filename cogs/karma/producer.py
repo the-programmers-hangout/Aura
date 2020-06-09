@@ -132,6 +132,7 @@ class KarmaProducer(commands.Cog):
             elif before_valid and not after_valid:
                 # remove karma given out through karma message.
                 log.info(f'Removing karma because message: {after.id} not valid after edit')
+                await after.clear_reactions()
                 await self.remove_karma(before, after.guild, 'message edit')
             elif after_valid and not before_valid:
                 # all new karma to give out
