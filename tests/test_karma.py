@@ -35,6 +35,7 @@ class KarmaGiving(unittest.TestCase):
     karma_producer = KarmaProducer(mock.MagicMock(), mock.MagicMock(), mock.MagicMock())
 
     dummy_wrong_message_content = 'lmao <@1>'
+    dummy_wrong_message_content_2 = '"thanks dude" <@1>'
     dummy_correct_message_content = 'thanks <@1>'
     dummy_correct_message_content_2 = 'Thanks <@1>'
     dummy_correct_message_content_3 = 'ty <@1>'
@@ -42,6 +43,7 @@ class KarmaGiving(unittest.TestCase):
 
     def test_messages_identified_correctly(self):
         assert not self.karma_producer.contains_valid_thanks(self.dummy_wrong_message_content)
+        assert not self.karma_producer.contains_valid_thanks(self.dummy_wrong_message_content_2)
         assert self.karma_producer.contains_valid_thanks(self.dummy_correct_message_content)
         assert self.karma_producer.contains_valid_thanks(self.dummy_correct_message_content_2)
         assert self.karma_producer.contains_valid_thanks(self.dummy_correct_message_content_3)
