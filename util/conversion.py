@@ -1,5 +1,8 @@
 import logging
 import re
+from typing import List, Set
+
+import discord
 
 log = logging.getLogger(__name__)
 
@@ -9,7 +12,14 @@ mention_regex = re.compile(mention_pattern)
 
 # convert member_list with mixed ids and members to a pure list of members
 # the list returned only contains non-bot members
-async def convert_content_to_member_set(ctx, argument_list):
+async def convert_content_to_member_set(ctx, argument_list: List[str]) -> Set[discord.Member]:
+    """
+    convert member_list with mixed ids and members to a pure list of members
+    the list returned only contains non-bot members
+    :param ctx: context of the invocation
+    :param argument_list: ids or mentions
+    :return:
+    """
     guild = ctx.guild
     pure_list = []
     logging.info('Conversion to pure list \n original list: {}'.format(argument_list))

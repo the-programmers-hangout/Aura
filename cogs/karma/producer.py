@@ -16,8 +16,8 @@ from util.constants import revoke_message
 log = logging.getLogger(__name__)
 
 
-# Class that gives positive karma and negative karma on message deletion (take back last action)
 class KarmaProducer(commands.Cog):
+    # Class that gives positive karma and negative karma on message deletion (take back last action)
 
     def __init__(self, bot, karma_service=KarmaService(datasource.karma),
                  blocker_service=BlockerService(datasource.blacklist)):
@@ -26,10 +26,14 @@ class KarmaProducer(commands.Cog):
         self.blocker_service = blocker_service
         self._members_on_cooldown = defaultdict(lambda: defaultdict(list))
 
-    # give karma if message has thanks and correct mentions
     @guild_only()
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message) -> None:
+        """
+        message listener, calls methods to validate valid karma gain and filter out blacklisted members.
+        :param message: discord.Message
+        :return: None
+        """
         guild_id: int = message.guild.id
         if not message.author.bot:
             # validate the message, is it a karma message?
@@ -48,19 +52,26 @@ class KarmaProducer(commands.Cog):
                     if str(config['blacklist']['emote']).lower() == 'true':
                         await message.add_reaction(reaction_emoji()['karma_blacklist'])
 
-    # remove karma on deleted message of said karma message
     @guild_only()
     @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        # find message id in db
+    async def on_message_delete(self, message) -> None:
+        """
+        message deletion listener, remove karma associated with that message, if it is a karma message.
+        :param message: message which was deleted
+        :return: None
+        """
         if self.karma_service.find_message(str(message.id)) is not None:
             await self.remove_karma(message, message.guild, 'message delete')
 
-    # remove karma on deleted reaction of said karma message
     @guild_only()
     @commands.Cog.listener()
-    async def on_reaction_remove(self, reaction: discord.Reaction, user):
-        # user args is the one who made the reaction according to docs
+    async def on_reaction_remove(self, reaction: discord.Reaction, user: discord.User) -> None:
+        """
+        If the thumps up reaction is removed then, remove the karma gained through the karma message.
+        :param reaction: the reaction that was removed
+        :param user: user who added the reaction first
+        :return: None
+        """
         if user.id == self.bot.user.id:
             # if aura made this reaction then it was very clearly a karma message
             if reaction.emoji == reaction_emoji()['karma_gain']:
@@ -71,7 +82,14 @@ class KarmaProducer(commands.Cog):
 
     @guild_only()
     @commands.Cog.listener()
-    async def on_reaction_clear(self, message, reactions):
+    async def on_reaction_clear(self, message, reactions) -> None:
+        """
+        If all reactions are cleared and one of those reactions is a karma gain emoji and was made by Aura
+        then remove all karma associated.
+        :param message:
+        :param reactions:
+        :return:
+        """
         for reaction in reactions:
             if reaction.emoji == reaction_emoji()['karma_gain']:
                 # reaction me is very much the same as checking the user id
@@ -83,8 +101,14 @@ class KarmaProducer(commands.Cog):
 
     @guild_only()
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction: discord.Reaction, user):
-        # make sure karma has not been removed from another action
+    async def on_reaction_add(self, reaction: discord.Reaction, user: discord.User) -> None:
+        """
+        If the karma deletion is set, will remove all karma gained through the message,
+        if the message author clicks it and then remove all reactions on the message
+        :param reaction: reaction which was clicked
+        :param user: user who added the reaction
+        :return: None
+        """
         if self.karma_service.find_message(str(reaction.message.id)) is not None:
             if reaction.emoji == reaction_emoji()['karma_delete']:
                 if str(karma()['self_delete']).lower() == 'true' and reaction.message.author.id == user.id:
@@ -93,7 +117,13 @@ class KarmaProducer(commands.Cog):
 
     @guild_only()
     @commands.Cog.listener()
-    async def on_message_edit(self, before: discord.Message, after: discord.Message):
+    async def on_message_edit(self, before: discord.Message, after: discord.Message) -> None:
+        """
+        Will remove and add karma according to the state of the message before and afterwards.
+        :param before: discord message before the edit
+        :param after: discord message after the edit
+        :return: None
+        """
         if str(karma()['edit']).lower() == 'true':
             before_valid = await self.validate_message(before)
             after_valid = await self.validate_message(after)
@@ -108,19 +138,27 @@ class KarmaProducer(commands.Cog):
                 log.info(f'Adding karma because message: {after.id} is valid after edit')
                 await self.give_karma(after, after.guild)
 
-    # check if message is a valid message for karma
-    async def validate_message(self, message) -> bool:
-        # check if message has any variation of thanks + at least one user mention
+    async def validate_message(self, message: discord.Message) -> bool:
+        """
+        validates the message
+        :param message: discord Message to validate for Aura
+        :return: True if message is valid, False if not.
+        """
         if self.contains_valid_thanks(message.content) and len(message.mentions) > 0:
             return True
         else:
             return False
 
-    # check if message has one of the configured keywords in a valid pattern by using regex
-    def contains_valid_thanks(self, message) -> bool:
+    def contains_valid_thanks(self, message: str) -> bool:
+        """
+        check if the message has a valid thanks keyword as configured. This is achieved
+        by using several patterns and applying them to the message content of a discord Message
+        :param message: message.content of a discord.Message
+        :return: True if message has a valid keyword pattern, False if not.
+        """
         pattern = r'\b{}\b'
         invalid_pattern = r'\"{}\b{}\b{}\"'
-        invalid_regex = '[0-9a-zA-z\s]*'  # message containing " and any character in between
+        invalid_regex = r'[0-9a-zA-z\s]*'  # message containing " and any character in between
         for thanks in thanks_list():
             thanks: str = thanks.strip()
             valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
@@ -129,10 +167,13 @@ class KarmaProducer(commands.Cog):
                 return True
         return False
 
-    # give karma to all users in a message except author, other bots or aura itself.
-    # logged to a configured channel with member name & discriminator, optionally with nickname
-    # cooldown giver-receiver combo after successfully giving karma
-    async def give_karma(self, message: discord.Message, guild: discord.Guild):
+    async def give_karma(self, message: discord.Message, guild: discord.Guild) -> None:
+        """
+        give karma to all the users in the message except the author, other bots or aura itself
+        :param message: message containing the mentions
+        :param guild: guild of the karma message
+        :return: None
+        """
         # walk through the mention list which contains discord: Members
         for mention in set(message.mentions):
             member = mention
@@ -157,8 +198,15 @@ class KarmaProducer(commands.Cog):
                             .send('Sorry {}, your karma for {} needs time to recharge'
                                   .format(message.author.mention, member.name))
 
-    # remove karma with event
-    async def remove_karma(self, message: discord.Message, guild: discord.Guild, reason: str):
+    async def remove_karma(self, message: discord.Message, guild: discord.Guild, reason: str) -> None:
+        """
+        remove karma from everyone that is in the set of mentions of the message,
+        providing a reason for the deletion.
+        :param message: message to remove karma from
+        :param guild: guild of the message
+        :param reason: reason for deleting the karma (event_type)
+        :return: None
+        """
         # walk through the mention list which contains discord: Members
         for mention in set(message.mentions):
             member = mention
@@ -167,9 +215,13 @@ class KarmaProducer(commands.Cog):
             if deletion_result.deleted_count == 1:
                 await self.log_karma_removal(message, member, reason)
 
-    # notify user about successful karma gain
-    async def notify_member_gain(self, message, member):
-        # this channel can be private
+    async def notify_member_gain(self, message: discord.Message, member: discord.Member) -> None:
+        """
+        notify the member that he gained karma, configureable through configuration.
+        :param message: the discord message, used to link to the message.
+        :param member: the member to notify, if applicable.
+        :return: None
+        """
         if str(karma()['log']).lower() == 'true':
             if member.nick is None:
                 await self.bot.get_channel(int(config['channel']['log'])).send(
@@ -199,7 +251,14 @@ class KarmaProducer(commands.Cog):
             if str(karma()['self_delete']).lower() == 'true':
                 await message.add_reaction(reaction_emoji()['karma_delete'])
 
-    async def log_karma_removal(self, message, member, event_type):
+    async def log_karma_removal(self, message: discord.Message, member: discord.Member, event_type: str) -> None:
+        """
+        log the karma removal of a user in a channel.
+        :param message: the discord message which triggered the removal, can be None.
+        :param member: the discord member whose removal is to be logged.
+        :param event_type: the reason for the deletion
+        :return: None
+        """
         if karma()['log']:
             if event_type == 'message delete':
                 await self.bot.get_channel(int(config['channel']['log'])).send(
@@ -214,12 +273,24 @@ class KarmaProducer(commands.Cog):
                         message.channel.mention,
                         message.jump_url))
 
-    # create new timer and add the user to it
     async def cooldown_user(self, guild_id: int, giver_id: int, receiver_id: int) -> None:
+        """
+        Put giver-receiver pairs on a cooldown and start a SingleActionTimer which removes them from the cooldown dict.
+        :param guild_id: id of the guild the cooldown is applied to.
+        :param giver_id: id of the giver who thanked the receiver.
+        :param receiver_id: id of the receiver who was thanked by the receiver.
+        :return: None
+        """
         self._members_on_cooldown[guild_id][giver_id].append(receiver_id)
         await KarmaSingleActionTimer(self.remove_from_cooldown, int(config['cooldown']),
                                      guild_id, giver_id, receiver_id).start()
 
-    # remove user from cooldown after time runs out
     async def remove_from_cooldown(self, guild_id: int, giver_id: int, receiver_id: int) -> None:
+        """
+        Method that is used in the SingleAction timer to remove the giver-receiver pair from the cooldown dict.
+        :param guild_id: id of the guild
+        :param giver_id:  id of the giver who thanked the receiver.
+        :param receiver_id: id of the receiver who was thanked by the receiver
+        :return:
+        """
         self._members_on_cooldown[guild_id][giver_id].remove(receiver_id)

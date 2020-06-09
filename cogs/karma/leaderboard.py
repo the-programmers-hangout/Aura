@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 
 class KarmaLeaderboard(commands.Cog):
-
+    # Karma Leaderboard classes
     def __init__(self, bot, karma_service=KarmaService(datasource.karma)):
         self.bot = bot
         self.karma_service = karma_service
@@ -23,7 +23,14 @@ class KarmaLeaderboard(commands.Cog):
                             + 'optionally you can provide days as an argument',
                       usage=leaderboard_usage
                             .format(config['prefix'], config['prefix'], config['prefix'], config['prefix']))
-    async def leaderboard(self, ctx, channel_mention="", time_span: int = 0):
+    async def leaderboard(self, ctx, channel_mention="", time_span: int = 0) -> None:
+        """
+        Leaderboard showing the top x users globally, channel specific and optionally of the last x days.
+        :param ctx: context of the invocation
+        :param channel_mention: optional channel mention for channel leaderboard
+        :param time_span: time_span in days for the last x days leaderboard
+        :return: None
+        """
         embed = discord.Embed(colour=embed_color)
         guild = ctx.message.guild
         if channel_mention == '' or channel_mention == 'global':

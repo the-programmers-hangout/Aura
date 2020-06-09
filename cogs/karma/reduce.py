@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 class KarmaReducer(commands.Cog):
-
+    # Class all about reducing the Karma of a Member
     def __init__(self, bot, karma_service=KarmaService(datasource.karma)):
         self.bot = bot
         self.karma_service = karma_service
@@ -26,7 +26,14 @@ class KarmaReducer(commands.Cog):
     @commands.command(brief='Reset all karma of a member in the guild',
                       usage='{}reset member_id\n{}reset <@!member_id>'
                       .format(config['prefix'], config['prefix']))
-    async def reset(self, ctx, *, args=''):
+    async def reset(self, ctx, *, args: str) -> None:
+        """
+        reset karma of the users provided to the command, both mentions and ids are valid.
+        :param ctx: context of the invocation
+        :param args: members provided to reset karma
+        :return: None
+        """
+        # convert args to discord.Member
         member_set = await convert_content_to_member_set(ctx, args.split())
         for member in member_set:
             if member_has_role(member, roles()['admin']) and ctx.message.author.id != int(config['owner']):
@@ -41,7 +48,7 @@ class KarmaReducer(commands.Cog):
 
 
 class KarmaBlocker(commands.Cog):
-
+    # Class about blocking and unblocking members from giving karma
     def __init__(self, bot):
         self.bot = bot
         self.blocker_service = BlockerService(datasource.blacklist)
@@ -51,7 +58,13 @@ class KarmaBlocker(commands.Cog):
     @commands.command(brief='blacklists a member from giving karma',
                       usage='{}blacklist member_id\n{}blacklist <@!member_id>'
                       .format(config['prefix'], config['prefix']))
-    async def blacklist(self, ctx, *, args):
+    async def blacklist(self, ctx, *, args: str) -> None:
+        """
+        blacklist the users provided to the command, both mentions and ids are valid.
+        :param ctx: context of the invocation
+        :param args: members provided to blacklist
+        :return: None
+        """
         member_set = await convert_content_to_member_set(ctx, args.split())
         for member in member_set:
             if member_has_role(member, roles()['admin']) and ctx.message.author.id != int(config['owner']):
@@ -69,7 +82,13 @@ class KarmaBlocker(commands.Cog):
     @commands.command(brief='removes existing blacklist of the guild member',
                       usage='{}whitelist member_id\n{}whitelist <@!member_id>'
                       .format(config['prefix'], config['prefix']))
-    async def whitelist(self, ctx, *, args):
+    async def whitelist(self, ctx, *, args:str ) -> None:
+        """
+        whitelist the users provided to the command, both mentions and ids are valid.
+        :param ctx: context of the invocation
+        :param args: members provided to whitelist
+        :return: None
+        """
         member_set = await convert_content_to_member_set(ctx, args.split())
         for member in member_set:
             if member_has_role(member, roles()['admin']) and ctx.message.author.id != int(config['owner']):
@@ -84,10 +103,17 @@ class KarmaBlocker(commands.Cog):
 
     @guild_only()
     @has_any_role(roles()['admin'], roles()['moderator'])
-    @commands.command(name='showblacklist', brief='list all blacklisted members in the guild the command was invoked in',
+    @commands.command(name='showblacklist',
+                      brief='list all blacklisted members in the guild the command was invoked in',
                       usage='{}showblackist'
                       .format(config['prefix'], config['prefix']))
-    async def show_blacklist(self, ctx):
+    async def show_blacklist(self, ctx) -> None:
+        """
+        prints out the blacklist in the channel, if message is over a certain max size the blacklist is embedded
+        into a text file.
+        :param ctx: context of the invocation
+        :return: None
+        """
         blacklist = list(self.blocker_service.find_all_blacklisted(str(ctx.guild.id)))
         return_message = ''
         for blacklisted in blacklist:
@@ -104,4 +130,3 @@ class KarmaBlocker(commands.Cog):
                 await ctx.channel.send(file=File(fp=BytesIO(bytes(return_message, 'utf-8')), filename='Blacklist'))
         else:
             await ctx.channel.send('Blacklist is empty')
-
