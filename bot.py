@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 
 from cogs.error import CommandErrorHandler
-from cogs.help import Help
+from cogs.help import Help, KarmaTutor
 from cogs.karma.leaderboard import KarmaLeaderboard
 from cogs.karma.producer import KarmaProducer
 from cogs.karma.profile import KarmaProfile
@@ -29,6 +29,7 @@ if __name__ == '__main__':
     karma_leaderboard = KarmaLeaderboard(client)
     settings_manager = SettingsManager(client)
     help_cog = Help(client)
+    karma_tutor = KarmaTutor(client)
 
     client.add_cog(module_manager)
     client.add_cog(karma_producer)
@@ -38,7 +39,8 @@ if __name__ == '__main__':
     client.add_cog(karma_leaderboard)
     client.add_cog(settings_manager)
     client.add_cog(CommandErrorHandler(client))
-    client.add_cog(Help(client))
+    client.add_cog(help_cog)
+    client.add_cog(karma_tutor)
 
     cog_mapping['ModuleManager'] = module_manager
     cog_mapping['KarmaProducer'] = karma_producer
@@ -47,5 +49,7 @@ if __name__ == '__main__':
     cog_mapping['KarmaProfile'] = karma_profile
     cog_mapping['KarmaLeaderboard'] = karma_leaderboard
     cog_mapping['SettingsManager'] = settings_manager
+    cog_mapping['Help'] = help_cog
+    cog_mapping['KarmaTutor'] = karma_tutor
 
     client.run(config['token'])
