@@ -4,10 +4,8 @@ import mongomock
 
 from core.model.member import Member
 from core.service.karma_service import BlockerService
-from util.util import create_config_yaml
 
 if __name__ == '__main__':
-    create_config_yaml()
     unittest.main()
 
 
