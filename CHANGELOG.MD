@@ -245,10 +245,18 @@ dashboard, mongodb and discord bot. (**done**)
 
 ### 1.12.0
 * apply local role hierarchy to reduce and block commands (**done**)
+* add owner config property (**done**)
 * add docs string to everything (**done**)
 * add config file to git ignore, add example file. (**done**)
 
-### 1.13.0
+### 1.13.1
+* fix config embed (**done**)
+* fix config insertions that were bugged due to wrong predicate (**done**)
+* add config response to keys that do not exist (**done**)
+* remove reactions on message edit for invalid karma messages (**done**)
+* change tutor text slightly (**done**)
+
+### 1.14.0
 * check the validity of the data returned from the database
 * complete partial edit tracking
 

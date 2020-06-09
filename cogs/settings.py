@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import has_role, guild_only
 
 from util.config import config, write_config, roles, descriptions
-from util.constants import embed_color
+from util.constants import embed_color, hidden_config
 from util.embedutil import add_filler_fields
 
 log = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class SettingsManager(commands.Cog):
             args[2] = keywords.strip()
             args = args[:3]
         if len(args) > 3:
-            await ctx.channel.send('You provided too many arguments to the config command')
+            await ctx.channel.send('You provided too many arguments to the config command.')
         else:
             if len(args) == 0:
                 embed = self.build_config_embed()
@@ -40,20 +40,24 @@ class SettingsManager(commands.Cog):
                 if args[0] == 'help':
                     embed = self.build_config_help_embed(args)
                     await ctx.channel.send(embed=embed)
-                elif args[0] != 'token' and args[0] != 'prefix' \
-                        and args[0] != 'database' and args[0] != 'logging' and args[0] != 'owner':
-                    if len(args) == 3 and config[args[0]] is not None:
-                        if config[args[0]][args[1]] is not None:
+                elif args[0] not in hidden_config:
+                    if len(args) == 3:
+                        if args[0] in config.keys() and args[1] in config[args[0]].keys():
                             config[args[0]][args[1]] = args[2]
                             write_config()
                             await ctx.channel.send(
                                 'Configuration parameter {} {} has been changed to {}'.format(args[0], args[1],
                                                                                               args[2]))
+                        else:
+                            await ctx.channel.send('Configuration key does not exist.')
                     else:
-                        config[args[0]] = args[1]
-                        write_config()
-                        await ctx.channel.send(
-                            'Configuration parameter {} has been changed to {}'.format(args[0], args[1]))
+                        if args[0] in config.keys():
+                            config[args[0]] = args[1]
+                            write_config()
+                            await ctx.channel.send(
+                                'Configuration parameter {} has been changed to {}'.format(args[0], args[1]))
+                        else:
+                            await ctx.channel.send('Configuration key does not exist.')
 
     def build_config_embed(self) -> Embed:
         """
@@ -65,7 +69,7 @@ class SettingsManager(commands.Cog):
                                                 + 'and their current values ',
                                     colour=embed_color)
         for key in config.keys():
-            if key != 'token' and key != 'prefix' and key != 'database' and key != 'logging':
+            if key not in hidden_config:
                 if isinstance(config[key], Mapping):
                     for other_key in config[key].keys():
                         config_embed.add_field(name=f'**{key} {other_key}**', value=config[key][other_key])

@@ -167,7 +167,7 @@ class KarmaTutor(commands.Cog):
                               + ' and one user mention for each helper you want to show gratitude to.')
         embed.add_field(name='**Examples**',
                         value=f'```fix\n{keywords[0]}, this really was a xy problem after all @moe.\n'
-                              + 'Hey so i pondered for a while and what you said earlier was really helpful, '
+                              + 'Hey so i pondered for a while and what you guys said earlier was really helpful, '
                               + f'{keywords[0]} @moe @doe.\n'
                               + f'{keywords[0]} so much for @moe @doe @noe helping me out all the time.'
                               + '\n```'

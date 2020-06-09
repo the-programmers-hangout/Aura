@@ -15,3 +15,4 @@ embed_max_columns = 3  # 3 because discord embeds can have three fields in a lin
 embed_color = Color.dark_gold()
 bold_field = "**{}**"
 cog_mapping = defaultdict(list)
+hidden_config = ['token', 'owner', 'prefix', 'database', 'logging']
