@@ -1,4 +1,7 @@
 ## Version History
+
+Version History for Aura, features are marked with (**done**), if they are implemented.
+
 ### 0.1.0
 * Give [karma category type] command implemented (**done**)
 * Configuration.yaml created and filled (**done**)
