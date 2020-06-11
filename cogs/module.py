@@ -31,6 +31,7 @@ class ModuleManager(commands.Cog):
             try:
                 self.bot.add_cog(cog_mapping[module])
             except Exception as e:
+                await ctx.channel.send(f'Module with the name {module} does not exist.')
                 log.error('{}: {}'.format(type(e).__name__, e))
             else:
                 await ctx.channel.send(f'Loaded module {module}')
@@ -51,6 +52,7 @@ class ModuleManager(commands.Cog):
             try:
                 self.bot.remove_cog(module)
             except Exception as e:
+                await ctx.channel.send(f'Module with the name {module} does not exist.')
                 log.error('{}: {}'.format(type(e).__name__, e))
             else:
                 await ctx.channel.send(f'Unloaded module {module}')
@@ -69,6 +71,7 @@ class ModuleManager(commands.Cog):
             self.bot.remove_cog(module)
             self.bot.add_cog(cog_mapping[module])
         except Exception as e:
+            await ctx.channel.send(f'Module with the name {module} does not exist.')
             log.error('{}: {}'.format(type(e).__name__, e))
         else:
             await ctx.channel.send(f'Reloaded module {module}')

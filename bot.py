@@ -15,7 +15,9 @@ from cogs.settings import SettingsManager
 from util.config import config
 from util.constants import cog_mapping
 
-logging.basicConfig(level=config['logging'], format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+logging.basicConfig(level=config['logging'],
+                    format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                    datefmt='%Y-%m-%d:%H:%M:%S',
                     stream=sys.stdout)
 
 if __name__ == '__main__':
