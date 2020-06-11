@@ -126,5 +126,5 @@ class KarmaProfile(commands.Cog):
             return embed
         else:
             # small embed since no karma etc.
-            embed.add_field(name="**total**", value=str(total_karma), inline=False)
+            embed.add_field(name="**total**", value='0', inline=False)
             return embed

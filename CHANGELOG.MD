@@ -257,7 +257,9 @@ dashboard, mongodb and discord bot.
 * fix config insertions that were bugged due to wrong predicate 
 * add config response to keys that do not exist 
 * remove reactions on message edit for invalid karma messages 
-* change tutor text slightly 
+* change tutor text slightly
+
+### 1.13.2
 
 ### 1.14.0
 * check the validity of the data returned from the database
