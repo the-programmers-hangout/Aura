@@ -260,6 +260,10 @@ dashboard, mongodb and discord bot.
 * change tutor text slightly
 
 ### 1.13.2
+* fix profile bug
+
+### 1.14.0
+* removed cooldowns also now remove active cooldowns
 
 ### 1.14.0
 * check the validity of the data returned from the database
