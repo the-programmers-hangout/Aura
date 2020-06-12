@@ -24,6 +24,8 @@ class KarmaProducer(commands.Cog):
         self.bot = bot
         self.karma_service = karma_service
         self.blocker_service = blocker_service
+        # this creates a dictionary where each value is a dictionary whose values are a list
+        # with lambda this automatically creates an empty list on non existing keys
         self._members_on_cooldown = defaultdict(lambda: defaultdict(list))
 
     @guild_only()
