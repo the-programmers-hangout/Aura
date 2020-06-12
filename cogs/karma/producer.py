@@ -27,6 +27,7 @@ class KarmaProducer(commands.Cog):
         # this creates a dictionary where each value is a dictionary whose values are a list
         # with lambda this automatically creates an empty list on non existing keys
         self._members_on_cooldown = defaultdict(lambda: defaultdict(list))
+        self._running_timers = defaultdict(lambda: defaultdict(lambda: defaultdict()))
 
     @guild_only()
     @commands.Cog.listener()
@@ -216,7 +217,13 @@ class KarmaProducer(commands.Cog):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id, 1)
             deletion_result = self.karma_service.delete_karma_member(karma_member)
             if deletion_result.deleted_count == 1:
-                await self.log_karma_removal(message, member, reason)
+                single_action_timer: KarmaSingleActionTimer \
+                    = self._running_timers[guild.id][message.author.id][member.id]
+                if single_action_timer is not None and single_action_timer.is_started:
+                    await single_action_timer.stop()
+                    del self._running_timers[guild.id][message.author.id][member.id]
+                    self._members_on_cooldown[guild.id][message.author.id].remove(member.id)
+            await self.log_karma_removal(message, member, reason)
 
     async def notify_member_gain(self, message: discord.Message, member: discord.Member) -> None:
         """
@@ -285,8 +292,10 @@ class KarmaProducer(commands.Cog):
         :return: None
         """
         self._members_on_cooldown[guild_id][giver_id].append(receiver_id)
-        await KarmaSingleActionTimer(self.remove_from_cooldown, int(config['cooldown']),
-                                     guild_id, giver_id, receiver_id).start()
+        single_action_timer = KarmaSingleActionTimer(self.remove_from_cooldown, int(config['cooldown']),
+                                                     guild_id, giver_id, receiver_id)
+        self._running_timers[guild_id][giver_id][receiver_id] = single_action_timer
+        await single_action_timer.start()
 
     async def remove_from_cooldown(self, guild_id: int, giver_id: int, receiver_id: int) -> None:
         """
@@ -297,3 +306,4 @@ class KarmaProducer(commands.Cog):
         :return:
         """
         self._members_on_cooldown[guild_id][giver_id].remove(receiver_id)
+        del self._running_timers[guild_id][giver_id][receiver_id]
