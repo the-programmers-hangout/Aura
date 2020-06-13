@@ -270,14 +270,11 @@ dashboard, mongodb and discord bot.
 * latency in info embed
 * change reactions / explain on partial edit
 
-### 1.14.0
+### planned features
 * check the validity of the data returned from the database
 * complete partial edit tracking
-
-### 1.x.0
 * remove cooldown on karma removal
 * track message edits with changed mentions
-
-### 1.y.0
+* add sentiment analysis or other NLP stuff.
 * rework python models and mongodb queries, should not change anything about the api.
 * add tests for every major functionality that does require mocking the discord library
