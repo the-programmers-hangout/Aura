@@ -37,24 +37,25 @@ class PermissionManager(commands.Cog):
                       usage='{}setpermission [command] [permission]'.format(config['prefix']))
     async def set_permission(self, ctx, command_name: str, permission: str):
         if command_name in permission_map.keys():
-            if permission.lower() in aura_permissions():
+            if permission.lower() in aura_permissions:
                 if command_name != 'help':
                     permission_map[command_name] = permission.lower()
                     write_permissions()
+                    await ctx.channel.send(f'Permission for command: {command_name} has been changed to {permission}.')
                 else:
-                    await ctx.channel.send('Permission of command is unmodifiable')
+                    await ctx.channel.send('Permission of command is unmodifiable.')
             else:
                 await ctx.channel.send(f'Permission Level: {permission} is not valid.\n' +
-                                       f'Following are valid permission levels {aura_permissions}')
+                                       f'Following are valid permission levels: {aura_permissions}.')
         else:
             await ctx.channel.send(f'The command {command_name} does not exist.')
 
     @guild_only()
-    @has_required_role(command_name='listpermission')
-    @commands.command(name='listpermission',
+    @has_required_role(command_name='showpermission')
+    @commands.command(name='showpermission',
                       brief='shows all commands with their currently set permissions.',
-                      usage='{}listpermission'.format(config['prefix']))
-    async def list_permission(self, ctx):
+                      usage='{}showpermission'.format(config['prefix']))
+    async def show_permission(self, ctx):
         embed: discord.Embed = Embed(color=embed_color, title='Permission Overview',
                                      description='shows all commands with their currently set permissions.')
         embed.add_field(name=bold_field.format('help'), value='everyone')

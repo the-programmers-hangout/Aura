@@ -25,21 +25,14 @@ def has_required_role(command_name):
         elif role.lower() == 'owner':
             if caller.id == int(config['owner']):
                 return True
-            else:
-                return False
         elif role.lower() == 'moderator':
             if member_has_role(caller, roles()['moderator']) \
                     or member_has_role(caller, roles()['admin']) \
                     or caller.id == int(config['owner']):
                 return True
-            else:
-                return False
         elif role.lower() == 'admin':
             if member_has_role(caller, roles()['admin']) \
                     or caller.id == int(config['owner']):
                 return True
-            else:
-                return False
-        else:
-            return False
+        return False
     return check(predicate)

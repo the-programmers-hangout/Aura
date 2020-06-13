@@ -134,12 +134,3 @@ class KarmaLeaderboard(commands.Cog):
                             await ctx.channel.send(embed=embed)
                         else:
                             await ctx.channel.send('No leaderboard exists for this timeframe')
-
-
-class ChannelLeaderboard(commands.Cog):
-    def __init__(self, bot, karma_service=KarmaMemberService(datasource.karma)):
-        self.bot = bot
-        self.karma_service = karma_service
-
-    def top_channels(self):
-        print()

@@ -7,6 +7,7 @@ from discord import Embed
 from discord.ext import commands
 from discord.ext.commands import guild_only, CommandError
 
+from core.decorator import has_required_role
 from util.config import config, author_discord, version, repository, karma, thanks_list, blacklist, reaction_emoji
 from util.constants import embed_color, bold_field
 from util.conversion import strfdelta
@@ -149,6 +150,7 @@ class KarmaTutor(commands.Cog):
         self.bot = bot
 
     @guild_only()
+    @has_required_role(command_name='explain')
     @commands.command(brief='explain the karma system to the caller based on the current configuration',
                       usage='{}explain'.format(config['prefix']))
     async def explain(self, ctx) -> None:
@@ -182,6 +184,7 @@ class KarmaTutor(commands.Cog):
         await ctx.channel.send(embed=embed)
 
     @guild_only()
+    @has_required_role(command_name='reactions')
     @commands.command(brief='shows the ways aura reacts based on the current configuration',
                       usage='{}reactions'.format(config['prefix']))
     async def reactions(self, ctx) -> None:
@@ -216,6 +219,7 @@ class KarmaTutor(commands.Cog):
         if str(blacklist()['dm']).lower() == 'true':
             feedback += 'Aura will contact you privately, if you are blacklisted.\n'
         if str(karma()['edit']).lower() == 'true':
-            feedback += 'Aura will partially track message edits.\n'
+            feedback += 'Aura will add karma, if message was not a valid karma message before editing it.\n'
+            feedback += 'Aura will remove karma, if message is not a valid karma message after editing it.'
         embed.add_field(name='**Aura Feedback**', value=feedback)
         return embed

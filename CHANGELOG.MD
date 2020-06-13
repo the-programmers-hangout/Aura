@@ -265,6 +265,11 @@ dashboard, mongodb and discord bot.
 ### 1.14.0
 * removed cooldowns also now remove active cooldowns
 
+### 1.15.0
+* changeable permissions
+* latency in info embed
+* change reactions / explain on partial edit
+
 ### 1.14.0
 * check the validity of the data returned from the database
 * complete partial edit tracking
