@@ -27,6 +27,7 @@ this means that theoretically the initial receiver can thank the giver while the
 * Module Model, enable and disable features you don't need or like.
 * Karma Help Commands to provide you with all the information on aura and how it works,
 what configuration parameters mean etc.
+* Change Permission of every command but the help command.
 
 ## Getting Started
 
