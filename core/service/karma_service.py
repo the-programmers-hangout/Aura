@@ -8,7 +8,7 @@ from util.config import profile, config
 log = logging.getLogger(__name__)
 
 
-class KarmaService:
+class KarmaMemberService:
 
     def __init__(self, ds_collection):
         self._karma = ds_collection
@@ -100,6 +100,33 @@ class KarmaService:
     # filter message id
     def find_message(self, message_id: str):
         return self._karma.find_one(filter=dict(message_id=message_id))
+
+
+class KarmaChannelService:
+    def __init__(self, ds_collection):
+        self._karma = ds_collection
+
+    def aggregate_top_karma_channels(self, guild_id: str, time_span: int = 0):
+        if time_span == 0:
+            pipeline = [{"$unwind": "$karma"}, {"$match": dict(guild_id=guild_id)},
+                        {"$group": {"_id": {"channel_id": "$channel_id"},
+                                    "karma": {"$sum": "$karma"}}},
+                        {"$sort": {"karma": -1}}, {"$limit": int(config['leaderboard'])}]
+            doc_cursor = self._karma.aggregate(pipeline)
+            # return cursor containing documents generated through the pipeline
+            return doc_cursor
+        else:
+            pipeline = [{"$unwind": "$karma"},
+                        {"$match": {"guild_id": guild_id,
+                                    "created_date":
+                                        {"$gt": datetime.datetime.utcnow() -
+                                                datetime.timedelta(days=time_span)}}},
+                        {"$group": {"_id": {"channel_id": "$channel_id"},
+                                    "karma": {"$sum": "$karma"}}},
+                        {"$sort": {"karma": -1}}, {"$limit": int(config['leaderboard'])}]
+            doc_cursor = self._karma.aggregate(pipeline)
+            # return cursor containing documents generated through the pipeline
+            return doc_cursor
 
 
 class BlockerService:

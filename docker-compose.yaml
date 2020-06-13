@@ -11,6 +11,9 @@ services:
       - type: bind
         source: ./config.yaml
         target: /app/config.yaml
+      - type: bind
+        source: ./resources/permission.yaml
+        target: /app/resources/permission.yaml
   database:
     container_name: mongo
     image: mongo:4.2.5

@@ -8,7 +8,7 @@ from discord.ext import commands
 from discord.ext.commands import guild_only, CommandError
 
 from util.config import config, author_discord, version, repository, karma, thanks_list, blacklist, reaction_emoji
-from util.constants import embed_color
+from util.constants import embed_color, bold_field
 from util.conversion import strfdelta
 from util.embedutil import add_filler_fields
 
@@ -31,18 +31,20 @@ class Help(commands.Cog):
             embed: Embed = Embed(colour=embed_color)
             embed.title = self.bot.user.name + "#" + self.bot.user.discriminator
             embed.description = 'A bot for handling karma points of non-bot guild members.'
-            embed.add_field(name='Prefix', value=config['prefix'], inline=True)
-            embed.add_field(name='Contributors', value=author_discord(), inline=True)
+            embed.add_field(name=bold_field.format('Prefix'), value=config['prefix'], inline=True)
+            embed.add_field(name=bold_field.format('Contributors'), value=author_discord(), inline=True)
             version_field = '```fix\nVersion: {}\nDiscord.py: {}\nPython: {}```' \
                 .format(version()['aura_version'], version()['discord_version'], version()['python_version'])
-            embed.add_field(name='Build Info', value=version_field, inline=False)
+            embed.add_field(name=bold_field.format('Build Info'), value=version_field, inline=False)
             current_time = time.time()
             difference = int(round(current_time - self.start_time))
             uptime = datetime.timedelta(seconds=difference)
-            embed.add_field(name='Uptime',
+            embed.add_field(name=bold_field.format('Uptime'),
                             value=strfdelta(uptime, '{days} days, {hours} hours, {minutes} minutes, {seconds} seconds'),
-                            inline=False)
-            embed.add_field(name='Source', value=repository(), inline=False)
+                            inline=True)
+            latency = round(self.bot.latency, 1) * 1000
+            embed.add_field(name=bold_field.format('Ping'), value=f'{int(latency)} ms', inline=True)
+            embed.add_field(name=bold_field.format('Source'), value=repository(), inline=False)
             embed.set_thumbnail(url=self.bot.user.avatar_url)
             await self.bot.get_channel(message.channel.id).send(embed=embed)
 

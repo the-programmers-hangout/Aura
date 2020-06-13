@@ -6,8 +6,9 @@ from discord.ext import commands
 from discord.ext.commands import has_any_role, guild_only
 
 from core import datasource
+from core.decorator import has_required_role
 from core.model.member import KarmaMember, Member
-from core.service.karma_service import KarmaService, BlockerService
+from core.service.karma_service import KarmaMemberService, BlockerService
 from util.config import roles, config, max_message_length
 from util.conversion import convert_content_to_member_set
 from util.util import member_has_role
@@ -17,7 +18,7 @@ log = logging.getLogger(__name__)
 
 class KarmaReducer(commands.Cog):
     # Class all about reducing the Karma of a Member
-    def __init__(self, bot, karma_service=KarmaService(datasource.karma)):
+    def __init__(self, bot, karma_service=KarmaMemberService(datasource.karma)):
         self.bot = bot
         self.karma_service = karma_service
 
@@ -54,7 +55,7 @@ class KarmaBlocker(commands.Cog):
         self.blocker_service = BlockerService(datasource.blacklist)
 
     @guild_only()
-    @has_any_role(roles()['admin'], roles()['moderator'])
+    @has_required_role(command_name='blacklist')
     @commands.command(brief='blacklists a member from giving karma',
                       usage='{}blacklist member_id\n{}blacklist <@!member_id>'
                       .format(config['prefix'], config['prefix']))
@@ -78,7 +79,7 @@ class KarmaBlocker(commands.Cog):
                     await ctx.channel.send('Blacklisted {}'.format(member.mention))
 
     @guild_only()
-    @has_any_role(roles()['admin'], roles()['moderator'])
+    @has_required_role(command_name='whitelist')
     @commands.command(brief='removes existing blacklist of the guild member',
                       usage='{}whitelist member_id\n{}whitelist <@!member_id>'
                       .format(config['prefix'], config['prefix']))
@@ -102,7 +103,7 @@ class KarmaBlocker(commands.Cog):
                     await ctx.channel.send('Whitelisted {}'.format(member.mention))
 
     @guild_only()
-    @has_any_role(roles()['admin'], roles()['moderator'])
+    @has_required_role(command_name='showblacklist')
     @commands.command(name='showblacklist',
                       brief='list all blacklisted members in the guild the command was invoked in',
                       usage='{}showblackist'
