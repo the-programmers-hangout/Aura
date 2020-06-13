@@ -8,7 +8,7 @@ from discord.ext.commands import guild_only
 
 from core import datasource
 from core.model.member import KarmaMember, Member
-from core.service.karma_service import KarmaService, BlockerService
+from core.service.karma_service import KarmaMemberService, BlockerService
 from core.timer import KarmaSingleActionTimer
 from util.config import config, thanks_list, karma, reaction_emoji
 from util.constants import revoke_message
@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 class KarmaProducer(commands.Cog):
     # Class that gives positive karma and negative karma on message deletion (take back last action)
 
-    def __init__(self, bot, karma_service=KarmaService(datasource.karma),
+    def __init__(self, bot, karma_service=KarmaMemberService(datasource.karma),
                  blocker_service=BlockerService(datasource.blacklist)):
         self.bot = bot
         self.karma_service = karma_service

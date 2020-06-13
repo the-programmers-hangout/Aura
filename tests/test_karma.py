@@ -5,7 +5,7 @@ import mongomock
 
 from cogs.karma.producer import KarmaProducer
 from core.model.member import KarmaMember
-from core.service.karma_service import KarmaService
+from core.service.karma_service import KarmaMemberService
 
 if __name__ == '__main__':
     unittest.main()
@@ -14,7 +14,7 @@ if __name__ == '__main__':
 # Verify that karma_services methods are working properly on a mocked mongodb
 class KarmaChange(unittest.TestCase):
     karma_storage = mongomock.MongoClient().db.karma
-    karma_service = KarmaService(karma_storage)
+    karma_service = KarmaMemberService(karma_storage)
     karma_member = KarmaMember('1', '1', '1', '1')
 
     def test_karma_increases(self):

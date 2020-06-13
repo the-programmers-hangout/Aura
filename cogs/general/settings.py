@@ -3,9 +3,10 @@ from collections import Mapping
 
 from discord import Embed
 from discord.ext import commands
-from discord.ext.commands import has_role, guild_only
+from discord.ext.commands import guild_only
 
-from util.config import config, write_config, roles, descriptions
+from core.decorator import has_required_role
+from util.config import config, write_config, descriptions
 from util.constants import embed_color, hidden_config
 from util.embedutil import add_filler_fields
 
@@ -20,7 +21,7 @@ class SettingsManager(commands.Cog):
     # edit config defined in config.yaml, return messages if incorrect args are provided.
     # no checks on non existing configuration
     @guild_only()
-    @has_role(roles()['admin'])
+    @has_required_role(command_name='config')
     @commands.command(brief='configuration menu or configuration modification',
                       usage='{}config\n{}config [keys] [new_value]\n{}config help [keys]'
                       .format(config['prefix'], config['prefix'], config['prefix']))

@@ -5,7 +5,8 @@ from discord.ext import commands
 from discord.ext.commands import guild_only, TextChannelConverter, CommandError
 
 from core import datasource
-from core.service.karma_service import KarmaService
+from core.decorator import has_required_role
+from core.service.karma_service import KarmaMemberService
 from util.config import config
 from util.constants import embed_color, bold_field, leaderboard_usage
 
@@ -14,15 +15,16 @@ log = logging.getLogger(__name__)
 
 class KarmaLeaderboard(commands.Cog):
     # Karma Leaderboard classes
-    def __init__(self, bot, karma_service=KarmaService(datasource.karma)):
+    def __init__(self, bot, karma_service=KarmaMemberService(datasource.karma)):
         self.bot = bot
         self.karma_service = karma_service
 
     @guild_only()
+    @has_required_role(command_name='leaderboard')
     @commands.command(brief='get a global karma leaderboard or a channel leaderboard, '
                             + 'optionally you can provide days as an argument',
                       usage=leaderboard_usage
-                            .format(config['prefix'], config['prefix'], config['prefix'], config['prefix']))
+                      .format(config['prefix'], config['prefix'], config['prefix'], config['prefix']))
     async def leaderboard(self, ctx, channel_mention="", time_span: int = 0) -> None:
         """
         Leaderboard showing the top x users globally, channel specific and optionally of the last x days.
@@ -132,3 +134,12 @@ class KarmaLeaderboard(commands.Cog):
                             await ctx.channel.send(embed=embed)
                         else:
                             await ctx.channel.send('No leaderboard exists for this timeframe')
+
+
+class ChannelLeaderboard(commands.Cog):
+    def __init__(self, bot, karma_service=KarmaMemberService(datasource.karma)):
+        self.bot = bot
+        self.karma_service = karma_service
+
+    def top_channels(self):
+        print()

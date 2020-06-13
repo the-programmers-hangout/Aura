@@ -4,16 +4,17 @@ import sys
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 
-from cogs.error import CommandErrorHandler
-from cogs.help import Help, KarmaTutor
+from cogs.general.error import CommandErrorHandler
+from cogs.general.help import Help, KarmaTutor
+from cogs.general.module import ModuleManager
+from cogs.general.permission import PermissionManager
+from cogs.general.settings import SettingsManager
 from cogs.karma.leaderboard import KarmaLeaderboard
 from cogs.karma.producer import KarmaProducer
 from cogs.karma.profile import KarmaProfile
 from cogs.karma.reduce import KarmaReducer, KarmaBlocker
-from cogs.module import ModuleManager
-from cogs.settings import SettingsManager
 from util.config import config
-from util.constants import cog_mapping
+from util.constants import cog_map
 
 logging.basicConfig(level=config['logging'],
                     format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
@@ -43,15 +44,16 @@ if __name__ == '__main__':
     client.add_cog(CommandErrorHandler(client))
     client.add_cog(help_cog)
     client.add_cog(karma_tutor)
+    client.add_cog(PermissionManager(client))
 
-    cog_mapping['ModuleManager'] = module_manager
-    cog_mapping['KarmaProducer'] = karma_producer
-    cog_mapping['KarmaBlocker'] = karma_blocker
-    cog_mapping['KarmaReducer'] = karma_reducer
-    cog_mapping['KarmaProfile'] = karma_profile
-    cog_mapping['KarmaLeaderboard'] = karma_leaderboard
-    cog_mapping['SettingsManager'] = settings_manager
-    cog_mapping['Help'] = help_cog
-    cog_mapping['KarmaTutor'] = karma_tutor
+    cog_map['ModuleManager'] = module_manager
+    cog_map['KarmaProducer'] = karma_producer
+    cog_map['KarmaBlocker'] = karma_blocker
+    cog_map['KarmaReducer'] = karma_reducer
+    cog_map['KarmaProfile'] = karma_profile
+    cog_map['KarmaLeaderboard'] = karma_leaderboard
+    cog_map['SettingsManager'] = settings_manager
+    cog_map['Help'] = help_cog
+    cog_map['KarmaTutor'] = karma_tutor
 
     client.run(config['token'])

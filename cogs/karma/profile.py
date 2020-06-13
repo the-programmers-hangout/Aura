@@ -5,8 +5,9 @@ from discord.ext import commands
 from discord.ext.commands import guild_only
 
 from core import datasource
+from core.decorator import has_required_role
 from core.model.member import KarmaMember
-from core.service.karma_service import KarmaService
+from core.service.karma_service import KarmaMemberService
 from util.config import profile, config
 from util.constants import embed_color, bold_field
 from util.conversion import convert_content_to_member_set
@@ -19,11 +20,12 @@ class KarmaProfile(commands.Cog):
     # Karma Profile Class, users other than moderators and admins can only see their own karma or profile.
     # Moderators and Admin Role Users can get the karma by issuing the command with the user id.
 
-    def __init__(self, bot, karma_service=KarmaService(datasource.karma)):
+    def __init__(self, bot, karma_service=KarmaMemberService(datasource.karma)):
         self.bot = bot
         self.karma_service = karma_service
 
     @guild_only()
+    @has_required_role(command_name='karma')
     @commands.command(brief='get karma of a user, of several users or yourself',
                       usage='{}karma\n{}karma <@!member_id> [...]'
                       .format(config['prefix'], config['prefix']))
@@ -59,6 +61,7 @@ class KarmaProfile(commands.Cog):
         await ctx.channel.send(return_msg)
 
     @guild_only()
+    @has_required_role(command_name='profile')
     @commands.command(brief='get karma profile of a user or yourself',
                       usage='{}profile\n{}profile <@!member_id>'
                       .format(config['prefix'], config['prefix']))
