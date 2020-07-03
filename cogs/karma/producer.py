@@ -112,11 +112,16 @@ class KarmaProducer(commands.Cog):
         :param user: user who added the reaction
         :return: None
         """
-        if self.karma_service.find_message(str(reaction.message.id)) is not None:
+        if self.karma_service.find_message(
+                str(reaction.message.id)) is not None and reaction.message.author.id == user.id and reaction.me:
             if reaction.emoji == reaction_emoji()['karma_delete']:
-                if str(karma()['self_delete']).lower() == 'true' and reaction.message.author.id == user.id:
+                if str(karma()['self_delete']).lower() == 'true':
                     await reaction.message.clear_reactions()
                     await self.remove_karma(reaction.message, reaction.message.guild, 'self emoji clear')
+            elif reaction.emoji == reaction_emoji()['karma_gain']:
+                for other_reaction in reaction.message.reactions:
+                    if other_reaction is not reaction:
+                       await other_reaction.clear()
 
     @guild_only()
     @commands.Cog.listener()
@@ -161,13 +166,15 @@ class KarmaProducer(commands.Cog):
         :return: True if message has a valid keyword pattern, False if not.
         """
         pattern = r'\b{}\b'
-        invalid_pattern = r'\"{}\b{}\b{}\"'
-        invalid_regex = r'[0-9a-zA-z\s]*'  # message containing " and any character in between
+        quotes_pattern = r'\"{}\b{}\b{}\"'
+        greentext_pattern = r'> {}\b{}\b{}'
+        any_char = r'[0-9a-zA-z\s]*'  # message containing " and any character in between
         for thanks in thanks_list():
             thanks: str = thanks.strip()
             valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
-            invalid_match = re.search(re.compile(invalid_pattern.format(invalid_regex, thanks, invalid_regex)), message)
-            if valid_match is not None and invalid_match is None:
+            invalid_quotes = re.search(re.compile(quotes_pattern.format(any_char, thanks, any_char)), message)
+            invalid_greentext = re.search(re.compile(greentext_pattern.format(any_char, thanks, any_char)), message)
+            if valid_match is not None and invalid_quotes is None and invalid_greentext is None:
                 return True
         return False
 
