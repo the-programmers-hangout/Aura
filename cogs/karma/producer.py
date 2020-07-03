@@ -121,7 +121,7 @@ class KarmaProducer(commands.Cog):
             elif reaction.emoji == reaction_emoji()['karma_gain']:
                 for other_reaction in reaction.message.reactions:
                     if other_reaction is not reaction:
-                       await other_reaction.clear()
+                        await other_reaction.clear()
 
     @guild_only()
     @commands.Cog.listener()
