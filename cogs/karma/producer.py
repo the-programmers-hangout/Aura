@@ -171,13 +171,14 @@ class KarmaProducer(commands.Cog):
         """
         pattern = r'\b{}\b'
         quotes_pattern = r'\"{}\b{}\b{}\"'
-        greentext_pattern = r'> {}\b{}\b{}'
+        greentext_pattern = r'^> {}\b{}\b{}$'
         any_char = r'[0-9a-zA-z\s]*'  # message containing " and any character in between
         for thanks in thanks_list():
             thanks: str = thanks.strip()
             valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
             invalid_quotes = re.search(re.compile(quotes_pattern.format(any_char, thanks, any_char)), message)
-            invalid_greentext = re.search(re.compile(greentext_pattern.format(any_char, thanks, any_char)), message)
+            invalid_greentext = re.search(re.compile(greentext_pattern.format(any_char, thanks, any_char),
+                                                     flags=re.MULTILINE), message)
             if valid_match is not None and invalid_quotes is None and invalid_greentext is None:
                 return True
         return False

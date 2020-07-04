@@ -279,6 +279,9 @@ dashboard, mongodb and discord bot.
 ### 1.16.1
 * improve latency by not rounding, thus latency being exact.
 
+### 1.16.2
+* fix greentext
+
 ### planned features
 * check the validity of the data returned from the database
 * complete partial edit tracking
