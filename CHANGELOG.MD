@@ -270,6 +270,12 @@ dashboard, mongodb and discord bot.
 * latency in info embed
 * change reactions / explain on partial edit
 
+### 1.16.0
+* filter out greentext thanks from aura
+* improve emoji deletion on click:
+    - delete other emojis other than karma_gain when it is clicked
+    - delete only aura emojis
+
 ### planned features
 * check the validity of the data returned from the database
 * complete partial edit tracking
