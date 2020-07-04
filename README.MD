@@ -1,4 +1,4 @@
-#  Aura - Discord
+#  Aura - Discord Karma Bot
 
 Aura is a discord bot focused on rewarding user contributions through
 a point system called karma. It has the following features:
