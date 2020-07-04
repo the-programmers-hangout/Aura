@@ -276,6 +276,9 @@ dashboard, mongodb and discord bot.
     - delete other emojis other than karma_gain when it is clicked
     - delete only aura emojis
 
+### 1.16.1
+* improve latency by not rounding, thus latency being exact.
+
 ### planned features
 * check the validity of the data returned from the database
 * complete partial edit tracking

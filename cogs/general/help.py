@@ -43,7 +43,7 @@ class Help(commands.Cog):
             embed.add_field(name=bold_field.format('Uptime'),
                             value=strfdelta(uptime, '{days} days, {hours} hours, {minutes} minutes, {seconds} seconds'),
                             inline=True)
-            latency = round(self.bot.latency, 1) * 1000
+            latency = self.bot.latency * 1000
             embed.add_field(name=bold_field.format('Ping'), value=f'{int(latency)} ms', inline=True)
             embed.add_field(name=bold_field.format('Source'), value=repository(), inline=False)
             embed.set_thumbnail(url=self.bot.user.avatar_url)
