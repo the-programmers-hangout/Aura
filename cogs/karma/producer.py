@@ -12,6 +12,7 @@ from core.service.karma_service import KarmaMemberService, BlockerService
 from core.timer import KarmaSingleActionTimer
 from util.config import config, thanks_list, karma, reaction_emoji
 from util.constants import revoke_message
+from util.util import clear_reaction
 
 log = logging.getLogger(__name__)
 
@@ -116,12 +117,15 @@ class KarmaProducer(commands.Cog):
                 str(reaction.message.id)) is not None and reaction.message.author.id == user.id and reaction.me:
             if reaction.emoji == reaction_emoji()['karma_delete']:
                 if str(karma()['self_delete']).lower() == 'true':
-                    await reaction.message.clear_reactions()
+                    log.info('Removing karma because the karma_delete emoji was clicked by author')
+                    for other_reaction in reaction.message.reactions:
+                        await clear_reaction(other_reaction)
                     await self.remove_karma(reaction.message, reaction.message.guild, 'self emoji clear')
             elif reaction.emoji == reaction_emoji()['karma_gain']:
+                log.info('Removing other aura emoji because gain was clicked by author')
                 for other_reaction in reaction.message.reactions:
-                    if other_reaction is not reaction:
-                        await other_reaction.clear()
+                    if reaction is not other_reaction:
+                        await clear_reaction(other_reaction)
 
     @guild_only()
     @commands.Cog.listener()
