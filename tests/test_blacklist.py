@@ -3,7 +3,7 @@ import unittest
 import mongomock
 
 from core.model.member import Member
-from core.service.karma_service import BlockerService
+from core.service.mongo_service import BlockerService
 
 if __name__ == '__main__':
     unittest.main()

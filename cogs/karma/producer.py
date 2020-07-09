@@ -7,7 +7,7 @@ from discord.ext.commands import guild_only
 
 from core import datasource
 from core.model.member import KarmaMember, Member
-from core.service.karma_service import KarmaMemberService, BlockerService
+from core.service.mongo_service import KarmaMemberService, BlockerService
 from core.service.validation_service import validate_message
 from core.timer import KarmaSingleActionTimer
 from util.config import config, karma, reaction_emoji
