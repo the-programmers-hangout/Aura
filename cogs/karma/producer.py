@@ -58,6 +58,30 @@ class KarmaProducer(commands.Cog):
 
     @guild_only()
     @commands.Cog.listener()
+    async def on_message_edit(self, before: discord.Message, after: discord.Message) -> None:
+        """
+        Will remove and add karma according to the state of the message before and afterwards.
+        :param before: discord message before the edit
+        :param after: discord message after the edit
+        :return: None
+        """
+        if str(karma()['edit']).lower() == 'true':
+            before_valid = await validate_message(before)
+            after_valid = await validate_message(after)
+            if before_valid and after_valid:
+                print()  # TODO implement search on message id to find all members thanked
+            elif before_valid and not after_valid:
+                # remove karma given out through karma message.
+                log.info(f'Removing karma because message: {after.id} not valid after edit')
+                await after.clear_reactions()
+                await self.remove_karma(before, after.guild, 'message edit')
+            elif after_valid and not before_valid:
+                # all new karma to give out
+                log.info(f'Adding karma because message: {after.id} is valid after edit')
+                await self.give_karma(after, after.guild)
+
+    @guild_only()
+    @commands.Cog.listener()
     async def on_message_delete(self, message) -> None:
         """
         message deletion listener, remove karma associated with that message, if it is a karma message.
@@ -126,30 +150,6 @@ class KarmaProducer(commands.Cog):
                 for other_reaction in reaction.message.reactions:
                     if reaction is not other_reaction:
                         await clear_reaction(other_reaction)
-
-    @guild_only()
-    @commands.Cog.listener()
-    async def on_message_edit(self, before: discord.Message, after: discord.Message) -> None:
-        """
-        Will remove and add karma according to the state of the message before and afterwards.
-        :param before: discord message before the edit
-        :param after: discord message after the edit
-        :return: None
-        """
-        if str(karma()['edit']).lower() == 'true':
-            before_valid = await validate_message(before)
-            after_valid = await validate_message(after)
-            if before_valid and after_valid:
-                print()  # TODO implement search on message id to find all members thanked
-            elif before_valid and not after_valid:
-                # remove karma given out through karma message.
-                log.info(f'Removing karma because message: {after.id} not valid after edit')
-                await after.clear_reactions()
-                await self.remove_karma(before, after.guild, 'message edit')
-            elif after_valid and not before_valid:
-                # all new karma to give out
-                log.info(f'Adding karma because message: {after.id} is valid after edit')
-                await self.give_karma(after, after.guild)
 
     async def give_karma(self, message: discord.Message, guild: discord.Guild) -> None:
         """
