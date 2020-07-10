@@ -194,5 +194,15 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/python,intellij+all
 
+# Ignore configuration files
 config.yaml
-venv/**
+
+# Ignore .venv and venv folders
+*venv/
+
+# Ignore local mongodb databases
+database
+
+# Editor configuration
+.vscode/
+.idea/
