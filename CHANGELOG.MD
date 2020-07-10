@@ -351,6 +351,7 @@ Version History for Aura
 
 -   added pipenv
 -   added flake8 and black configuration files
+-   formattted code
 
 ### planned features
 
