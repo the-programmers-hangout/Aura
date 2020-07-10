@@ -19,20 +19,18 @@ def has_required_role(command_name):
     def predicate(ctx):
         role = str(permission_map[command_name])
         caller = ctx.message.author
-        log.info(f'Checking on permission {role} for command: {command_name} and user: {ctx.message.author.id}')
-        if role.lower() == 'everyone':
+        log.info(f"Checking on permission {role} for command: {command_name} and user: {ctx.message.author.id}")
+        if role.lower() == "everyone":
             return True
-        elif role.lower() == 'owner':
-            if caller.id == int(config['owner']):
+        elif role.lower() == "owner":
+            if caller.id == int(config["owner"]):
                 return True
-        elif role.lower() == 'moderator':
-            if member_has_role(caller, roles()['moderator']) \
-                    or member_has_role(caller, roles()['admin']) \
-                    or caller.id == int(config['owner']):
+        elif role.lower() == "moderator":
+            if member_has_role(caller, roles()["moderator"]) or member_has_role(caller, roles()["admin"]) or caller.id == int(config["owner"]):
                 return True
-        elif role.lower() == 'admin':
-            if member_has_role(caller, roles()['admin']) \
-                    or caller.id == int(config['owner']):
+        elif role.lower() == "admin":
+            if member_has_role(caller, roles()["admin"]) or caller.id == int(config["owner"]):
                 return True
         return False
+
     return check(predicate)

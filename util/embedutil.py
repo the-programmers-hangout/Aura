@@ -3,7 +3,7 @@ import discord
 from util.constants import zero_width_space, embed_max_columns
 
 
-def add_filler_fields(embed: discord.Embed, collection, mode: str = '+', counter: int = 0) -> discord.Embed:
+def add_filler_fields(embed: discord.Embed, collection, mode: str = "+", counter: int = 0) -> discord.Embed:
     """
     add filler fields (fields with zero width strings) to embeds so they look balanced.
     :param embed: the embed which needs filler fields applied to it.

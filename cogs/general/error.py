@@ -19,23 +19,23 @@ class CommandErrorHandler(commands.Cog):
         :return: None
         """
         # This prevents any commands with local handlers being handled here in on_command_error.
-        if hasattr(ctx.command, 'on_error'):
+        if hasattr(ctx.command, "on_error"):
             return
 
         ignored = (commands.CommandNotFound, commands.UserInputError)
 
         # Allows us to check for original exceptions raised and sent to CommandInvokeError.
         # If nothing is found. We keep the exception passed to on_command_error.
-        error = getattr(error, 'original', error)
+        error = getattr(error, "original", error)
 
         # Anything in ignored will return and prevent anything happening.
         if isinstance(error, ignored):
             return
 
         elif isinstance(error, commands.DisabledCommand):
-            return await ctx.send(f'{ctx.command} has been disabled.')
+            return await ctx.send(f"{ctx.command} has been disabled.")
 
         elif isinstance(error, commands.NoPrivateMessage):
-            return await ctx.author.send(f'{ctx.command} can not be used in Private Messages.')
+            return await ctx.author.send(f"{ctx.command} can not be used in Private Messages.")
 
-        log.error('Ignoring exception in command {}: {}'.format(ctx.command, error))
+        log.error("Ignoring exception in command {}: {}".format(ctx.command, error))

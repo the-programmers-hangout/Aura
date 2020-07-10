@@ -16,14 +16,16 @@ from cogs.karma.reduce import KarmaReducer, KarmaBlocker
 from util.config import config
 from util.constants import cog_map
 
-logging.basicConfig(level=config['logging'],
-                    format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-                    datefmt='%Y-%m-%d:%H:%M:%S',
-                    stream=sys.stdout)
+logging.basicConfig(
+    level=config["logging"],
+    format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
+    datefmt="%Y-%m-%d:%H:%M:%S",
+    stream=sys.stdout,
+)
 
-if __name__ == '__main__':
-    client = commands.Bot(command_prefix=when_mentioned_or(config['prefix']))
-    client.remove_command('help')
+if __name__ == "__main__":
+    client = commands.Bot(command_prefix=when_mentioned_or(config["prefix"]))
+    client.remove_command("help")
     module_manager = ModuleManager(client)
     karma_producer = KarmaProducer(client)
     karma_blocker = KarmaBlocker(client)
@@ -46,14 +48,14 @@ if __name__ == '__main__':
     client.add_cog(karma_tutor)
     client.add_cog(PermissionManager(client))
 
-    cog_map['ModuleManager'] = module_manager
-    cog_map['KarmaProducer'] = karma_producer
-    cog_map['KarmaBlocker'] = karma_blocker
-    cog_map['KarmaReducer'] = karma_reducer
-    cog_map['KarmaProfile'] = karma_profile
-    cog_map['KarmaLeaderboard'] = karma_leaderboard
-    cog_map['SettingsManager'] = settings_manager
-    cog_map['Help'] = help_cog
-    cog_map['KarmaTutor'] = karma_tutor
+    cog_map["ModuleManager"] = module_manager
+    cog_map["KarmaProducer"] = karma_producer
+    cog_map["KarmaBlocker"] = karma_blocker
+    cog_map["KarmaReducer"] = karma_reducer
+    cog_map["KarmaProfile"] = karma_profile
+    cog_map["KarmaLeaderboard"] = karma_leaderboard
+    cog_map["SettingsManager"] = settings_manager
+    cog_map["Help"] = help_cog
+    cog_map["KarmaTutor"] = karma_tutor
 
-    client.run(config['token'])
+    client.run(config["token"])

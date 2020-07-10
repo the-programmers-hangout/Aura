@@ -40,13 +40,13 @@ class KarmaSingleActionTimer(PeriodicTimer):
         self.receiver_id = receiver_id
 
     async def start(self):
-        logging.info('Started KarmaSingleActionTimer for giver: {} and receiver: {} in guild {}'
-                     .format(self.giver_id, self.receiver_id, self.guild_id))
+        logging.info(
+            "Started KarmaSingleActionTimer for giver: {} and receiver: {} in guild {}".format(self.giver_id, self.receiver_id, self.guild_id)
+        )
         if not self.is_started:
             self.is_started = True
             # Start task to call func once:
-            self._task = asyncio.ensure_future(self._run_with(guild_id=self.guild_id, giver_id=self.giver_id,
-                                                              receiver_id=self.receiver_id))
+            self._task = asyncio.ensure_future(self._run_with(guild_id=self.guild_id, giver_id=self.giver_id, receiver_id=self.receiver_id))
 
     async def _run_with(self, guild_id, giver_id, receiver_id):
         await asyncio.sleep(self.time)

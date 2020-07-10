@@ -20,8 +20,7 @@ log = logging.getLogger(__name__)
 class KarmaProducer(commands.Cog):
     # Class that gives positive karma and negative karma on message deletion (take back last action)
 
-    def __init__(self, bot, karma_service=KarmaMemberService(datasource.karma),
-                 blocker_service=BlockerService(datasource.blacklist)):
+    def __init__(self, bot, karma_service=KarmaMemberService(datasource.karma), blocker_service=BlockerService(datasource.blacklist)):
         self.bot = bot
         self.karma_service = karma_service
         self.blocker_service = blocker_service
@@ -48,13 +47,14 @@ class KarmaProducer(commands.Cog):
                     await self.give_karma(message, message.guild)
                 else:
                     # is blacklisted, check configuration on how to tell the user he is blacklisted
-                    if str(config['blacklist']['dm']).lower() == 'true':
-                        log.info('Sending Blacklist dm to {} in guild {}'.format(message.author.id, guild_id))
-                        await message.author.send('You have been blacklisted from giving out Karma, '
-                                                  'if you believe this to be an error contact {}.'
-                                                  .format(config['blacklist']['contact']))
-                    if str(config['blacklist']['emote']).lower() == 'true':
-                        await message.add_reaction(reaction_emoji()['karma_blacklist'])
+                    if str(config["blacklist"]["dm"]).lower() == "true":
+                        log.info("Sending Blacklist dm to {} in guild {}".format(message.author.id, guild_id))
+                        await message.author.send(
+                            "You have been blacklisted from giving out Karma, "
+                            "if you believe this to be an error contact {}.".format(config["blacklist"]["contact"])
+                        )
+                    if str(config["blacklist"]["emote"]).lower() == "true":
+                        await message.add_reaction(reaction_emoji()["karma_blacklist"])
 
     @guild_only()
     @commands.Cog.listener()
@@ -65,7 +65,7 @@ class KarmaProducer(commands.Cog):
         :return: None
         """
         if self.karma_service.find_message(str(message.id)) is not None:
-            await self.remove_karma(message, message.guild, 'message delete')
+            await self.remove_karma(message, message.guild, "message delete")
 
     @guild_only()
     @commands.Cog.listener()
@@ -78,11 +78,11 @@ class KarmaProducer(commands.Cog):
         """
         if user.id == self.bot.user.id:
             # if aura made this reaction then it was very clearly a karma message
-            if reaction.emoji == reaction_emoji()['karma_gain']:
+            if reaction.emoji == reaction_emoji()["karma_gain"]:
                 message = reaction.message
                 # find message id in db
                 if self.karma_service.find_message(str(message.id)) is not None:
-                    await self.remove_karma(message, message.guild, 'reaction remove')
+                    await self.remove_karma(message, message.guild, "reaction remove")
 
     @guild_only()
     @commands.Cog.listener()
@@ -95,13 +95,13 @@ class KarmaProducer(commands.Cog):
         :return:
         """
         for reaction in reactions:
-            if reaction.emoji == reaction_emoji()['karma_gain']:
+            if reaction.emoji == reaction_emoji()["karma_gain"]:
                 # reaction me is very much the same as checking the user id
                 # was the reaction made by aura
                 if reaction.me:
                     # find message id in db
                     if self.karma_service.find_message(str(message.id)) is not None:
-                        await self.remove_karma(message, message.guild, 'reaction clear')
+                        await self.remove_karma(message, message.guild, "reaction clear")
 
     @guild_only()
     @commands.Cog.listener()
@@ -113,16 +113,15 @@ class KarmaProducer(commands.Cog):
         :param user: user who added the reaction
         :return: None
         """
-        if self.karma_service.find_message(
-                str(reaction.message.id)) is not None and reaction.message.author.id == user.id and reaction.me:
-            if reaction.emoji == reaction_emoji()['karma_delete']:
-                if str(karma()['self_delete']).lower() == 'true':
-                    log.info('Removing karma because the karma_delete emoji was clicked by author')
+        if self.karma_service.find_message(str(reaction.message.id)) is not None and reaction.message.author.id == user.id and reaction.me:
+            if reaction.emoji == reaction_emoji()["karma_delete"]:
+                if str(karma()["self_delete"]).lower() == "true":
+                    log.info("Removing karma because the karma_delete emoji was clicked by author")
                     for other_reaction in reaction.message.reactions:
                         await clear_reaction(other_reaction)
-                    await self.remove_karma(reaction.message, reaction.message.guild, 'self emoji clear')
-            elif reaction.emoji == reaction_emoji()['karma_gain']:
-                log.info('Removing other aura emoji because gain was clicked by author')
+                    await self.remove_karma(reaction.message, reaction.message.guild, "self emoji clear")
+            elif reaction.emoji == reaction_emoji()["karma_gain"]:
+                log.info("Removing other aura emoji because gain was clicked by author")
                 for other_reaction in reaction.message.reactions:
                     if reaction is not other_reaction:
                         await clear_reaction(other_reaction)
@@ -136,19 +135,19 @@ class KarmaProducer(commands.Cog):
         :param after: discord message after the edit
         :return: None
         """
-        if str(karma()['edit']).lower() == 'true':
+        if str(karma()["edit"]).lower() == "true":
             before_valid = await self.validate_message(before)
             after_valid = await self.validate_message(after)
             if before_valid and after_valid:
                 print()  # TODO implement search on message id to find all members thanked
             elif before_valid and not after_valid:
                 # remove karma given out through karma message.
-                log.info(f'Removing karma because message: {after.id} not valid after edit')
+                log.info(f"Removing karma because message: {after.id} not valid after edit")
                 await after.clear_reactions()
-                await self.remove_karma(before, after.guild, 'message edit')
+                await self.remove_karma(before, after.guild, "message edit")
             elif after_valid and not before_valid:
                 # all new karma to give out
-                log.info(f'Adding karma because message: {after.id} is valid after edit')
+                log.info(f"Adding karma because message: {after.id} is valid after edit")
                 await self.give_karma(after, after.guild)
 
     async def validate_message(self, message: discord.Message) -> bool:
@@ -169,16 +168,15 @@ class KarmaProducer(commands.Cog):
         :param message: message.content of a discord.Message
         :return: True if message has a valid keyword pattern, False if not.
         """
-        pattern = r'\b{}\b'
-        quotes_pattern = r'\"{}\b{}\b{}\"'
-        greentext_pattern = r'^> {}\b{}\b{}$'
-        any_char = r'[0-9a-zA-z\s]*'  # message containing " and any character in between
+        pattern = r"\b{}\b"
+        quotes_pattern = r"\"{}\b{}\b{}\""
+        greentext_pattern = r"^> {}\b{}\b{}$"
+        any_char = r"[0-9a-zA-z\s]*"  # message containing " and any character in between
         for thanks in thanks_list():
             thanks: str = thanks.strip()
             valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
             invalid_quotes = re.search(re.compile(quotes_pattern.format(any_char, thanks, any_char)), message)
-            invalid_greentext = re.search(re.compile(greentext_pattern.format(any_char, thanks, any_char),
-                                                     flags=re.MULTILINE), message)
+            invalid_greentext = re.search(re.compile(greentext_pattern.format(any_char, thanks, any_char), flags=re.MULTILINE), message)
             if valid_match is not None and invalid_quotes is None and invalid_greentext is None:
                 return True
         return False
@@ -194,25 +192,22 @@ class KarmaProducer(commands.Cog):
         for mention in set(message.mentions):
             member = mention
             # filter out message author, aura and other bots
-            if member.id != message.author.id and member.id != self.bot.user.id and not \
-                    self.bot.get_user(member.id).bot:
+            if member.id != message.author.id and member.id != self.bot.user.id and not self.bot.get_user(member.id).bot:
                 # check if giver-receiver combo on cooldown
                 if member.id not in self._members_on_cooldown[guild.id][message.author.id]:
                     karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id)
                     self.karma_service.upsert_karma_member(karma_member)
                     await self.cooldown_user(guild.id, message.author.id, member.id)
                     await self.notify_member_gain(message, member)
-                    log.info('{} gave karma to {} in guild {}'
-                             .format(message.author.id, member.id, guild.id))
+                    log.info("{} gave karma to {} in guild {}".format(message.author.id, member.id, guild.id))
                 else:
-                    log.info('Sending configured cooldown response to {} in guild {}'
-                             .format(message.author.id, guild.id))
-                    if str(config['karma']['time-emote']).lower() == "true":
-                        await message.add_reaction(reaction_emoji()['karma_cooldown'])
-                    if str(config['karma']['time-message']).lower() == "true":
-                        await self.bot.get_channel(message.channel.id) \
-                            .send('Sorry {}, your karma for {} needs time to recharge'
-                                  .format(message.author.mention, member.name))
+                    log.info("Sending configured cooldown response to {} in guild {}".format(message.author.id, guild.id))
+                    if str(config["karma"]["time-emote"]).lower() == "true":
+                        await message.add_reaction(reaction_emoji()["karma_cooldown"])
+                    if str(config["karma"]["time-message"]).lower() == "true":
+                        await self.bot.get_channel(message.channel.id).send(
+                            "Sorry {}, your karma for {} needs time to recharge".format(message.author.mention, member.name)
+                        )
 
     async def remove_karma(self, message: discord.Message, guild: discord.Guild, reason: str) -> None:
         """
@@ -229,8 +224,7 @@ class KarmaProducer(commands.Cog):
             karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id, 1)
             deletion_result = self.karma_service.delete_karma_member(karma_member)
             if deletion_result.deleted_count == 1:
-                single_action_timer: KarmaSingleActionTimer \
-                    = self._running_timers[guild.id][message.author.id][member.id]
+                single_action_timer: KarmaSingleActionTimer = self._running_timers[guild.id][message.author.id][member.id]
                 if single_action_timer is not None and single_action_timer.is_started:
                     await single_action_timer.stop()
                     del self._running_timers[guild.id][message.author.id][member.id]
@@ -244,34 +238,31 @@ class KarmaProducer(commands.Cog):
         :param member: the member to notify, if applicable.
         :return: None
         """
-        if str(karma()['log']).lower() == 'true':
+        if str(karma()["log"]).lower() == "true":
             if member.nick is None:
-                await self.bot.get_channel(int(config['channel']['log'])).send(
-                    '{} earned karma in {}. {}'
-                        .format(member.name + '#'
-                                + member.discriminator,
-                                message.channel.mention,
-                                message.jump_url))
+                await self.bot.get_channel(int(config["channel"]["log"])).send(
+                    "{} earned karma in {}. {}".format(member.name + "#" + member.discriminator, message.channel.mention, message.jump_url)
+                )
             else:
-                await self.bot.get_channel(int(config['channel']['log'])).send(
-                    '{} ({}) earned karma in {}. {}'.format(member.name + '#'
-                                                            + member.discriminator,
-                                                            member.nick,
-                                                            message.channel.mention,
-                                                            message.jump_url))
-        if str(karma()['message']).lower() == 'true':
-            if str(karma()['self_delete']).lower() == 'true':
+                await self.bot.get_channel(int(config["channel"]["log"])).send(
+                    "{} ({}) earned karma in {}. {}".format(
+                        member.name + "#" + member.discriminator, member.nick, message.channel.mention, message.jump_url
+                    )
+                )
+        if str(karma()["message"]).lower() == "true":
+            if str(karma()["self_delete"]).lower() == "true":
                 await self.bot.get_channel(message.channel.id).send(
-                    'Congratulations {}, you have earned karma from {}. '
-                    .format(member.mention, message.author.mention)
-                    + revoke_message.format(message.author.mention))
+                    "Congratulations {}, you have earned karma from {}. ".format(member.mention, message.author.mention)
+                    + revoke_message.format(message.author.mention)
+                )
             else:
-                await self.bot.get_channel(message.channel.id).send('Congratulations {}, you have earned karma from {}.'
-                                                                    .format(member.mention, message.author.mention))
-        if str(karma()['emote']).lower() == 'true':
-            await message.add_reaction(reaction_emoji()['karma_gain'])
-            if str(karma()['self_delete']).lower() == 'true':
-                await message.add_reaction(reaction_emoji()['karma_delete'])
+                await self.bot.get_channel(message.channel.id).send(
+                    "Congratulations {}, you have earned karma from {}.".format(member.mention, message.author.mention)
+                )
+        if str(karma()["emote"]).lower() == "true":
+            await message.add_reaction(reaction_emoji()["karma_gain"])
+            if str(karma()["self_delete"]).lower() == "true":
+                await message.add_reaction(reaction_emoji()["karma_delete"])
 
     async def log_karma_removal(self, message: discord.Message, member: discord.Member, event_type: str) -> None:
         """
@@ -281,19 +272,19 @@ class KarmaProducer(commands.Cog):
         :param event_type: the reason for the deletion
         :return: None
         """
-        if karma()['log']:
-            if event_type == 'message delete':
-                await self.bot.get_channel(int(config['channel']['log'])).send(
-                    'karma for {} was removed through event: {} :: in {}'.format(
-                        member.name + '#' + member.discriminator,
-                        event_type, message.channel.mention))
+        if karma()["log"]:
+            if event_type == "message delete":
+                await self.bot.get_channel(int(config["channel"]["log"])).send(
+                    "karma for {} was removed through event: {} :: in {}".format(
+                        member.name + "#" + member.discriminator, event_type, message.channel.mention
+                    )
+                )
             else:
-                await self.bot.get_channel(int(config['channel']['log'])).send(
-                    'karma for {} was removed through event: {} :: in {} :: {}'.format(
-                        member.name + '#' + member.discriminator,
-                        event_type,
-                        message.channel.mention,
-                        message.jump_url))
+                await self.bot.get_channel(int(config["channel"]["log"])).send(
+                    "karma for {} was removed through event: {} :: in {} :: {}".format(
+                        member.name + "#" + member.discriminator, event_type, message.channel.mention, message.jump_url
+                    )
+                )
 
     async def cooldown_user(self, guild_id: int, giver_id: int, receiver_id: int) -> None:
         """
@@ -304,8 +295,7 @@ class KarmaProducer(commands.Cog):
         :return: None
         """
         self._members_on_cooldown[guild_id][giver_id].append(receiver_id)
-        single_action_timer = KarmaSingleActionTimer(self.remove_from_cooldown, int(config['cooldown']),
-                                                     guild_id, giver_id, receiver_id)
+        single_action_timer = KarmaSingleActionTimer(self.remove_from_cooldown, int(config["cooldown"]), guild_id, giver_id, receiver_id)
         self._running_timers[guild_id][giver_id][receiver_id] = single_action_timer
         await single_action_timer.start()
 

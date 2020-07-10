@@ -6,7 +6,7 @@ import discord
 
 log = logging.getLogger(__name__)
 
-mention_pattern = r'[^@!<>]+'
+mention_pattern = r"[^@!<>]+"
 mention_regex = re.compile(mention_pattern)
 
 
@@ -22,7 +22,7 @@ async def convert_content_to_member_set(ctx, argument_list: List[str]) -> Set[di
     """
     guild = ctx.guild
     pure_list = []
-    logging.info('Conversion to pure list \n original list: {}'.format(argument_list))
+    logging.info("Conversion to pure list \n original list: {}".format(argument_list))
     for content in argument_list:
         result = re.search(mention_regex, content)
         if result is not None:
