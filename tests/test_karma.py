@@ -6,6 +6,7 @@ import mongomock
 from cogs.karma.producer import KarmaProducer
 from core.model.member import KarmaMember
 from core.service.mongo_service import KarmaMemberService
+from core.service.validation_service import contains_valid_thanks
 
 if __name__ == '__main__':
     unittest.main()
@@ -42,9 +43,9 @@ class KarmaGiving(unittest.TestCase):
     dummy_correct_message_content_4 = 'thank You <@1>'
 
     def test_messages_identified_correctly(self):
-        assert not self.karma_producer.contains_valid_thanks(self.dummy_wrong_message_content)
-        assert not self.karma_producer.contains_valid_thanks(self.dummy_wrong_message_content_2)
-        assert self.karma_producer.contains_valid_thanks(self.dummy_correct_message_content)
-        assert self.karma_producer.contains_valid_thanks(self.dummy_correct_message_content_2)
-        assert self.karma_producer.contains_valid_thanks(self.dummy_correct_message_content_3)
-        assert self.karma_producer.contains_valid_thanks(self.dummy_correct_message_content_4)
+        assert not contains_valid_thanks(self.dummy_wrong_message_content)
+        assert not contains_valid_thanks(self.dummy_wrong_message_content_2)
+        assert contains_valid_thanks(self.dummy_correct_message_content)
+        assert contains_valid_thanks(self.dummy_correct_message_content_2)
+        assert contains_valid_thanks(self.dummy_correct_message_content_3)
+        assert contains_valid_thanks(self.dummy_correct_message_content_4)
