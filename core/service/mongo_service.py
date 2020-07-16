@@ -2,7 +2,6 @@ import datetime
 import logging
 
 from core.model.member import KarmaMember, Member
-# karma database service class, perform operations on the configured mongodb.
 from util.config import profile, config
 
 log = logging.getLogger(__name__)
@@ -11,6 +10,7 @@ log = logging.getLogger(__name__)
 class KarmaMemberService:
 
     def __init__(self, ds_collection):
+        # karma database service class, perform operations on the configured mongodb.
         self._karma = ds_collection
         self._increase_karma = {"$inc": {'karma': 1}}
 
