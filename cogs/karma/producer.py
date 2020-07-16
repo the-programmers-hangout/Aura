@@ -195,7 +195,7 @@ class KarmaProducer(commands.Cog):
         for mention in set(message.mentions):
             member = mention
             karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id, 1)
-            deletion_result = self.karma_service.delete_karma_member(karma_member)
+            deletion_result = self.karma_service.delete_single_karma(karma_member)
             if deletion_result.deleted_count == 1:
                 single_action_timer: KarmaSingleActionTimer \
                     = self._running_timers[guild.id][message.author.id][member.id]
