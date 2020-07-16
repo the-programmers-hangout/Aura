@@ -7,7 +7,7 @@ from cogs.karma.producer import KarmaProducer
 from core.model.member import KarmaMember
 from core.service.mongo_service import KarmaMemberService
 from core.service.validation_service import contains_valid_thanks
-from tests.test_decorator import async_test
+from tests.async_decorator import async_test
 
 if __name__ == '__main__':
     unittest.main()
