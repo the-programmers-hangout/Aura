@@ -7,6 +7,7 @@ from cogs.karma.producer import KarmaProducer
 from core.model.member import KarmaMember
 from core.service.mongo_service import KarmaMemberService
 from core.service.validation_service import contains_valid_thanks
+from tests.test_decorator import async_test
 
 if __name__ == '__main__':
     unittest.main()
@@ -37,14 +38,17 @@ class KarmaGiving(unittest.TestCase):
 
     dummy_wrong_message_content = 'laughing out loud brother'
     dummy_wrong_message_content_2 = '"thanks dude"'
+    dummy_wrong_message_content_3 = "> thanks obama"
     dummy_correct_message_content = 'thanks camel'
     dummy_correct_message_content_2 = 'Thanks birdie'
-    dummy_correct_message_content_3 = 'ty bro'
+    dummy_correct_message_content_3 = 'ty it was 3 > 2'
     dummy_correct_message_content_4 = 'thank You horse'
 
+    @async_test
     async def test_messages_identified_correctly(self):
         assert not await contains_valid_thanks(self.dummy_wrong_message_content)
         assert not await contains_valid_thanks(self.dummy_wrong_message_content_2)
+        assert not await contains_valid_thanks(self.dummy_wrong_message_content_3)
         assert await contains_valid_thanks(self.dummy_correct_message_content)
         assert await contains_valid_thanks(self.dummy_correct_message_content_2)
         assert await contains_valid_thanks(self.dummy_correct_message_content_3)
