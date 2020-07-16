@@ -42,7 +42,7 @@ class KarmaGiving(unittest.TestCase):
     dummy_correct_message_content_3 = 'ty bro'
     dummy_correct_message_content_4 = 'thank You horse'
 
-    def test_messages_identified_correctly(self):
+    async def test_messages_identified_correctly(self):
         assert not await contains_valid_thanks(self.dummy_wrong_message_content)
         assert not await contains_valid_thanks(self.dummy_wrong_message_content_2)
         assert await contains_valid_thanks(self.dummy_correct_message_content)
