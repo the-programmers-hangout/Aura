@@ -1,5 +1,4 @@
 import logging
-import re
 from collections import defaultdict
 
 import discord
@@ -8,9 +7,10 @@ from discord.ext.commands import guild_only
 
 from core import datasource
 from core.model.member import KarmaMember, Member
-from core.service.karma_service import KarmaMemberService, BlockerService
+from core.service.mongo_service import KarmaMemberService, BlockerService
+from core.service.validation_service import validate_message
 from core.timer import KarmaSingleActionTimer
-from util.config import config, thanks_list, karma, reaction_emoji
+from util.config import config, karma, reaction_emoji
 from util.constants import revoke_message
 from util.util import clear_reaction
 
@@ -41,7 +41,7 @@ class KarmaProducer(commands.Cog):
         guild_id: int = message.guild.id
         if not message.author.bot:
             # validate the message, is it a karma message?
-            if await self.validate_message(message):
+            if await validate_message(message):
                 # check if member is blacklisted
                 if self.blocker_service.find_member(Member(str(guild_id), message.author.id)) is None:
                     # not blacklisted try to give karma
@@ -55,6 +55,30 @@ class KarmaProducer(commands.Cog):
                                                   .format(config['blacklist']['contact']))
                     if str(config['blacklist']['emote']).lower() == 'true':
                         await message.add_reaction(reaction_emoji()['karma_blacklist'])
+
+    @guild_only()
+    @commands.Cog.listener()
+    async def on_message_edit(self, before: discord.Message, after: discord.Message) -> None:
+        """
+        Will remove and add karma according to the state of the message before and afterwards.
+        :param before: discord message before the edit
+        :param after: discord message after the edit
+        :return: None
+        """
+        if str(karma()['edit']).lower() == 'true':
+            before_valid = await validate_message(before)
+            after_valid = await validate_message(after)
+            if before_valid and after_valid:
+                print()  # TODO implement search on message id to find all members thanked
+            elif before_valid and not after_valid:
+                # remove karma given out through karma message.
+                log.info(f'Removing karma because message: {after.id} not valid after edit')
+                await after.clear_reactions()
+                await self.remove_karma(before, after.guild, 'message edit')
+            elif after_valid and not before_valid:
+                # all new karma to give out
+                log.info(f'Adding karma because message: {after.id} is valid after edit')
+                await self.give_karma(after, after.guild)
 
     @guild_only()
     @commands.Cog.listener()
@@ -127,62 +151,6 @@ class KarmaProducer(commands.Cog):
                     if reaction is not other_reaction:
                         await clear_reaction(other_reaction)
 
-    @guild_only()
-    @commands.Cog.listener()
-    async def on_message_edit(self, before: discord.Message, after: discord.Message) -> None:
-        """
-        Will remove and add karma according to the state of the message before and afterwards.
-        :param before: discord message before the edit
-        :param after: discord message after the edit
-        :return: None
-        """
-        if str(karma()['edit']).lower() == 'true':
-            before_valid = await self.validate_message(before)
-            after_valid = await self.validate_message(after)
-            if before_valid and after_valid:
-                print()  # TODO implement search on message id to find all members thanked
-            elif before_valid and not after_valid:
-                # remove karma given out through karma message.
-                log.info(f'Removing karma because message: {after.id} not valid after edit')
-                await after.clear_reactions()
-                await self.remove_karma(before, after.guild, 'message edit')
-            elif after_valid and not before_valid:
-                # all new karma to give out
-                log.info(f'Adding karma because message: {after.id} is valid after edit')
-                await self.give_karma(after, after.guild)
-
-    async def validate_message(self, message: discord.Message) -> bool:
-        """
-        validates the message
-        :param message: discord Message to validate for Aura
-        :return: True if message is valid, False if not.
-        """
-        if self.contains_valid_thanks(message.content) and len(message.mentions) > 0:
-            return True
-        else:
-            return False
-
-    def contains_valid_thanks(self, message: str) -> bool:
-        """
-        check if the message has a valid thanks keyword as configured. This is achieved
-        by using several patterns and applying them to the message content of a discord Message
-        :param message: message.content of a discord.Message
-        :return: True if message has a valid keyword pattern, False if not.
-        """
-        pattern = r'\b{}\b'
-        quotes_pattern = r'\"{}\b{}\b{}\"'
-        greentext_pattern = r'^> {}\b{}\b{}$'
-        any_char = r'[0-9a-zA-z\s]*'  # message containing " and any character in between
-        for thanks in thanks_list():
-            thanks: str = thanks.strip()
-            valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
-            invalid_quotes = re.search(re.compile(quotes_pattern.format(any_char, thanks, any_char)), message)
-            invalid_greentext = re.search(re.compile(greentext_pattern.format(any_char, thanks, any_char),
-                                                     flags=re.MULTILINE), message)
-            if valid_match is not None and invalid_quotes is None and invalid_greentext is None:
-                return True
-        return False
-
     async def give_karma(self, message: discord.Message, guild: discord.Guild) -> None:
         """
         give karma to all the users in the message except the author, other bots or aura itself
@@ -227,7 +195,7 @@ class KarmaProducer(commands.Cog):
         for mention in set(message.mentions):
             member = mention
             karma_member = KarmaMember(guild.id, member.id, message.channel.id, message.id, 1)
-            deletion_result = self.karma_service.delete_karma_member(karma_member)
+            deletion_result = self.karma_service.delete_single_karma(karma_member)
             if deletion_result.deleted_count == 1:
                 single_action_timer: KarmaSingleActionTimer \
                     = self._running_timers[guild.id][message.author.id][member.id]

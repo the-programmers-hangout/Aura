@@ -280,7 +280,14 @@ dashboard, mongodb and discord bot.
 * improve latency by not rounding, thus latency being exact.
 
 ### 1.16.2
-* fix greentext
+* fix greentext parsing
+
+### 1.17.0
+* code refactoring of the producer cog, moving away validation into its own file.
+* update of discord.py to 1.3.4 for the upcoming domain changes.
+* testing decorator for async tests
+* project refactoring, renaming some files.
+* adding docs strings in service files, that were missed.
 
 ### planned features
 * check the validity of the data returned from the database

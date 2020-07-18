@@ -8,7 +8,7 @@ from discord.ext.commands import has_any_role, guild_only
 from core import datasource
 from core.decorator import has_required_role
 from core.model.member import KarmaMember, Member
-from core.service.karma_service import KarmaMemberService, BlockerService
+from core.service.mongo_service import KarmaMemberService, BlockerService
 from util.config import roles, config, max_message_length
 from util.conversion import convert_content_to_member_set
 from util.util import member_has_role

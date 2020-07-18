@@ -7,7 +7,7 @@ from discord.ext.commands import guild_only
 from core import datasource
 from core.decorator import has_required_role
 from core.model.member import KarmaMember
-from core.service.karma_service import KarmaMemberService
+from core.service.mongo_service import KarmaMemberService
 from util.config import profile, config
 from util.constants import embed_color, bold_field
 from util.conversion import convert_content_to_member_set

@@ -6,7 +6,7 @@ from discord.ext.commands import guild_only, TextChannelConverter, CommandError
 
 from core import datasource
 from core.decorator import has_required_role
-from core.service.karma_service import KarmaMemberService
+from core.service.mongo_service import KarmaMemberService
 from util.config import config
 from util.constants import embed_color, bold_field, leaderboard_usage
 
