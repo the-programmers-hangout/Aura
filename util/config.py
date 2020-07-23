@@ -45,22 +45,6 @@ def thanks_list():
 def reaction_emoji():
     return config['emoji']
 
-
-# version dict
-def version():
-    return dict(aura_version='1.17.0', python_version='3.8.2', discord_version='1.3.4')
-
-
-# return the discord tag of the author of this bot
-def author_discord():
-    return 'arkencl#5579'
-
-
-# return the link to the repository
-def repository():
-    return '[[Github]](https://github.com/arkencl/aura)'
-
-
 max_message_length = 500
 
 karma_gain_emoji = reaction_emoji()['karma_gain']  # used to indicate positive karma gain
