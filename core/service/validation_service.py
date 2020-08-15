@@ -28,7 +28,7 @@ async def contains_valid_thanks(message: str) -> bool:
     pattern = r'\b{}\b'
     quotes_pattern = r'\"{}\b{}\b{}\"'
     greentext_pattern = r'^> {}\b{}\b{}$'
-    any_char = r'[0-9a-zA-z\s]*'  # message containing " and any character in between
+    any_char = r'.*'  # message containing " and any character in between
     for thanks in thanks_list():
         thanks: str = thanks.strip()
         valid_match = re.search(re.compile(pattern.format(thanks), re.IGNORECASE), message)
