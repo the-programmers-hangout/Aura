@@ -289,8 +289,12 @@ dashboard, mongodb and discord bot.
 * project refactoring, renaming some files.
 * adding docs strings in service files, that were missed.
 
+### 1.17.1
+* fix faulty detection of "invalid strings".
+detection may need to move off of regex and to token retrieval because
+including messages with matching the general and more specific regex is not as easy.
+
 ### planned features
-* check the validity of the data returned from the database
 * complete partial edit tracking
 * remove cooldown on karma removal
 * track message edits with changed mentions
