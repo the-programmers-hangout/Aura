@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir -r ./app/requirements.txt
 COPY . ./app
 
 # force the stdout and stderr streams to be unbuffered
-CMD [ "python", "-u", "./app/bot.py"]
+CMD [ "python", "-u", "./app/launcher.py"]
