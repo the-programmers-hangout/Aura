@@ -1,0 +1,38 @@
+blacklist:
+  contact: Modmail
+  dm: 'true'
+  emote: 'true'
+channel:
+  log:
+cooldown: '5'
+database:
+  connection:
+    host: mongo
+    password: example
+    port: 27017
+    username: root
+  name: aura
+emoji:
+  karma_blacklist: "\u2620\uFE0F"
+  karma_cooldown: "\U0001F552"
+  karma_delete: "\u274C"
+  karma_gain: "\U0001F44D"
+karma:
+  edit: 'false'
+  emote: 'true'
+  keywords: thanks, ty, thank you
+  log: 'true'
+  message: 'false'
+  self_delete: 'true'
+  time-emote: 'true'
+  time-message: 'false'
+leaderboard: 10
+logging: INFO
+prefix: aura!
+profile:
+  channels: '5'
+roles:
+  admin: Admin
+  moderator: Staff
+owner:
+token:

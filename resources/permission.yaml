@@ -1,0 +1,16 @@
+blacklist: moderator
+config: admin
+explain: everyone
+getpermission: moderator
+karma: everyone
+leaderboard: everyone
+load: owner
+profile: everyone
+reactions: everyone
+reload: admin
+reset: moderator
+setpermission: owner
+showblacklist: moderator
+showpermission: moderator
+unload: owner
+whitelist: moderator

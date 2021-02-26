@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  aura:
+    container_name: aura
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - database
+    volumes:
+      - type: bind
+        source: ./config.yaml
+        target: /app/config.yaml
+      - type: bind
+        source: ./resources/permission.yaml
+        target: /app/resources/permission.yaml
+  database:
+    container_name: mongo
+    image: mongo:4.2.5
+    ports:
+    - 27017:27017
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+    - db:/var/lib/data
+volumes:
+  db:
+  app:
