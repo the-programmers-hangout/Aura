@@ -24,6 +24,7 @@ class Aura(commands.AutoShardedBot):
                          help_attrs=dict(hidden=True), fetch_offline_members=True,
                          heartbeat_timeout=150.0, intents=intents)
 
+        self.remove_command('help')
         module_manager = ModuleManager(self)
         karma_producer = KarmaProducer(self)
         karma_blocker = KarmaBlocker(self)

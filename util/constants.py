@@ -27,7 +27,7 @@ hidden_config = ["token", "owner", "prefix", "database", "logging"]
 
 # version dict
 def version():
-    return dict(aura_version="1.17.2", python_version="3.8.2", discord_version="1.6.0")
+    return dict(aura_version="1.17.3", python_version="3.8.2", discord_version="1.6.0")
 
 
 # return the discord tag of the author of this bot
